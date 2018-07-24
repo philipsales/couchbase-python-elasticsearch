@@ -21,8 +21,8 @@ class CurisV2ETL:
             try:
                 address = {
                     "address" : {
-                        "community" : x.address.barangay.title(),
-                        "province": x.address.province.title(),
+                        "community" : x.address.barangay,
+                        "province": x.address.province,
                         "zip" : x.address.postal_code 
                         }
                 }

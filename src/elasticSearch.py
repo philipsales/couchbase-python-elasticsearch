@@ -17,6 +17,53 @@ class ElasticsearchConnect:
             scheme=conn['SCHEME'],
             port=conn['PORT'],
             timeout=conn['TIMEOUT'])
+            
+    def batch_dump(self, docs):
+        self._set_mappings()
+        counter = 0
+
+        try:
+            for doc in docs:
+                res = self._es.index(index = self._index, 
+                                     doc_type = self._doc_type, 
+                                     id = uuid.uuid1(), 
+                                     body = doc)
+                counter += 1
+
+            self._total_entries(counter)
+            self._es.indices.refresh(index=self._index)
+            self._refresh_index()
+
+        except:
+            pass
+
+    def bulk_dump(self, docs):
+        self._set_mappings()
+        counter = 0
+        bulk_data = []
+
+        try:
+            for doc in docs:
+                _header = { "create" : { "_index" : self._index,  
+                            "_type" : self._doc_type, 
+                            "_id" : str(uuid.uuid1()) } 
+                          }
+                bulk_data.append(json.dumps(_header))
+                bulk_data.append(doc)
+                counter += 1
+                print('--elastic: ', counter)
+
+            self._total_entries(counter)
+            return self._es.bulk(bulk_data)
+
+        except:
+            pass
+
+    def get_total(self):
+        query = self._es.search(index = self._index, 
+                                body = {"query": {"match_all": {}}})
+
+        print("Total Elastic records %d Hits:" % query['hits']['total'])
 
     def _set_mappings(self):
         body = mappings.schema.elastic_mapping
@@ -35,41 +82,12 @@ class ElasticsearchConnect:
 
             except:
                 pass
-            
-    def batch_dump(self, docs):
-        self._set_mappings()
-        counter = 0
 
-        for doc in docs:
-            res = self._es.index(index = self._index, 
-                                 doc_type = self._doc_type, 
-                                 id = uuid.uuid1(), 
-                                 body = doc)
-            counter += 1
+    def _refresh_index(self):
+        return self._es.indices.refresh(index=self._index)
 
-        print("Total Batch Entries: ", counter)
-        self._es.indices.refresh(index=self._index)
+    def _total_entries(self,count):
+        print("Total Batch Entries: ", count)
 
-    def bulk_dump(self, docs):
-        self._set_mappings()
-        counter = 0
-        bulk_data = []
 
-        for doc in docs:
-            _header = { "create" : { "_index" : self._index,  
-                        "_type" : self._doc_type, 
-                        "_id" : str(uuid.uuid1()) } 
-                      }
-            bulk_data.append(json.dumps(_header))
-            bulk_data.append(doc)
-            counter += 1
-            print('--elastic: ', counter)
 
-        print("Total Dump Entries: ", counter)
-        res = self._es.bulk(bulk_data)
-
-    def get_total(self):
-        query = self._es.search(index = self._index, 
-                                body = {"query": {"match_all": {}}})
-
-        print("Total Elastic records %d Hits:" % query['hits']['total'])

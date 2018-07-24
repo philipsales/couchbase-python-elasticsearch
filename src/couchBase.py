@@ -48,10 +48,11 @@ class N1QLConnect:
             return cb_data
 
         except:
-            #TODO
             pass
 
     def get_changes(self):
         pass
 
+    def find(self):
+        pass
 

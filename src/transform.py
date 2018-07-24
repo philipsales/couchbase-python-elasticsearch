@@ -39,7 +39,7 @@ class CurisV2ETL:
         return els_data
 
     def _json2obj(self, data): 
-        return json.loads(data, object_hook=self._json_object_hook)
+        return json.loads(data, object_hook = self._json_object_hook)
 
     def _json_object_hook(self, d):
-        return namedtuple('X', d.keys(), rename=True)(*d.values())
+        return namedtuple('X', d.keys(), rename = True)(*d.values())

@@ -10,26 +10,26 @@ CouchbaseConfig = {
         'TIMEOUT': 7200
     },
     'dev': {
-        'BUCKET': 'awhcurisdb010832',
+        'BUCKET': '',
         'USERNAME': '',
         'PASSWORD': '',
-        'HOST': 'couchbase://172.104.49.91/',
+        'HOST': '',
         'PORT': '',
         'TIMEOUT': 7200
     },
     'uat': {
-        'BUCKET': 'awhcurisdb',
+        'BUCKET': '',
         'USERNAME': '',
         'PASSWORD': '',
-        'HOST': 'couchbase://139.162.18.54/',
+        'HOST': '',
         'PORT': '',
         'TIMEOUT': 7200
     },
     'prod': {
-        'BUCKET': 'awhcurisdb',
+        'BUCKET': '',
         'USERNAME': '',
         'PASSWORD': '',
-        'HOST': 'couchbase://13.76.6.56/',
+        'HOST': '',
         'PORT': '',
         'TIMEOUT': 7200
     }
@@ -37,8 +37,8 @@ CouchbaseConfig = {
 
 ElasticSearchConfig = {
     'local': {
-        'USERNAME': 'elastic',
-        'PASSWORD': 'elastic',
+        'USERNAME': '',
+        'PASSWORD': '',
         'INDEX': 'philippines',
         'TYPE': 'patients',
         'SCHEME': 'HTTP',
@@ -47,8 +47,8 @@ ElasticSearchConfig = {
         'TIMEOUT': 7200
     },
     'dev': {
-        'USERNAME': 'elastic',
-        'PASSWORD': 'elastic',
+        'USERNAME': '',
+        'PASSWORD': '',
         'INDEX': 'philippines',
         'TYPE': 'patients',
         'SCHEME': 'HTTP',
@@ -57,8 +57,8 @@ ElasticSearchConfig = {
         'TIMEOUT': 7200
     },
     'prod': {
-        'USERNAME': 'elastic',
-        'PASSWORD': 'elastic',
+        'USERNAME': '',
+        'PASSWORD': '',
         'INDEX': 'philippines',
         'TYPE': 'patients',
         'SCHEME': 'HTTP',

@@ -26,5 +26,4 @@ ES_DOCTYPE = es['TYPE']
 es = ElasticsearchConnect(ES_CONNECTION, ES_INDEX, ES_DOCTYPE)
 es.set_mappings()
 es.bulk_dump(es_data)
-
-
+es.get_total()

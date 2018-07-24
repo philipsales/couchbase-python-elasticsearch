@@ -25,7 +25,10 @@ class CouchbaseConnect:
         bucket.n1ql_timeout = self._timeout 
         
         try:
-            query = N1QLQuery("SELECT meta("+self._bucket+").id as cb_id, " + self._bucket + ".* FROM "+self._bucket+" limit 10" )
+            query = N1QLQuery("SELECT meta("+self._bucket+").id as cb_id, " 
+                              + self._bucket + ".* FROM "
+                              + self._bucket +" limit 10")
+
             query.timeout = self._timeout 
 
             for row in bucket.n1ql_query(query): 

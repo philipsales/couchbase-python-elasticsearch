@@ -1,4 +1,4 @@
-from couchBase import CouchbaseConnect
-from elasticSearch import ElasticsearchConnect
-from transform import CurisV2ETL 
+from src.couchBase import CouchbaseConnect
+from src.elasticSearch import ElasticsearchConnect
+from src.transform import CurisV2ETL 
 

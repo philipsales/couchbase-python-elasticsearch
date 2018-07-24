@@ -4,7 +4,8 @@ Bare data pipepline
 
 ## Getting Started
 
-Install on Mac based machine only.  Make sure bin/sh environment is enable
+- [x] MacOS based machine. 
+- [ ] Linux based machine --TODO. 
 
 ### Prerequisites
 
@@ -20,7 +21,12 @@ brew install python
 pip install couchbase
 ```
 
-### Installing
+4. Install python environment manager 
+```
+python3 -m pip install virtualenv
+```
+
+### Running the Program
 
 1. Create a specific python version for virtual environment 
 ```
@@ -32,19 +38,20 @@ virtualenv --python=<path_to>/python3.6 <virtaul_env_folder_name>
 source <path>/bin/activate 
 ```
 
-3. Run program 
+3. Rename the file settings/config.template.py to template.py
 
+4. Run program 
 ```
 python ./main.py
 ```
 
 ## Running the tests
 
-None
+TODO
 
 ## Deployment
 
-None
+TODO
 
 ## Built With
 
@@ -56,7 +63,7 @@ None
 
 ## Versioning
 
-None
+0.0.1
 
 ## Authors
 

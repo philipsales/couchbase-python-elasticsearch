@@ -7,7 +7,12 @@ class CurisV2ETL:
     def __init__(self):
         pass
 
-    def map_address(self, datas):
+    def pipeline(self,data):
+        #TODO insert all pipeline here
+        return data 
+
+
+    def _map_address(self, datas):
         counter = 0
         els_data = []
 
@@ -37,6 +42,9 @@ class CurisV2ETL:
             print('--transform: ', counter)
 
         return els_data
+
+    def _compute_birthdate(self, datas):
+        pass
 
     def _json2obj(self, data): 
         return json.loads(data, object_hook = self._json_object_hook)

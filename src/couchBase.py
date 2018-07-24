@@ -4,20 +4,29 @@ from couchbase.bucket import Bucket
 from couchbase.n1ql import N1QLQuery
 from couchbase.n1ql import N1QLError
 
-class CouchbaseConnect:
-    
+class SyncGatewayConnect:
     def __init__(self, conn, **kwargs):
         self._bucket = conn['BUCKET'] 
         self._url = conn['HOST'] + conn['BUCKET']
         self._timeout = conn['TIMEOUT']
 
-    def curl_all(self):
+    def get_all(self):
         pass
 
-    def gateway_sync_all(self):
+    def get_changes(self):
         pass
 
-    def n1ql_all(self):
+    def find(self):
+        pass
+
+class N1QLConnect:
+    
+    def __init__(self, conn, *args,**kwargs):
+        self._bucket = conn['BUCKET'] 
+        self._url = conn['HOST'] + conn['BUCKET']
+        self._timeout = conn['TIMEOUT']
+
+    def get_all(self):
         counter = 0
         cb_data = []
 
@@ -42,5 +51,7 @@ class CouchbaseConnect:
             #TODO
             pass
 
+    def get_changes(self):
+        pass
 
 

@@ -8,9 +8,9 @@ from elasticsearch import Elasticsearch
 
 class ElasticsearchConnect:
 
-    def __init__(self, conn, index, doc_type):
-        self._index = index 
-        self._doc_type = doc_type 
+    def __init__(self, conn, *args,**kwargs):
+        self._index = conn['INDEX']
+        self._doc_type = conn['TYPE']
         self._es = Elasticsearch(
             conn['HOST'],
             http_auth=(conn['USERNAME'],conn['PASSWORD']),
@@ -18,7 +18,7 @@ class ElasticsearchConnect:
             port=conn['PORT'],
             timeout=conn['TIMEOUT'])
 
-    def set_mappings(self):
+    def _set_mappings(self):
         body = mappings.schema.elastic_mapping
 
         if self._es.indices.exists(self._index):
@@ -37,6 +37,7 @@ class ElasticsearchConnect:
                 pass
             
     def batch_dump(self, docs):
+        self._set_mappings()
         counter = 0
 
         for doc in docs:
@@ -50,6 +51,7 @@ class ElasticsearchConnect:
         self._es.indices.refresh(index=self._index)
 
     def bulk_dump(self, docs):
+        self._set_mappings()
         counter = 0
         bulk_data = []
 

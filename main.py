@@ -15,7 +15,7 @@ cb = N1QLConnect(CB_CONNECTION)
 cb_data = cb.get_all()
 
 etl = CurisV2ETL()
-es_data = etl.pipeline(cb_data)
+es_data = etl.map_address(cb_data)
 
 ES_CONNECTION = es 
 es = ElasticsearchConnect(ES_CONNECTION)

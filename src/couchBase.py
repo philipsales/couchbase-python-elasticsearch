@@ -36,7 +36,7 @@ class N1QLConnect:
         try:
             query = N1QLQuery("SELECT meta("+self._bucket+").id as cb_id, " 
                               + self._bucket + ".* FROM "
-                              + self._bucket +" limit 10")
+                              + self._bucket +" limit 30")
 
             query.timeout = self._timeout 
 

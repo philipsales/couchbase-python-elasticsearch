@@ -9,10 +9,9 @@ class CurisV2ETL:
 
     def pipeline(self,data):
         #TODO insert all pipeline here
-        return data 
+        return data
 
-
-    def _map_address(self, datas):
+    def map_address(self, datas):
         counter = 0
         els_data = []
 
@@ -22,8 +21,8 @@ class CurisV2ETL:
             try:
                 address = {
                     "address" : {
-                        "community" : x.address.barangay,
-                        "province": x.address.province ,
+                        "community" : x.address.barangay.title(),
+                        "province": x.address.province.title(),
                         "zip" : x.address.postal_code 
                         }
                 }
@@ -43,7 +42,7 @@ class CurisV2ETL:
 
         return els_data
 
-    def _compute_birthdate(self, datas):
+    def compute_birthdate(self, datas):
         pass
 
     def _json2obj(self, data): 

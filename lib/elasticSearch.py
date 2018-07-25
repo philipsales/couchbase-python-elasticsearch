@@ -8,7 +8,7 @@ import mappings.schema
 from elasticsearch import Elasticsearch
 from elasticsearch.exceptions import ConnectionError 
 
-from log.config import set_log_config, logging
+from logs.config import set_log_config, logging
 logger = logging.getLogger("elasticsearch.connection")
 
 class ElasticsearchConnect:

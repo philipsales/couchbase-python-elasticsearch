@@ -61,3 +61,6 @@ dist
 
 #configuration
 settings/config.py
+
+#logs
+#logs/error.log

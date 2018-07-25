@@ -9,7 +9,7 @@ from couchbase.exceptions import CouchbaseTransientError, CouchbaseNetworkError
 
 from requests.exceptions import RequestException
 
-from log.config import set_log_config, logging
+from logs.config import set_log_config, logging
 logger = logging.getLogger("couchbase.connection")
 
 class SyncGatewayConnect:

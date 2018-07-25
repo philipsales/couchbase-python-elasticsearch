@@ -2,7 +2,7 @@ import sys
 import json
 from collections import namedtuple
 
-from log.config import set_log_config, logging
+from logs.config import set_log_config, logging
 logger = logging.getLogger("transform.etl")
 
 class CurisV2ETL:

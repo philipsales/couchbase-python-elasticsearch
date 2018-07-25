@@ -14,7 +14,6 @@ CB_CONNECTION = cb
 cbs = SyncGatewayConnect(CB_CONNECTION)
 cbs_data = cbs.get_all()
 
->>>>>>> feature-logs.01
 cb = N1QLConnect(CB_CONNECTION)
 cb_data = cb.get_all()
 

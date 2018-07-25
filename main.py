@@ -1,25 +1,28 @@
-import settings.config 
+import os 
+import sys
 
-from lib.couchBase import SyncGatewayConnect, N1QLConnect
-from lib.elasticSearch import ElasticsearchConnect
-from lib.transform import CurisV2ETL 
+root  = os.path.dirname(os.path.realpath(__file__))
+sys.path.append(root +'/lib')
 
-cb_ENV = 'dev'
-es_ENV = 'local'
+from settings.couchbase_conf import CouchbaseConfig, CouchbaseENV
+from settings.elastic_conf import ElasticSearchConfig, ElasticSearchENV 
 
-cb = settings.config.CouchbaseConfig[cb_ENV]
-es = settings.config.ElasticSearchConfig[es_ENV]
+from lib.couchbase_syncgateway import SyncGatewayConnect 
+from lib.couchbase_n1ql import N1QLConnect 
+from lib.elasticsearch import ElasticsearchConnect 
 
-CB_CONNECTION = cb 
-cbs = SyncGatewayConnect(CB_CONNECTION)
-cbs_data = cbs.get_all()
+from lib.transform import CurisV2ETL
 
-cb = N1QLConnect(CB_CONNECTION)
+cb_conn = CouchbaseConfig[CouchbaseENV]
+cb = SyncGatewayConnect(cb_conn)
+cb_data = cb.get_all()
+
+cb = N1QLConnect(cb_conn)
 cb_data = cb.get_all()
 
 etl = CurisV2ETL()
 es_data = etl.map_address(cb_data)
 
-ES_CONNECTION = es 
-es = ElasticsearchConnect(ES_CONNECTION)
+es_conn = ElasticSearchConfig[ElasticSearchENV]
+es = ElasticsearchConnect(es_conn)
 es.bulk_dump(es_data)

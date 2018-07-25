@@ -1,15 +1,20 @@
+import os 
 import sys
 import uuid
 import json
 import logging
+
+root  = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+sys.path.append(root +'/logs')
+sys.path.append(root +'/settings')
 
 import mappings.schema
 
 from elasticsearch import Elasticsearch
 from elasticsearch.exceptions import ConnectionError 
 
-from logs.config import set_log_config, logging
-logger = logging.getLogger("elasticsearch.connection")
+import logging_conf, logging
+logger = logging.getLogger("couchbase.connection")
 
 class ElasticsearchConnect:
 

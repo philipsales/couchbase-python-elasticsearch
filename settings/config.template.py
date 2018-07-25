@@ -10,10 +10,10 @@ CouchbaseConfig = {
         'TIMEOUT': 7200
     },
     'dev': {
-        'BUCKET': 'awhcurisdb010832',
+        'BUCKET': '',
         'USERNAME': '',
         'PASSWORD': '',
-        'HOST': 'couchbase://172.104.49.91/',
+        'HOST': '',
         'PORT': '',
         'TIMEOUT': 7200
     },
@@ -36,7 +36,11 @@ CouchbaseConfig = {
 }
 
 ElasticSearchConfig = {
+<<<<<<< HEAD
     'dev': {
+=======
+    'local': {
+>>>>>>> feature-logs.01
         'USERNAME': '',
         'PASSWORD': '',
         'INDEX': 'philippines',
@@ -46,7 +50,11 @@ ElasticSearchConfig = {
         'PORT': 9200,
         'TIMEOUT': 7200
     },
+<<<<<<< HEAD
     'local': {
+=======
+    'dev': {
+>>>>>>> feature-logs.01
         'USERNAME': '',
         'PASSWORD': '',
         'INDEX': 'philippines',

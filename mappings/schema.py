@@ -1,0 +1,54 @@
+import sys 
+
+elastic_mapping = {  
+   "mappings":{  
+      "patients":{  
+         "_source":{  
+            "enabled": True
+         },
+         "properties":{  
+            "active":{  
+               "type":"boolean"
+            },
+            "sex":{  
+               "type":"keyword"
+            },
+            "yr_birth":{  
+               "type":"date"
+            },
+            "address":{  
+               "type":"object",
+               "properties":{  
+                  "add_date":{  
+                     "type":"keyword"
+                  },
+                  "communty":{  
+                     "type":"keyword"
+                  },
+                  "town":{  
+                     "type":"keyword"
+                  },
+                  "province":{  
+                     "type":"keyword"
+                  },
+                  "zip":{  
+                     "type":"keyword"
+                  },
+                  "country":{  
+                     "type":"keyword"
+                  }
+               }
+            },
+            "civil_st":{  
+               "type":"keyword"
+            },
+            "religion":{  
+               "type":"keyword"
+            },
+            "educ":{  
+               "type":"keyword"
+            }
+         }
+      }
+   }
+}

@@ -16,7 +16,7 @@ from requests.exceptions import ConnectionError, RequestException
 from couchbase_conf import CouchbaseConfig, CouchbaseENV
 
 import logging_conf, logging
-logger = logging.getLogger("couchbase.connection")
+logger = logging.getLogger("couchbase.syncgateway")
 
 class SyncGatewayConnect:
 
@@ -73,7 +73,11 @@ class SyncGatewayConnect:
         port = self._port 
         api_endpoint = self._api_endpoint 
 
-        return protocol + "://"  + ip_address + ":" + port + "/"  + bucket + "/" + api_endpoint  
+        return protocol + "://"  
+            + ip_address + ":" 
+            + port + "/"  
+            + bucket + "/" 
+            + api_endpoint  
 
     def get_changes(self):
         pass

@@ -14,7 +14,7 @@ from elasticsearch import Elasticsearch
 from elasticsearch.exceptions import ConnectionError 
 
 import logging_conf, logging
-logger = logging.getLogger("couchbase.connection")
+logger = logging.getLogger("elasticsearch.connection")
 
 class ElasticsearchConnect:
 

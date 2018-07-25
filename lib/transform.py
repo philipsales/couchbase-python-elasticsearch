@@ -9,7 +9,7 @@ import json
 from collections import namedtuple
 
 import logging_conf, logging
-logger = logging.getLogger("couchbase.connection")
+logger = logging.getLogger("transformer")
 
 class CurisV2ETL:
 

@@ -18,7 +18,7 @@ from requests.exceptions import RequestException
 from couchbase_conf import CouchbaseConfig, CouchbaseENV
 
 import logging_conf, logging
-logger = logging.getLogger("couchbase.connection")
+logger = logging.getLogger("couchbase.n1q1")
 
 class N1QLConnect:
     
@@ -77,7 +77,6 @@ class N1QLConnect:
 
     def get_changes(self):
         pass:
-
 
 if __name__ == '__main__':
     N1QLConnect().get_all()

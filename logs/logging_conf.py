@@ -1,6 +1,8 @@
 import sys
 import os.path
 
+root = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+
 import logging.config
 from logging import FileHandler, StreamHandler
 
@@ -11,9 +13,10 @@ default_formatter = logging.Formatter(\
 console_handler = StreamHandler()
 console_handler.setFormatter(default_formatter)
 
-error_handler = FileHandler("error.log", "a")
+error_handler = FileHandler(root+"/logs/error.log", "a")
 error_handler.setLevel(logging.ERROR)
 error_handler.setFormatter(default_formatter)
+
 
 root = logging.getLogger()
 root.addHandler(console_handler)
@@ -22,6 +25,7 @@ root.setLevel(logging.DEBUG)
 
 def main():
     LOGGING_CONF=os.path.join(os.path.dirname(__file__), "logging.ini")
+    print(LOGGING_CONF)
     logging.config.fileConfig(LOGGING_CONF)
 
 if __name__ == '__main__':

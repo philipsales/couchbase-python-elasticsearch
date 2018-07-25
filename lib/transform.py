@@ -1,9 +1,15 @@
+import os 
 import sys
+
+root  = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+sys.path.append(root +'/logs')
+
 import json
+
 from collections import namedtuple
 
-from logs.config import set_log_config, logging
-logger = logging.getLogger("transform.etl")
+import logging_conf, logging
+logger = logging.getLogger("couchbase.connection")
 
 class CurisV2ETL:
 
@@ -46,7 +52,6 @@ class CurisV2ETL:
                 els_data.append(json.dumps(address))
                 counter += 1
                
-
             return els_data
 
     def compute_birthdate(self, datas):

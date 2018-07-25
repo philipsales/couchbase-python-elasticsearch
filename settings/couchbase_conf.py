@@ -1,5 +1,7 @@
 
 #SERVER Configuration
+CouchbaseENV = "development"
+
 CouchbaseConfig = {
     'local': {
         'BUCKET': 'awhcurisdb_dev',
@@ -11,7 +13,7 @@ CouchbaseConfig = {
         'PORT': '',
         'TIMEOUT': 7200
     },
-    'dev': {
+    'development': {
         'BUCKET': 'awhcurisdb010832',
         'USERNAME': '',
         'PASSWORD': '',
@@ -31,7 +33,7 @@ CouchbaseConfig = {
         'PORT': '',
         'TIMEOUT': 7200
     },
-    'prod': {
+    'production': {
         'BUCKET': 'awhcurisdb',
         'USERNAME': '',
         'PASSWORD': '',
@@ -42,41 +44,4 @@ CouchbaseConfig = {
         'TIMEOUT': 7200
     }
 }
-
-ElasticSearchConfig = {
-    'local': {
-        'USERNAME': 'elastic',
-        'PASSWORD': 'elastic',
-        'INDEX': 'philippines',
-        'TYPE': 'patients',
-        'SCHEME': 'HTTP',
-        'HOST': 'localhost',
-        'PORT': 9200,
-        'TIMEOUT': 7200
-    },
-    'dev': {
-        'USERNAME': 'kibanaadmin',
-        'PASSWORD': 'AWH@dm1n',
-        'INDEX': 'philippines',
-        'TYPE': 'patients',
-        'SCHEME': 'https',
-        'HOST': '172.104.184.192',
-        'PORT': 9200,
-        'TIMEOUT': 7200
-    },
-    'prod': {
-        'USERNAME': 'elastic',
-        'PASSWORD': 'elastic',
-        'INDEX': 'philippines',
-        'TYPE': 'patients',
-        'SCHEME': 'HTTP',
-        'HOST': 'localhost',
-        'PORT': 9200,
-        'TIMEOUT': 7200
-    }
-}
-
-
-
-
 

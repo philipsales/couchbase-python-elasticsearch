@@ -39,7 +39,6 @@ class N1QLConnect:
             bucket.n1ql_timeout = self._timeout 
 
             script = self._set_query()
-
             query = N1QLQuery(script)
             query.timeout = self._timeout 
 
@@ -57,9 +56,9 @@ class N1QLConnect:
 
     def _set_query(self, **kwargs):
 
-        return ("SELECT meta("+self._bucket+").id as cb_id, " 
+        return ("SELECT meta(" + self._bucket + ").id as cb_id, " 
                  + self._bucket + ".* FROM "
-                 + self._bucket +" limit 10")
+                 + self._bucket + " limit 10")
 
     def _dict2json(self, results):
         counter = 0

@@ -18,15 +18,15 @@ logger = logging.getLogger("elasticsearch.connection")
 
 class ElasticsearchConnect:
 
-    def __init__(self, conn, *args,**kwargs):
+    def __init__(self, conn, *args, **kwargs):
         self._index = conn['INDEX']
         self._doc_type = conn['TYPE']
         self._es = Elasticsearch(
             conn['HOST'],
-            http_auth=(conn['USERNAME'],conn['PASSWORD']),
-            scheme=conn['SCHEME'],
-            port=conn['PORT'],
-            timeout=conn['TIMEOUT'])
+            http_auth = (conn['USERNAME'], conn['PASSWORD']),
+            scheme = conn['SCHEME'],
+            port = conn['PORT'],
+            timeout = conn['TIMEOUT'])
             
     def batch_dump(self, docs):
         self._set_mappings()
@@ -41,7 +41,7 @@ class ElasticsearchConnect:
                 counter += 1
 
             self._total_entries(counter)
-            self._es.indices.refresh(index=self._index)
+            self._es.indices.refresh(index = self._index)
             self._refresh_index()
 
         except (ConnectionError, RequestException) as err: 
@@ -69,7 +69,6 @@ class ElasticsearchConnect:
             logger.error(error)
 
     def get_total(self):
-
         try: 
             query = self._es.search(index = self._index, 
                                     body = {"query": {"match_all": {}}})

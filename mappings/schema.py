@@ -1,3 +1,4 @@
+
 elastic_mapping = {  
    "mappings":{  
       "patients":{  

@@ -10,7 +10,6 @@ from settings.elastic_conf import ElasticSearchConfig, ElasticSearchENV
 from pipeline.couchbase_syncgateway import SyncGatewayConnect 
 from pipeline.couchbase_n1ql import N1QLConnect 
 from pipeline.elasticsearch import ElasticsearchConnect 
-
 from pipeline.transform import CurisV2ETL
 
 cb_conn = CouchbaseConfig[CouchbaseENV]

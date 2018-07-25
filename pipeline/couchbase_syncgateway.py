@@ -36,10 +36,10 @@ class SyncGatewayConnect:
     def get_all(self):
         headers = self._conn_headers()
         filters = self._conn_filters()
-        url = self._conn_config()
+        url = self._conn_url()
 
         try:
-            r = requests.get(url, headers = headers, params=filters)
+            r = requests.get(url, headers = headers, params = filters)
             logger.info(r.status_code)
             logger.info(r.elapsed.total_seconds())
 
@@ -66,11 +66,11 @@ class SyncGatewayConnect:
             "limit": "10"
         }
 
-    def _conn_config(self, *kwargs):
-        ip_address = self._ip_address
-        bucket = self._bucket
+    def _conn_url(self, *kwargs):
         protocol = self._protocol
+        ip_address = self._ip_address
         port = self._port 
+        bucket = self._bucket
         api_endpoint = self._api_endpoint 
 
         return protocol + "://"  

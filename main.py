@@ -1,16 +1,19 @@
 import settings.config 
 
-from src.couchBase import SyncGatewayConnect
-from src.couchBase import N1QLConnect
-from src.elasticSearch import ElasticsearchConnect
-from src.transform import CurisV2ETL 
+from lib.couchBase import SyncGatewayConnect, N1QLConnect
+from lib.elasticSearch import ElasticsearchConnect
+from lib.transform import CurisV2ETL 
 
-ENV = 'prod'
+cb_ENV = 'dev'
+es_ENV = 'local'
 
-cb = settings.config.CouchbaseConfig[ENV]
-es = settings.config.ElasticSearchConfig[ENV]
+cb = settings.config.CouchbaseConfig[cb_ENV]
+es = settings.config.ElasticSearchConfig[es_ENV]
 
 CB_CONNECTION = cb 
+cbs = SyncGatewayConnect(CB_CONNECTION)
+cbs_data = cbs.get_all()
+
 cb = N1QLConnect(CB_CONNECTION)
 cb_data = cb.get_all()
 

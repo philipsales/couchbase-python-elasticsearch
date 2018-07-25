@@ -1,5 +1,3 @@
-import sys 
-
 elastic_mapping = {  
    "mappings":{  
       "patients":{  

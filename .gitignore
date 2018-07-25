@@ -61,6 +61,8 @@ dist
 
 #configuration
 settings/config.py
+settings/couchbase_conf.py
+settings/elastic_conf.py
 
 #logs
 #logs/error.log

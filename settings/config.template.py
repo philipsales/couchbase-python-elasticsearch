@@ -1,5 +1,7 @@
 import sys 
 
+CouchbaseENV = "development"
+
 CouchbaseConfig = {
     'local': {
         'BUCKET': 'awhcurisdb_dev',
@@ -34,6 +36,8 @@ CouchbaseConfig = {
         'TIMEOUT': 7200
     }
 }
+
+ElasticSearchENV = 'local'
 
 ElasticSearchConfig = {
     'dev': {

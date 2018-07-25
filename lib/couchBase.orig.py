@@ -1,14 +1,7 @@
-
+import sys
 import json
 import time
 import requests
-
-import os 
-import sys
-
-root = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-sys.path.append(root +'/settings')
-sys.path.append(root +'/logs')
 
 from couchbase.bucket import Bucket
 from couchbase.n1ql import N1QLQuery, N1QLError
@@ -16,8 +9,9 @@ from couchbase.exceptions import CouchbaseTransientError, CouchbaseNetworkError
 
 from requests.exceptions import RequestException
 
-import config
-from log_config import main, logging
+import settings.config 
+import logging
+#from logs.config import set_log_config, logging
 logger = logging.getLogger("couchbase.connection")
 
 
@@ -25,15 +19,13 @@ class SyncGatewayConnect:
 
     def __init__(self, conn=[], **kwargs):
 
-        if not conn:
-            cb_ENV = 'dev'
-            conn = config.CouchbaseConfig[cb_ENV]
-
+        conn = settings.config.CouchbaseConfig[cb_ENV]
         self._bucket = conn['BUCKET'] 
         self._url = conn['HOST'] + conn['BUCKET']
         self._ip_address = conn['IP'] 
         self._timeout = conn['TIMEOUT']
 
+    def get_all(self):
         headers = self._conn_headers()
         filters = self._conn_filters()
         url = self._conn_config()
@@ -82,11 +74,12 @@ class SyncGatewayConnect:
 
 class N1QLConnect:
     
-    #def __init__(self, conn, *args,**kwargs):
-    def get_all(self, conn, *args,**kwargs):
+    def __init__(self, conn, *args,**kwargs):
         self._bucket = conn['BUCKET'] 
         self._url = conn['HOST'] + conn['BUCKET']
         self._timeout = conn['TIMEOUT']
+
+    def get_all(self):
 
         try:
             bucket = Bucket(self._url)

@@ -1,10 +1,7 @@
-
 import json
-import time
-import requests
-
 import os 
 import sys
+import requests
 
 root = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 sys.path.append(root +'/settings')
@@ -32,6 +29,9 @@ class SyncGatewayConnect:
         self._url = conn['HOST'] + conn['BUCKET']
         self._ip_address = conn['IP'] 
         self._timeout = conn['TIMEOUT']
+        self._protocol = conn['PROTOCOL']
+        self._port = conn['PORT']
+        self._api_endpoint = "_all_docs?"
 
     def get_all(self):
         headers = self._conn_headers()
@@ -48,7 +48,7 @@ class SyncGatewayConnect:
             sys.exit(1)
 
     def _conn_headers(self, *kwargs):
-
+        #TODO make dynamic thru kwargs
         return {
             "accept": "application/json",
             "allow_redirects": "True",
@@ -56,7 +56,7 @@ class SyncGatewayConnect:
         }
 
     def _conn_filters(self, *kwargs):
-
+        #TODO make dynamic thru kwargs
         return  {
             "access" : "false",
             "channels": "false",
@@ -69,11 +69,11 @@ class SyncGatewayConnect:
     def _conn_config(self, *kwargs):
         ip_address = self._ip_address
         bucket = self._bucket
-        scheme = "http"
-        port = "4984"
-        api_endpoint = "_all_docs?"
+        protocol = self._protocol
+        port = self._port 
+        api_endpoint = self._api_endpoint 
 
-        return scheme + "://"  + ip_address + ":" + port + "/"  + bucket + "/" + api_endpoint  
+        return protocol + "://"  + ip_address + ":" + port + "/"  + bucket + "/" + api_endpoint  
 
     def get_changes(self):
         pass

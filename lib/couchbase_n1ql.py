@@ -72,6 +72,13 @@ class N1QLConnect:
 
         return data
 
+    def find(self):
+        pass:
+
+    def get_changes(self):
+        pass:
+
+
 if __name__ == '__main__':
     N1QLConnect().get_all()
 

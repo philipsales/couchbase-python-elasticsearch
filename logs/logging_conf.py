@@ -25,6 +25,7 @@ def main():
     LOGGING_CONF=os.path.join(os.path.dirname(__file__), "logging.ini")
     logging.config.fileConfig(LOGGING_CONF)
 
+    
 if __name__ == '__main__':
     main()
 

@@ -65,4 +65,9 @@ settings/couchbase_conf.py
 settings/elastic_conf.py
 
 #logs
-#logs/error.log
+logs/error.log
+
+#remove setup.py build
+build/
+*.egg-info
+dist/

@@ -40,7 +40,12 @@ source <path>/bin/activate
 
 3. Rename the file settings/config.template.py to template.py
 
-4. Run program 
+4. Build the project
+```
+python setup.py install 
+```
+
+5. Run program 
 ```
 python ./main.py
 ```

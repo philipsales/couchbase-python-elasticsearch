@@ -3,19 +3,15 @@ import os
 import sys
 import requests
 
-root = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-sys.path.append(root +'/settings')
-sys.path.append(root +'/logs')
-
 from couchbase.bucket import Bucket
 from couchbase.n1ql import N1QLQuery, N1QLError
 from couchbase.exceptions import CouchbaseTransientError
 from couchbase.exceptions import CouchbaseNetworkError
 from requests.exceptions import ConnectionError, RequestException 
 
-from couchbase_conf import CouchbaseConfig, CouchbaseENV
+from settings.couchbase_conf import CouchbaseConfig, CouchbaseENV
 
-import logging_conf, logging
+import logs.logging_conf, logging
 logger = logging.getLogger("couchbase.syncgateway")
 
 class SyncGatewayConnect:
@@ -73,11 +69,8 @@ class SyncGatewayConnect:
         bucket = self._bucket
         api_endpoint = self._api_endpoint 
 
-        return protocol + "://"  
-            + ip_address + ":" 
-            + port + "/"  
-            + bucket + "/" 
-            + api_endpoint  
+        urls = protocol + "://"  + ip_address + ":" + port + "/"  + bucket + "/" + api_endpoint  
+        return urls
 
     def get_changes(self):
         pass

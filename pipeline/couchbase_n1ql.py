@@ -1,24 +1,20 @@
-import os 
 import sys
-
-root = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-sys.path.append(root +'/logs')
-sys.path.append(root +'/settings')
+import json
+import requests
 
 from couchbase.bucket import Bucket
 from couchbase.n1ql import N1QLQuery, N1QLError
 from couchbase.exceptions import CouchbaseTransientError
 from couchbase.exceptions import CouchbaseNetworkError
 
-import json
-import requests
-
 from requests.exceptions import RequestException
 
-from couchbase_conf import CouchbaseConfig, CouchbaseENV
+from settings.couchbase_conf import CouchbaseConfig, CouchbaseENV
 
-import logging_conf, logging
+import logs.logging_conf, logging
 logger = logging.getLogger("couchbase.n1q1")
+
+print(sys.path)
 
 class N1QLConnect:
     
@@ -38,8 +34,8 @@ class N1QLConnect:
             bucket = Bucket(self._url)
             bucket.n1ql_timeout = self._timeout 
 
-            script = self._set_query()
-            query = N1QLQuery(script)
+            statement = self._set_query()
+            query = N1QLQuery(statement)
             query.timeout = self._timeout 
 
             res = bucket.n1ql_query(query) 
@@ -72,10 +68,10 @@ class N1QLConnect:
         return data
 
     def find(self):
-        pass:
+        pass
 
     def get_changes(self):
-        pass:
+        pass
 
 if __name__ == '__main__':
     N1QLConnect().get_all()

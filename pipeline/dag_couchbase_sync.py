@@ -14,12 +14,6 @@ from settings.couchbase_conf import CouchbaseConfig, CouchbaseENV
 import logs.logging_conf, logging
 logger = logging.getLogger("couchbase.syncgateway")
 
-import datetime as dt
-
-from airflow import DAG
-from airflow.operators.bash_operator import BashOperator
-from airflow.operators.python_operator import PythonOperator
-
 conn = CouchbaseConfig[CouchbaseENV]
 
 BUCKET = conn['BUCKET'] 
@@ -80,24 +74,3 @@ def _conn_url(**kwargs):
 
 if __name__ == "__main__":
     init_couchbase()
-    
-default_args = {
-    'owner': 'Philip',
-    'start_date': dt.datetime(2017, 6, 1)
-}
-
-"""
-with DAG('dg_couchbase_sync',
-         default_args=default_args,
-         schedule_interval='0 1 * * *',
-         ) as dag:
-
-    task1 = PythonOperator(task_id='task1', 
-            python_callable=init_couchbase)
-
-    task2 = PythonOperator(task_id='task2', 
-            python_callable=task2)
-
-    task1 >> task2
-
-"""

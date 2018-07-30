@@ -14,12 +14,6 @@ from settings.couchbase_conf import CouchbaseConfig, CouchbaseENV
 import logs.logging_conf, logging
 logger = logging.getLogger("couchbase.n1q1")
 
-import datetime as dt
-
-from airflow import DAG
-from airflow.operators.bash_operator import BashOperator
-from airflow.operators.python_operator import PythonOperator
-
 conn = CouchbaseConfig[CouchbaseENV]
 
 BUCKET = conn['BUCKET'] 
@@ -74,19 +68,3 @@ def _dict2json(results):
 if __name__ == "__main__":
     get_all()
     
-#run as individual workflow dag
-"""
-default_args = {
-    'owner': 'Philip',
-    'start_date': dt.datetime(2017, 6, 1)
-}
-
-with DAG('dg_couchbase_n1ql',
-         default_args=default_args,
-         schedule_interval='0 1 * * *',
-         ) as dag:
-
-    t_get_all = PythonOperator(task_id='t_get_all', 
-            python_callable=get_all)
-
-"""

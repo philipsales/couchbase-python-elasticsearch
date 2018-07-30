@@ -30,33 +30,19 @@ def extract_data():
     return cb_data
 
 def transform_data(**kwargs):
-    ti = kwargs['ti']
-    print('ti = kwargs !!!!!!!!!!!')
-    path = ti.xcom_pull(task_ids='t_extract_data')
-    print('from extract data !!!!!!!!!!!!!!!')
-    print(path)
-    etl_data = init_pipeline(path)
-    print('result from init_pipeline !!!!!!!!!!!!!!')
-    print(etl_data)
+    cb = kwargs['ti']
+    cb_data = cb.xcom_pull(task_ids='t_extract_data')
+    etl_data = init_pipeline(cb_data)
     return etl_data
 
 def load_data(**kwargs):
-    ti = kwargs['ti']
-    print('ti = kwargs !!!!!!!!!!!')
-    path = ti.xcom_pull(task_ids='t_transform_data')
-    print('from transfomr data !!!!!!!!!!!')
-    print(path)
-    etl_data = bulk_dump(path)
-    print('- result of bulk_data !!!!!!!')
-    print(etl_data)
-    return etl_data
+    transform_data = kwargs['ti']
+    load_data = transform_data.xcom_pull(task_ids='t_transform_data')
+    result = bulk_dump(load_data)
+    return result 
 
 def main():
     cb_conn = CouchbaseConfig[CouchbaseENV]
-    """
-    cb = SyncGatewayConnect(cb_conn)
-    cb_data = cb.get_all()
-    """
 
     cb = N1QLConnect(cb_conn)
     cb_data = cb.get_all()
@@ -64,7 +50,7 @@ def main():
     etl = CurisV2ETL()
     es_data = etl.map_address(cb_data)
 
-    es_conn = ElasticSearchConfig['development']
+    es_conn = ElasticSearchConfig[ElasticSearchENV]
     es = ElasticsearchConnect(es_conn)
     es.bulk_dump(es_data)
 

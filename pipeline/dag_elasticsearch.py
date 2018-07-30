@@ -10,13 +10,6 @@ from elasticsearch.exceptions import ConnectionError
 import logs.logging_conf, logging
 logger = logging.getLogger("elasticsearch.connection")
 
-
-import datetime as dt
-
-from airflow import DAG
-from airflow.operators.bash_operator import BashOperator
-from airflow.operators.python_operator import PythonOperator
-
 from settings.elastic_conf import ElasticSearchConfig, ElasticSearchENV 
 
 conn = ElasticSearchConfig[ElasticSearchENV]
@@ -90,17 +83,3 @@ def set_mappings():
 if __name__ == "__main__":
     bulk_dump(data)
   
-"""
-default_args = {
-    'owner': 'Philip',
-    'start_date': dt.datetime(2017, 6, 1)
-}
-
-with DAG('dg_elasticsearch',
-         default_args=default_args,
-         schedule_interval='0 1 * * *',
-         ) as dag:
-
-    t_dump_all = PythonOperator(task_id='t_dump_all', 
-            python_callable=bulk_dump)
-"""

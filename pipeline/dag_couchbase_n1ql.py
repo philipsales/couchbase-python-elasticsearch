@@ -54,7 +54,7 @@ def get_all():
 def _set_statement(**kwargs):
     return ("SELECT meta(" + BUCKET + ").id as cb_id, " 
                 + BUCKET + ".* FROM "
-                + BUCKET + " limit 10")
+                + BUCKET + " limit 20")
 
 def _dict2json(results):
     counter = 0
@@ -63,13 +63,19 @@ def _dict2json(results):
     for row in results: 
         data.append(json.dumps(row))
         counter += 1
+        logger.info(row)
+        logger.info('===========')
+        logger.info(json.dumps(row))
         logger.info(counter)
 
     return data
 
+#run as standalone module
 if __name__ == "__main__":
     get_all()
     
+#run as individual workflow dag
+"""
 default_args = {
     'owner': 'Philip',
     'start_date': dt.datetime(2017, 6, 1)
@@ -77,10 +83,10 @@ default_args = {
 
 with DAG('dg_couchbase_n1ql',
          default_args=default_args,
-         schedule_interval='0 * * * *',
+         schedule_interval='0 1 * * *',
          ) as dag:
 
     t_get_all = PythonOperator(task_id='t_get_all', 
             python_callable=get_all)
 
-
+"""

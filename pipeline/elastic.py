@@ -1,19 +1,13 @@
-import os 
-import sys
 import uuid
 import json
 import logging
-
-root  = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-sys.path.append(root +'/logs')
-sys.path.append(root +'/settings')
 
 import mappings.schema
 
 from elasticsearch import Elasticsearch
 from elasticsearch.exceptions import ConnectionError 
 
-import logging_conf, logging
+import logs.logging_conf, logging
 logger = logging.getLogger("elasticsearch.connection")
 
 class ElasticsearchConnect:
@@ -69,7 +63,7 @@ class ElasticsearchConnect:
             logger.info(bulk_data)
             return self._es.bulk(bulk_data)
 
-        except (ConnectionError, RequestException) as err: 
+        except (ConnectionError) as err: 
             logger.error(error)
 
     def get_total(self):
@@ -108,5 +102,6 @@ class ElasticsearchConnect:
     def _total_entries(self, count):
         print("Total Batch Entries: {%}", count)
 
-
+if __name__ == '__main__':
+    ElasticsearchConnect().bulk_dump()
 

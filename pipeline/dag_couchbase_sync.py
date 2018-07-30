@@ -86,9 +86,10 @@ default_args = {
     'start_date': dt.datetime(2017, 6, 1)
 }
 
-with DAG('foobar',
+"""
+with DAG('dg_couchbase_sync',
          default_args=default_args,
-         schedule_interval='0 * * * *',
+         schedule_interval='0 1 * * *',
          ) as dag:
 
     task1 = PythonOperator(task_id='task1', 
@@ -99,3 +100,4 @@ with DAG('foobar',
 
     task1 >> task2
 
+"""

@@ -23,7 +23,7 @@ class ElasticsearchConnect:
         self._doc_type = conn['TYPE']
         self._es = Elasticsearch(
             conn['HOST'],
-            auth='elkadmin:admin(1)n@WH',
+            auth='elkadmin:admin(1)n@AWH',
             protocol='http',
             http_auth = (conn['USERNAME'], conn['PASSWORD']),
             #scheme = conn['SCHEME'],
@@ -47,7 +47,7 @@ class ElasticsearchConnect:
             self._es.indices.refresh(index = self._index)
             self._refresh_index()
 
-        except (ConnectionError, RequestException) as err: 
+        except (ConnectionError) as err: 
             logger.error(error)
 
     def bulk_dump(self, docs):
@@ -66,6 +66,7 @@ class ElasticsearchConnect:
                 counter += 1
 
             self._total_entries(counter)
+            logger.info(bulk_data)
             return self._es.bulk(bulk_data)
 
         except (ConnectionError, RequestException) as err: 

@@ -1,0 +1,148 @@
+import os 
+import sys
+import uuid
+import json
+import logging
+
+import mappings.schema
+
+from elasticsearch import Elasticsearch
+from elasticsearch.exceptions import ConnectionError 
+
+import logging_conf, logging
+logger = logging.getLogger("elasticsearch.connection")
+
+import datetime as dt
+
+from airflow import DAG
+from airflow.operators.bash_operator import BashOperator
+from airflow.operators.python_operator import PythonOperator
+
+from settings.elastic_conf import ElasticSearchConfig, ElasticSearchENV 
+
+conn = ElasticSearchConfig[ElasticSearchENV]
+
+INDEX = conn['INDEX']
+DOC_TYPE = conn['TYPE']
+HOST1 = conn['HOST']
+nodes = [HOST1]
+
+print('----------')
+print(conn)
+print(conn['PORT'])
+print(conn['INDEX'])
+print(conn['HOST'])
+print(conn['TIMEOUT'])
+"""
+conn_conf = {
+    'auth' : 'elkadmin:admin(1)n@WH',
+    'scheme' : 'http',
+    'http_auth' : (conn['USERNAME'], conn['PASSWORD']),
+    'port' : conn['PORT'],
+    'timeout' : conn['TIMEOUT']
+}
+"""
+
+"""
+es = Elasticsearch(nodes, 
+    conn['HOST'],
+    auth='elkadmin:admin(1)n@WH',
+    protocol='http',
+    http_auth = (conn['USERNAME'], conn['PASSWORD']),
+    #scheme = conn['SCHEME'],
+    scheme = 'http',
+    port = conn['PORT']
+)
+conn['HOST'],
+auth='elkadmin:admin(1)n@WH',
+protocol='http',
+http_auth = (conn['USERNAME'], conn['PASSWORD']),
+#scheme = conn['SCHEME'],
+scheme = 'http',
+port = conn['PORT'],
+timeout = conn['TIMEOUT']
+"""
+
+test_docs = [
+'{"address": {"community": "Puerta", "province": "Palawan", "zip": "5009"}}',
+'{"address": {"community": "Iligan", "province": "Cebu", "zip": "5008"}}',
+'{"address": {"community": "Puerto", "province": "Princesa", "zip": "5009"}}'
+]
+
+def bulk_dump(docs=''):
+    set_mappings()
+    counter = 0
+    bulk_data = []
+    es = Elasticsearch(
+        conn['HOST'],
+        auth='elkadmin:admin(1)n@AWH',
+        protocol='http',
+        http_auth = (conn['USERNAME'], conn['PASSWORD']),
+        #scheme = conn['SCHEME'],
+        scheme = 'http',
+        port = conn['PORT'],
+        timeout = int(conn['TIMEOUT']))
+
+    try:
+        for doc in test_docs:
+            logger.info(docs)
+            _header = { "create" : { "_index" : INDEX,  
+                        "_type" : DOC_TYPE, 
+                        "_id" : str(uuid.uuid1()) } }
+
+            bulk_data.append(json.dumps(_header))
+            bulk_data.append(doc)
+            counter += 1
+
+            #bulk_data = ['{"create": {"_index": "philippines", "_type": "patients", "_id": "'+ str(uuid.uuid1()) +'"}}', '{"address": {"community": "Iligan", "province": "Cebu", "zip": "5008"}}']
+        logger.info(bulk_data)
+        return es.bulk(bulk_data)
+
+    except (ConnectionError) as err: 
+        logger.error(error)
+
+def set_mappings():
+    es = Elasticsearch(
+        conn['HOST'],
+        auth='elkadmin:admin(1)n@AWH',
+        protocol='http',
+        http_auth = (conn['USERNAME'], conn['PASSWORD']),
+        #scheme = conn['SCHEME'],
+        scheme = 'http',
+        port = conn['PORT'],
+        timeout = int(conn['TIMEOUT']))
+
+    body = mappings.schema.elastic_mapping
+
+    if es.indices.exists(INDEX):
+        logger.debug("INDEX exists")
+    else:
+        try: 
+            res = es.indices.create(index = INDEX, 
+                                    body = json.dumps(body))
+
+            print(" response: '%s'" % (res))
+
+            if res["acknowledged"] != True:
+                logger.info("Index creation failed")
+            else:
+                logger.info("Index created")
+
+        except ConnectionError as err:
+            logger.error(err)
+
+if __name__ == "__main__":
+    bulk_dump()
+  
+default_args = {
+    'owner': 'Philip',
+    'start_date': dt.datetime(2017, 6, 1)
+}
+
+with DAG('dg_elasticsearch',
+         default_args=default_args,
+         schedule_interval='0 * * * *',
+         ) as dag:
+
+    t_dump_all = PythonOperator(task_id='t_dump_all', 
+            python_callable=bulk_dump)

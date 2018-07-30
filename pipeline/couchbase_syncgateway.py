@@ -59,7 +59,7 @@ class SyncGatewayConnect:
             "include_docs": "true",
             "revs": "false",
             "update_seq": "false",
-            "limit": "10"
+            "limit": "2"
         }
 
     def _conn_url(self, *kwargs):

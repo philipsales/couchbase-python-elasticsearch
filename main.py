@@ -20,8 +20,12 @@ from airflow.operators.bash_operator import BashOperator
 from airflow.operators.python_operator import PythonOperator
 
 
-def main1():
-    cb = init_couchbase() 
+def init_couch():
+    cb_data = init_couchbase() 
+
+def test_elasticsearch():
+    pass
+
 
 def main():
     cb_conn = CouchbaseConfig[CouchbaseENV]
@@ -36,7 +40,7 @@ def main():
     etl = CurisV2ETL()
     es_data = etl.map_address(cb_data)
 
-    es_conn = ElasticSearchConfig[ElasticSearchENV]
+    es_conn = ElasticSearchConfig['development']
     es = ElasticsearchConnect(es_conn)
     es.bulk_dump(es_data)
 
@@ -49,12 +53,15 @@ default_args = {
     'start_date': dt.datetime(2017, 6, 1)
 }
 
-with DAG(dag_id='main_dag',
+with DAG(dag_id='dg_main',
          default_args=default_args,
          schedule_interval='0 * * * *',
          ) as dag:
 
-    main1 = PythonOperator(task_id='main1', 
-            python_callable=main1)
+    main = PythonOperator(task_id='main', 
+            python_callable=main)
+            
+    t_init_couch = PythonOperator(task_id='t_init_couch', 
+            python_callable=init_couch)
 
-    main1 
+    main 

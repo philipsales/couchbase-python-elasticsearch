@@ -54,7 +54,7 @@ class N1QLConnect:
 
         return ("SELECT meta(" + self._bucket + ").id as cb_id, " 
                  + self._bucket + ".* FROM "
-                 + self._bucket + " limit 10")
+                 + self._bucket + " limit 1")
 
     def _dict2json(self, results):
         counter = 0

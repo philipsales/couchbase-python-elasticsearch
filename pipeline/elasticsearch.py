@@ -23,8 +23,11 @@ class ElasticsearchConnect:
         self._doc_type = conn['TYPE']
         self._es = Elasticsearch(
             conn['HOST'],
+            auth='elkadmin:admin(1)n@WH',
+            protocol='http',
             http_auth = (conn['USERNAME'], conn['PASSWORD']),
-            scheme = conn['SCHEME'],
+            #scheme = conn['SCHEME'],
+            scheme = 'http',
             port = conn['PORT'],
             timeout = conn['TIMEOUT'])
             

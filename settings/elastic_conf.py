@@ -1,5 +1,5 @@
 
-ElasticSearchENV = "local"
+ElasticSearchENV = "development"
 
 ElasticSearchConfig = {
     'local': {
@@ -20,7 +20,7 @@ ElasticSearchConfig = {
         'SCHEME': 'https',
         'HOST': '172.104.184.192',
         'PORT': 9200,
-        'TIMEOUT': 7200
+        'TIMEOUT': 10 
     },
     'production': {
         'USERNAME': 'elastic',

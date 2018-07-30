@@ -25,8 +25,10 @@ def main1():
 
 def main():
     cb_conn = CouchbaseConfig[CouchbaseENV]
+    """
     cb = SyncGatewayConnect(cb_conn)
     cb_data = cb.get_all()
+    """
 
     cb = N1QLConnect(cb_conn)
     cb_data = cb.get_all()

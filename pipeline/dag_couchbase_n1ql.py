@@ -54,7 +54,7 @@ def get_all():
 def _set_statement(**kwargs):
     return ("SELECT meta(" + BUCKET + ").id as cb_id, " 
                 + BUCKET + ".* FROM "
-                + BUCKET + " limit 1")
+                + BUCKET + " limit 10")
 
 def _dict2json(results):
     counter = 0

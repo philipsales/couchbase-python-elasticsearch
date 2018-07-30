@@ -4,10 +4,10 @@ CouchbaseENV = "development"
 
 CouchbaseConfig = {
     'local': {
-        'BUCKET': 'awhcurisdb_dev',
+        'BUCKET': '',
         'USERNAME': '',
         'PASSWORD': '',
-        'HOST': 'couchbase://127.0.0.1/',
+        'HOST': '',
         'PORT': '',
         'TIMEOUT': 7200
     },
@@ -71,8 +71,3 @@ ElasticSearchConfig = {
         'TIMEOUT': 7200
     }
 }
-
-
-
-
-

@@ -54,9 +54,12 @@ class ElasticsearchConnect:
 
         try:
             for doc in docs:
+                # Convert JSON to Python object to be able to extract awh_id
+                python_obj = json.loads(doc)
+                
                 _header = { "create" : { "_index" : self._index,  
                             "_type" : self._doc_type, 
-                            "_id" : str(uuid.uuid1()) } }
+                            "_id" : str(python_obj["awh_id"]) } }
 
                 bulk_data.append(json.dumps(_header))
                 bulk_data.append(doc)
@@ -65,7 +68,7 @@ class ElasticsearchConnect:
             self._total_entries(counter)
             return self._es.bulk(bulk_data)
 
-        except (ConnectionError, RequestException) as err: 
+        except (ConnectionError, RequestException) as err:
             logger.error(error)
 
     def get_total(self):
@@ -79,7 +82,7 @@ class ElasticsearchConnect:
             logger.error(error)
 
     def _set_mappings(self):
-        body = mappings.schema.elastic_mapping
+        body = mappings.schema.health_mapping
 
         if self._es.indices.exists(self._index):
             logger.debug("index exists")

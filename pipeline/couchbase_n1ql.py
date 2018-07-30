@@ -29,12 +29,12 @@ class N1QLConnect:
         self._ip_address = conn['IP'] 
         self._timeout = conn['TIMEOUT']
 
-    def get_all(self):
+    def get_all(self, org):
         try:
             bucket = Bucket(self._url)
             bucket.n1ql_timeout = self._timeout 
 
-            statement = self._set_query()
+            statement = self._set_query(organization=org)
             query = N1QLQuery(statement)
             query.timeout = self._timeout 
 
@@ -52,9 +52,12 @@ class N1QLConnect:
 
     def _set_query(self, **kwargs):
 
+        organization = kwargs.get('organization',"")
+
         return ("SELECT meta(" + self._bucket + ").id as cb_id, " 
                  + self._bucket + ".* FROM "
-                 + self._bucket + " limit 10")
+                 + self._bucket + " WHERE organization='"
+                 + organization + "' AND _deleted IS MISSING limit 5")
 
     def _dict2json(self, results):
         counter = 0

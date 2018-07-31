@@ -53,11 +53,6 @@ Thumbs.db
 .vscode
 
 #python
-*.pyc
-__pycache__
-MANIFEST
-build
-dist
 
 #configuration
 settings/config.py
@@ -71,3 +66,11 @@ logs/error.log
 build/
 *.egg-info
 dist/
+
+#python compiled cache
+*/__pycache__
+__pycache__
+*.pyc
+MANIFEST
+build
+dist

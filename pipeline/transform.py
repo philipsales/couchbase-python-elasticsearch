@@ -1,106 +1,103 @@
 import os 
 import sys
 
-from pipeline.schemas import profiles
-from pipeline.schemas import health
-from pipeline.schemas import household
-from pipeline.schemas import symptoms
-
-root  = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-sys.path.append(root +'/logs')
-
 import json
 
 from collections import namedtuple
 
-import logging_conf, logging
+from pipeline.schemas import profiles 
+from pipeline.schemas import health
+from pipeline.schemas import household
+from pipeline.schemas import symptoms
 
+import logs.logging_conf, logging
 logger = logging.getLogger("transformer")
 
-class CurisV2ETL:
+import datetime as dt
 
-    def __init__(self):
-        pass
+from airflow import DAG
+from airflow.operators.bash_operator import BashOperator
+from airflow.operators.python_operator import PythonOperator
 
-    def pipeline(self,data):
-        #TODO insert all pipeline here
-        return data
+def init_pipeline(data, **kwargs):
+    etl_data = []
 
-    def map_profile(self, data):
-        els_data = []
-        profile = {}
+    profiles = map_profile(data)
+    for row in profiles:
+        tmp ={}
+        tmp['patients'] = json.loads(row)
+        etl_data.append(tmp)
 
-        profile = profiles.Profiles(data)
-        els_data = profile.map_extracted()
-        
-        return els_data
+    health = map_health(data)
+    for row in health:
+        tmp ={}
+        tmp['health'] = json.loads(row)
+        etl_data.append(tmp)
+    
+    symptoms = map_symptoms(data)
+    for row in symptoms:
+        tmp ={}
+        tmp['symptoms'] = json.loads(row)
+        etl_data.append(tmp)
 
-    def map_household(self, data):
-        els_data = []
-        households = {}
+    return etl_data 
 
-        households = household.Household(data)
-        els_data = households.map_extracted()
+def map_symptoms(data):
+    els_data = []
+    symptom = {}
 
-        return household
+    symptom = symptoms.Symptoms(data)
+    els_data = symptom.map_extracted()
 
-    def map_health(self, data):
-        els_data = []
-        healths = {}
+    return els_data 
 
-        healths = health.Health(data)
-        els_data = healths.map_extracted()
-        
-        return els_data
+def map_health(data):
+    els_data = []
+    healths = {}
 
-    def map_symptoms(self, data):
-        els_data = []
-        symptom = {}
+    healths = health.Health(data)
+    els_data = healths.map_extracted()
+    
+    return els_data
 
-        symptom = symptoms.Symptoms(data)
-        els_data = symptom.map_extracted()
+def map_profile(data):
+    els_data = []
+    profile = {}
 
-        return symptoms
+    profile = profiles.Profiles(data)
+    els_data = profile.map_extracted()
+    
+    return els_data
 
-    def map_address(self, documents):
-        #TODO map json to object
-        counter = 0
-        els_data = []
+def map_household(data):
+    els_data = []
+    households = {}
 
-        if not documents:
-            raise TypeError("no value")
-        else:
-            for doc in documents:
-                x = self._json2obj(str(doc))
+    households = household.Household(data)
+    els_data = households.map_extracted()
 
-                try:
-                    address = {
-                        "address" : {
-                            "community" : x.address.barangay,
-                            "province": x.address.province,
-                            "zip" : x.address.postal_code 
-                            }
-                    }
+    return els_data 
 
-                except AttributeError: 
-                    address = {
-                        "address" : {
-                            "community" : "",
-                            "province": "" ,
-                            "zip" : ""
-                            }
-                    }
+#run as standalone module
+if __name__ == "__main__":
+    init_pipeline(data)
 
-                els_data.append(json.dumps(address))
-                counter += 1
-               
-            return els_data
+#run as workflow 
+default_args = {
+    'owner': 'ELKadmin',
+    'start_date': dt.datetime(2017, 6, 1)
+}
 
-    def compute_birthdate(self, datas):
-        pass
+with DAG(dag_id='subdg_transform',
+    default_args=default_args,
+    schedule_interval='0 1 * * *',
+    ) as dag:
 
-    def _json2obj(self, data): 
-        return json.loads(data, object_hook = self._json_object_hook)
+    task_map_profile = PythonOperator(task_id='task_map_profile', 
+            python_callable=map_profile)
 
-    def _json_object_hook(self, d):
-        return namedtuple('X', d.keys(), rename = True)(*d.values())
+    task_maphealth = PythonOperator(task_id='task_maphealth', 
+            python_callable=map_health)
+
+    task_mapsymptoms = PythonOperator(task_id='task_mapsymptoms', 
+            python_callable=map_symptoms)

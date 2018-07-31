@@ -7,41 +7,73 @@ from settings.couchbase_conf import CouchbaseConfig, CouchbaseENV
 from settings.elastic_conf import ElasticSearchConfig, ElasticSearchENV
 from settings.constants import CouchbaseConstants
 
-from pipeline.couchbase_syncgateway import SyncGatewayConnect 
-from pipeline.couchbase_n1ql import N1QLConnect 
-from pipeline.elasticsearch import ElasticsearchConnect 
-from pipeline.transform import CurisV2ETL
+#from pipeline.couchbase_n1ql import get_all 
+from pipeline import couchbase_n1ql
+from pipeline import couchbase_sync
+from pipeline import transform
+from pipeline import elastic
+
+import datetime as dt
+
+from airflow import DAG
+from airflow.operators.bash_operator import BashOperator
+from airflow.operators.python_operator import PythonOperator
+
+def extract_data():
+    #cb_data = couchbase_sync.init_couchbase()
+    cb_constants = CouchbaseConstants
+    cb_data = couchbase_n1ql.get_all(cb_constants['cuartero'])
+    return cb_data
+
+def transform_data(**kwargs):
+    cb = kwargs['ti']
+    cb_data = cb.xcom_pull(task_ids='extract_from_couch')
+    etl_data = transform.init_pipeline(cb_data)
+    return etl_data
+
+def load_data(**kwargs):
+    transform_data = kwargs['ti']
+    etl_data = transform_data.xcom_pull(task_ids='transform_couch_data')
+    result = elastic.bulk_dump(etl_data)
+    return result 
 
 def main():
-    # Initializing Couchbase
-    cb_conn = CouchbaseConfig[CouchbaseENV]
-    cb_sync = SyncGatewayConnect(cb_conn)
-    cb = N1QLConnect(cb_conn)
-
-    # Initializing constants
     cb_constants = CouchbaseConstants
+    cb_data = couchbase_n1ql.get_all(cb_constants['cuartero'])
+    etl_data = transform.init_pipeline(cb_data)
+    result = elastic.bulk_dump(etl_data)
 
-    # Initializing Elasticsearch
-    es_conn = ElasticSearchConfig[ElasticSearchENV]
-    es = ElasticsearchConnect(es_conn)
+    cb_data = couchbase_n1ql.get_all(cb_constants['pototan'])
+    etl_data = transform.init_pipeline(cb_data)
+    result = elastic.bulk_dump(etl_data)
 
-    # Initializing ETL
-    etl = CurisV2ETL()
-
-    # Cuartero data
-    cb_cuartero = cb.get_all(cb_constants['cuartero'])
-    es_data_cuartero = etl.map_profile(cb_cuartero)
-    es.bulk_dump(es_data_cuartero)
-
-    # Pototan data
-    # cb_pototan = cb.get_all(cb_constants['pototan'])
-    # es_data_pototan = etl.map_profile(cb_pototan)
-    # es.bulk_dump(es_data_pototan)
-
-    # Guimbal data
-    # cb_guimbal = cb.get_all(cb_constants['guimbal'])
-    # es_data_guimbal = etl.map_profile(cb_guimbal)
-    # es.bulk_dump(es_data_guimbal)
-
+#run as standalone package
 if __name__ == '__main__':
     main()
+
+#run as workflow 
+default_args = {
+    'owner': 'ELKadmin',
+    'start_date': dt.datetime(2017, 6, 1)
+}
+
+with DAG(dag_id='dg_main',
+    default_args=default_args,
+    schedule_interval='0 1 * * *',
+    ) as dag:
+
+    extract_from_couch = PythonOperator(task_id='extract_from_couch', 
+            python_callable=extract_data)
+
+    transform_couch_data = PythonOperator(task_id='transform_couch_data', 
+            provide_context=True,
+            depends_on_past=True,
+            python_callable=transform_data)
+
+    load_to_elasticsearch = PythonOperator(task_id='load_to_elasticsearch', 
+            depends_on_past=True,
+            provide_context=True,
+            python_callable=load_data)
+
+extract_from_couch >> transform_couch_data >> load_to_elasticsearch
+

@@ -4,6 +4,9 @@ import datetime
 from collections import namedtuple
 import traceback
 
+import logs.logging_conf, logging
+logger = logging.getLogger("schema.symptoms")
+
 import mappings.curis_schema
 
 class Symptoms:
@@ -40,7 +43,7 @@ class Symptoms:
             
             # Throws this exception when x.symptoms does not exist
             except AttributeError:
-                print("Something went wrong...")
+                logger.info("Something went wrong...")
                 continue
 
         return self.extracted

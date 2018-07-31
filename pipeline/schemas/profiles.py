@@ -4,6 +4,9 @@ import json
 from collections import namedtuple
 import traceback
 
+import logs.logging_conf, logging
+logger = logging.getLogger("schema.profiles")
+
 import mappings.curis_schema
 
 class Profiles:
@@ -15,7 +18,7 @@ class Profiles:
         
     #Extracts the profiles section on each json in Curis
     def extract_profiles(self):
-        print(mappings.curis_schema)
+        logger.info(mappings.curis_schema)
         for j in self.arr:
             # Convert JSON to Python object
             x = self._json2obj(str(j))
@@ -51,7 +54,7 @@ class Profiles:
             except AttributeError:
                 #Do something if AttributeError is raised
                 #IF THERE'S ANYTHING TO DO
-                print("Something went wrong...")
+                logger.info("Something went wrong...")
                 traceback.print_exc()
                 continue
             
@@ -105,7 +108,7 @@ class Profiles:
             except AttributeError:
                 #Do something if AttributeError is raised
                 #IF THERE'S ANYTHING TO DO
-                print("Something went terribly wrong!")
+                logger.info("Something went terribly wrong!")
                 traceback.print_exc()
                 continue
 

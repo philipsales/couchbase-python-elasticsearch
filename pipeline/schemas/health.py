@@ -4,6 +4,8 @@ import json
 from collections import namedtuple
 import traceback
 
+import logs.logging_conf, logging
+logger = logging.getLogger("schema.health")
 import mappings.curis_schema
 
 class Health:
@@ -38,7 +40,7 @@ class Health:
                 #push to a global variable the extracted one
                 self.extracted.append(json.dumps(obj))
             except AttributeError:
-                print("Something went wrong...")
+                logger.info("Something went wrong...")
                 traceback.print_exc()
                 continue
 
@@ -90,7 +92,7 @@ class Health:
             
             # Happens when there is a missing attribute in the 'health' object
             except AttributeError:
-                print("Something went terribly wrong!")
+                logger.info("Something went terribly wrong!")
                 traceback.print_exc()
                 continue
 

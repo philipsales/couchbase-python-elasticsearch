@@ -4,6 +4,9 @@ import json
 from collections import namedtuple
 import traceback
 
+import logs.logging_conf, logging
+logger = logging.getLogger("schema.household")
+
 import mappings.curis_schema
 
 class Household:
@@ -31,7 +34,7 @@ class Household:
 
                 obj.update(latestHousehold)
             except AttributeError:
-                print("Something went wrong...")
+                logger.info("Something went wrong...")
                 traceback.print_exc()
                 continue
 

@@ -1,5 +1,5 @@
 
-ElasticSearchENV = "local"
+ElasticSearchENV = "development"
 
 ElasticSearchConfig = {
     'local': {
@@ -10,17 +10,17 @@ ElasticSearchConfig = {
         'SCHEME': 'HTTP',
         'HOST': 'localhost',
         'PORT': 9200,
-        'TIMEOUT': 7200
+        'TIMEOUT': 360
     },
     'development': {
-        'USERNAME': 'kibanaadmin',
-        'PASSWORD': 'AWH@dm1n',
+        'USERNAME': 'elkadmin',
+        'PASSWORD': 'admin(1)n@AWH',
         'INDEX': 'philippines',
         'TYPE': 'patients',
-        'SCHEME': 'https',
+        'SCHEME': 'http',
         'HOST': '172.104.184.192',
         'PORT': 9200,
-        'TIMEOUT': 7200
+        'TIMEOUT': 360
     },
     'production': {
         'USERNAME': 'elastic',
@@ -30,7 +30,7 @@ ElasticSearchConfig = {
         'SCHEME': 'HTTP',
         'HOST': 'localhost',
         'PORT': 9200,
-        'TIMEOUT': 7200
+        'TIMEOUT': 360
     }
 }
 

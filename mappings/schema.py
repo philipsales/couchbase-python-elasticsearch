@@ -9,7 +9,8 @@ profile_mapping = {
             "active": { "type": "boolean" },
             "sex": { "type": "keyword" },
             "birth_date": { 
-                "type": "date"
+                "type": "date",
+                "format": "MM/dd/yyyy"
             },
             "deceased": {
                 "type": "object",
@@ -21,7 +22,7 @@ profile_mapping = {
             "address": {
                 "type": "object",
                 "properties": {
-                    "add_date": { "type": "keyword" },
+                    "add_date": { "type": "date" },
                     "commnty": { "type": "keyword" },
                     "province": { "type": "keyword" },
                     "zip": { "type": "keyword" },
@@ -97,6 +98,8 @@ health_mapping = {
             "diagnosed": {"type":"keyword"},
             "medical_equipments": {"type":"keyword"},
             "maintenance_drugs": {"type":"keyword"},
+            "high_cost_medicine": {"type": "keyword"},
+            "org": {"type":"keyword"},
             "version":{
                 "type":"object",
                 "properties": {
@@ -124,6 +127,7 @@ household_mapping = {
             "utilities": {"type":"keyword"}, 
             "type_of_sanitation": {"type":"keyword"}, 
             "sanitation_ownerships": {"type":"keyword"},
+            "org": {"type":"keyword"},
             "version":{
                 "type":"object",
                 "properties": {
@@ -142,6 +146,7 @@ symptoms_mapping = {
         },
         "properties": {
             "awh_id": {"type": "keyword"},
+            "org": {"type":"keyword"},
             "head": {
                 "type":"object",
                 "properties": {

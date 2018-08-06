@@ -4,6 +4,7 @@ import json
 import logging
 
 from mappings import schema
+from settings import constants
 
 from elasticsearch import Elasticsearch
 from elasticsearch.exceptions import ConnectionError 
@@ -28,50 +29,56 @@ es = Elasticsearch(
     port = conn['PORT'],
     timeout = int(conn['TIMEOUT']))
 
-def bulk_dump(docs):
-    set_mappings()
+def bulk_dump(docs, country):
+    set_mappings(country)
     counter = 0
     bulk_data = []
     
     try:
         for doc in docs:
-            _type = list(doc.keys())
-            _body = list(doc.values())
-
-            _header = { "create" : { "_index" : INDEX,  
-                        "_type" : _type[0], 
-                        "_id" : str(uuid.uuid1()) } }
-
-            bulk_data.append(_header)
-            bulk_data.append(_body[0])
-            counter += 1
-
-        logger.info(bulk_data)
-        return es.bulk(bulk_data)
-
-    except (ConnectionError) as err: 
-        logger.error(error)
-
-def batch_dump(docs):
-        set_mappings()
-        counter = 0
-
-        try:
-            for doc in docs:
+            try:
                 _type = list(doc.keys())
                 _body = list(doc.values())
 
-                res = es.index(index = INDEX, 
-                         doc_type = _type[0] , 
-                         id = uuid.uuid1(), 
-                         body = _body[0])
+                index = _set_index(country,_type[0])
+
+                _header = { "create" : { "_index" : index,  
+                            "_type" : _type[0], 
+                            "_id" : str(_body[0]["awh_id"]) } }
+
+                bulk_data.append(_header)
+                bulk_data.append(json.dumps(_body[0]))
                 counter += 1
+            except TypeError:
+                print("NoneType object!")
+                continue
 
-            _total_entries(counter)
-            _refresh_index(INDEX)
+        logger.info(bulk_data)
+        return es.bulk(bulk_data)
+            
+    except (ConnectionError) as err: 
+        logger.error(error)
 
-        except (ConnectionError) as err: 
-            logger.error(error)
+# def batch_dump(docs):
+#         set_mappings()
+#         counter = 0
+
+#         try:
+#             for doc in docs:
+#                 _type = list(doc.keys())
+#                 _body = list(doc.values())
+
+#                 res = es.index(index = INDEX, 
+#                          doc_type = _type[0] , 
+#                          id = uuid.uuid1(), 
+#                          body = _body[0])
+#                 counter += 1
+
+#             _total_entries(counter)
+#             _refresh_index(INDEX)
+
+#         except (ConnectionError) as err: 
+#             logger.error(error)
 
 def _refresh_index(data):
     return es.indices.refresh(index=data)
@@ -79,29 +86,43 @@ def _refresh_index(data):
 def _total_entries(count):
     print("Total Batch Entries: {%}", count)
 
-def set_mappings():
-    all_mappings = {}
-    all_mappings.update(schema.profile_mapping)
-    all_mappings.update(schema.health_mapping)
-    all_mappings.update(schema.household_mapping)
-    all_mappings.update(schema.symptoms_mapping)
+def set_mappings(country):
+    nameOfIndices = constants.ElasticsearchConstants['index']
 
-    body = '{ "mappings": ' + json.dumps(all_mappings) + ' }'
+    for index in nameOfIndices:
+        all_mappings = manage_mapping(index)
 
-    if es.indices.exists(INDEX):
-        logger.debug("INDEX exists")
-    else:
-        try: 
-            res = es.indices.create(index = INDEX, body = body )
-            logger.info(res)
+        body = '{ "mappings": ' + json.dumps(all_mappings) + ' }'
+        index = _set_index(country, index)
 
-            if res["acknowledged"] != True:
-                logger.info("Index creation failed")
-            else:
-                logger.info("Index created")
+        if es.indices.exists(index):
+            logger.debug("INDEX exists")
+        else:
+            try: 
+                res = es.indices.create(index = index, body = body )
+                logger.info(res)
 
-        except ConnectionError as err:
-            logger.error(err)
+                if res["acknowledged"] != True:
+                    logger.info("Index creation failed")
+                else:
+                    logger.info("Index created")
+
+            except ConnectionError as err:
+                logger.error(err)
+
+def _set_index(country, schema):
+    return (constants.ElasticsearchConstants['country'][country] 
+            + "_" + constants.ElasticsearchConstants['index'][schema])
+
+def manage_mapping(index):
+    if index == constants.ElasticsearchConstants["index"]["demographics"]:
+        return schema.profile_mapping
+    elif index == constants.ElasticsearchConstants["index"]["health"]:
+        return schema.health_mapping
+    elif index == constants.ElasticsearchConstants["index"]["household"]:
+        return schema.household_mapping
+    elif index == constants.ElasticsearchConstants["index"]["symptoms"]:
+        return schema.symptoms_mapping
 
 #run as standalone module
 if __name__ == "__main__":

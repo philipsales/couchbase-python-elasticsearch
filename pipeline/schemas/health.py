@@ -7,6 +7,7 @@ import traceback
 import logs.logging_conf, logging
 logger = logging.getLogger("schema.health")
 import mappings.curis_schema
+from pipeline import mapper
 
 class Health:
 
@@ -18,11 +19,12 @@ class Health:
     # Extracts the health informations section on each json in Curis
     def extract_health(self):
         for i in self.arr:
-            x = self._json2obj(str(i))
+            # Converts JSON object to Python object
+            x = json.loads(i)
             
             try:
                 # Destructuring the mother json
-                (cb_id, health_informations) = (x.cb_id, x.health_informations)
+                (cb_id, health_informations, organization) = (x["cb_id"], x["health_informations"], x["organization"])
                 #Gets latest counter of the array of health informations
                 ctr:int = len(health_informations)
 
@@ -31,7 +33,8 @@ class Health:
 
                 # Initializing the doc to be sent
                 obj = {
-                    "cb_id" : cb_id
+                    "cb_id" : cb_id,
+                    "organization": organization
                 }
 
                 # Updating the obj with the health informations JSON fields
@@ -45,10 +48,6 @@ class Health:
                 continue
 
         return self.extracted
-
-    # def clean_data(self):
-    #     self.extract_health()
-    #     return self.extracted
     
     #Map From extracted JSON to Elasticsearch schema
     def map_extracted(self):
@@ -59,36 +58,16 @@ class Health:
         # Start mapping to Elasticsearch schema
         for x in self.extracted:
             # Convert JSON object to Python object
-            health = self._json2obj(str(x))
-
-            # Map blood pressure to expected object structure in elasticsearch schema
-            bloodPressure = self.map_blood_pressure(health.blood_pressure)
-            # Compute body mass index
-            bmi = self.computeBodyMassIndex(health.height, health.weight)
+            health = json.loads(x)
 
             try:
+                # Map blood pressure to expected object structure in elasticsearch schema
+                bloodPressure = self.map_blood_pressure(health["blood_pressure"])
+                # Compute body mass index
+                bmi = self.computeBodyMassIndex(health["height"], health["weight"])
+
                 # Mapping starts here
-                obj = {
-                    "awh_id": health.cb_id,
-                    "bmi": bmi,
-                    "blood_group": health.blood_type,
-                    "blood_rhesus": health.blood_sign,
-                    "allergies": health.allergies,
-                    "bp": bloodPressure,
-                    "blood_sugar": health.blood_sugar,
-                    "smoking_habit": health.smoking_habit,
-                    "fruits_in_a_week": health.fruits_in_a_week,
-                    "vegetables_in_a_week": health.vegetables_in_a_week,
-                    "exercise_in_a_week": health.exercise_in_a_week,
-                    "family_history": health.family_history,
-                    "diagnosed": health.diagnosed,
-                    "medical_equipments": health.medical_equipments,
-                    "maintenance_drugs": health.maintenance_drugs,
-                    "version":{
-                        "number": 1,
-                        "date": datetime.datetime.now().isoformat()
-                    }
-                }
+                obj = self.map_es_health(health, bmi, bloodPressure)
             
             # Happens when there is a missing attribute in the 'health' object
             except AttributeError:
@@ -153,6 +132,7 @@ class Health:
         except AttributeError:
             # Passing the object structure of Curis object under health_informations into the variable
             healthInformations = mappings.curis_schema.health
+            
         
         return healthInformations
     
@@ -198,9 +178,52 @@ class Health:
         
         return bmi_result
 
+    def map_es_health(self, health, bmi, bloodPressure):
+        try:
+            obj = {
+                "awh_id": health["cb_id"],
+                "bmi": bmi,
+                "blood_group": health["blood_type"],
+                "blood_rhesus": health["blood_sign"],
+                "allergies": health["allergies"],
+                "bp": bloodPressure,
+                "blood_sugar": health["blood_sugar"],
+                "smoking_habit": health["smoking_habit"],
+                "fruits_in_a_week": health["fruits_in_a_week"],
+                "vegetables_in_a_week": health["vegetables_in_a_week"],
+                "exercise_in_a_week": health["exercise_in_a_week"],
+                "family_history": health["family_history"],
+                "diagnosed": health["diagnosed"],
+                "medical_equipments": health["medical_equipments"],
+                "maintenance_drugs": health["maintenance_drugs"],
+                "org": health["organization"],
+                "version":{
+                    "number": 1,
+                    "date": datetime.datetime.now().isoformat()
+                }
+            }
+        except KeyError:
+            obj = {
+                "awh_id": health["cb_id"],
+                "bmi": bmi,
+                "blood_group": health["blood_type"],
+                "blood_rhesus": health["blood_sign"],
+                "allergies": health["allergies"],
+                "bp": bloodPressure,
+                "blood_sugar": health["blood_sugar"],
+                "smoking_habit": health["smoking_habit"],
+                "fruits_in_a_week": health["fruits_in_a_week"],
+                "vegetables_in_a_week": health["vegetables_in_a_week"],
+                "exercise_in_a_week": health["exercise_in_a_week"],
+                "family_history": health["family_history"],
+                "diagnosed": health["diagnosed"],
+                "high_cost_medicine": health["high_cost_medicine"],
+                "maintenance_drugs": health["maintenance_drugs"],
+                "org": health["organization"],
+                "version":{
+                    "number": 1,
+                    "date": datetime.datetime.now().isoformat()
+                }
+            }
 
-    def _json2obj(self, data): 
-        return json.loads(data, object_hook = self._json_object_hook)
-
-    def _json_object_hook(self, d):
-        return namedtuple('X', d.keys(), rename = True)(*d.values())
+        return obj

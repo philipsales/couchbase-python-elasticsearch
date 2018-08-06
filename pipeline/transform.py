@@ -22,17 +22,23 @@ from airflow.operators.python_operator import PythonOperator
 def init_pipeline(data, **kwargs):
     etl_data = []
 
-    profiles = map_profile(data)
-    for row in profiles:
-        tmp ={}
-        tmp['patients'] = json.loads(row)
-        etl_data.append(tmp)
+    # profiles = map_profile(data)
+    # for row in profiles:
+    #     tmp ={}
+    #     tmp['demographics'] = json.loads(row)
+    #     etl_data.append(tmp)
 
-    health = map_health(data)
-    for row in health:
-        tmp ={}
-        tmp['health'] = json.loads(row)
-        etl_data.append(tmp)
+    # household = map_household(data)
+    # for row in household:
+    #     tmp ={}
+    #     tmp['household'] = json.loads(row)
+    #     etl_data.append(tmp)
+
+    # health = map_health(data)
+    # for row in health:
+    #     tmp ={}
+    #     tmp['health'] = json.loads(row)
+    #     etl_data.append(tmp)
     
     symptoms = map_symptoms(data)
     for row in symptoms:

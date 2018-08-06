@@ -3,7 +3,9 @@ import sys
 profile = {
     "civil_status":"",
     "religion":"",
-    "employment":{},
+    "is_employed": True,
+    "monthly_income": 0.0,
+    "nature": "",
     "education":""
 }
 
@@ -56,7 +58,7 @@ symptoms = {
         "eyes": [],
         "nose": [],
         "mouth": [],
-        "chin_jaw": [],
+        "chin_and_jaw": [],
         "ears": []
     },
     "neck" : {
@@ -64,18 +66,18 @@ symptoms = {
         "throat": [],
         "upperback": [],
         "lowerback": [],
-        "shoulder": []
+        "shoulders": []
     },
     "chest" : {
         "chest": [],
-        "lungs": []
+        "lungs_and_breathing": []
     },
     "arms" : {
-        "upper": [],
+        "upper_arm": [],
         "elbow": [],
-        "lower": [],
+        "lower_arm": [],
         "wrist": [],
-        "hand": [],
+        "hand_and_palm": [],
         "fingers": []
     },
     "abdomen": {

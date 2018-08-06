@@ -24,12 +24,12 @@ PROTOCOL = conn['PROTOCOL']
 PORT = conn['PORT']
 API_ENDPOINT = "_all_docs?"
 
-def get_all(org): 
+def get_all(country): 
     try:
         bucket = Bucket(URL)
         bucket.n1ql_timeout = TIMEOUT 
 
-        statement = _set_statement(organization=org)
+        statement = _set_statement(country=country)
         logger.info(statement)
         query = N1QLQuery(statement)
         query.timeout = TIMEOUT 
@@ -43,12 +43,12 @@ def get_all(org):
         sys.exit(1) 
 
 def _set_statement(**kwargs):
-    organization = kwargs.get('organization',"")
+    country = kwargs.get('country',"")
 
     return ("SELECT meta(" + BUCKET + ").id as cb_id, " 
                 + BUCKET + ".* FROM "
-                + BUCKET + " WHERE organization='"
-                + organization + "' AND _deleted IS MISSING limit 1 ")
+                + BUCKET + " WHERE address.country='"
+                + country + "' AND _deleted IS MISSING limit 5")
 
 def _dict2json(results):
     counter = 0

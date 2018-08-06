@@ -20,16 +20,18 @@ class Symptoms:
     def extract_symptoms(self):
         for i in self.arr:
             # Convert JSON object to Python object
-            x = self._json2obj(str(i))
+            # x = self._json2obj(str(i))
+            x = json.loads(i)
 
             try:
                 # Destructuring Curis json
-                (symptoms, cb_id) = (x.symptoms,x.cb_id)
+                (symptoms, cb_id, organization) = (x["symptoms_collection"], x["cb_id"], x["organization"])
                 ctr:int = len(symptoms)
-                
+
                 # Initialize the object to be appended in self.extracted
                 obj = {
-                    "cb_id":cb_id
+                    "cb_id": cb_id,
+                    "organization": organization
                 }
 
                 # Gets latest symptoms in the array of symptoms
@@ -37,14 +39,28 @@ class Symptoms:
 
                 # Update the object with the extracted latest symptoms
                 obj.update(latestSymptoms)
-
-                # Push to self.extracted the JSON
-                self.extracted.append(json.dumps(obj))
             
             # Throws this exception when x.symptoms does not exist
             except AttributeError:
                 logger.info("Something went wrong...")
+                traceback.print_exc()
                 continue
+
+            except KeyError:
+                (cb_id, organization) = (x["cb_id"], x["organization"])
+                latestSymptoms = mappings.curis_schema.symptoms
+
+                obj = {
+                    "cb_id": cb_id,
+                    "organization": organization
+                }
+
+                obj.update(latestSymptoms)
+
+            print(obj)
+
+            # Push to self.extracted the JSON
+            self.extracted.append(json.dumps(obj))
 
         return self.extracted
     
@@ -55,19 +71,20 @@ class Symptoms:
 
         #Looping through the extracted array
         for x in self.extracted:
-            symptoms = self._json2obj(str(x))
+            # symptoms = self._json2obj(str(x))
+            symptoms = json.loads(x)
 
             try:
                 # Mapping the extracted json to the elasticsearch schema
-                head = self.map_head(symptoms)
-                arms = self.map_arms(symptoms)
-                chest = self.map_chest(symptoms)
-                legs = self.map_legs(symptoms)
-                pelvis = self.map_pelvis(symptoms)
-                neck = self.map_neck(symptoms)
+                head = self.map_head(symptoms["head"])
+                arms = self.map_arms(symptoms["arms"])
+                chest = self.map_chest(symptoms["chest"])
+                legs = self.map_legs(symptoms["legs"])
+                pelvis = self.map_pelvis(symptoms["pelvis"])
+                neck = self.map_neck(symptoms["neck"])
 
                 obj = {
-                    "awh_id": symptoms.cb_id,
+                    "awh_id": symptoms["cb_id"],
                     "head": head,
                     "neck": neck,
                     "chest": chest,
@@ -76,16 +93,19 @@ class Symptoms:
                     "pelvis": pelvis,
                     "legs": legs,
                     "skin": symptoms["skin"]["skin"],
+                    "org": symptoms["organization"],
                     "version":{
                         "number": 1,
-                        "date": datetime.datetime.now()
+                        "date": datetime.datetime.now().isoformat()
                     }
                 }
 
                 self.final.append(json.dumps(obj))
             
             except:
-                pass
+                print("Something went terribly wrong!!!")
+                traceback.print_exc()
+                continue
             
         return self.final
 
@@ -98,12 +118,12 @@ class Symptoms:
         #Creating an object to be passed
         try:
             head = {
-                "head": datum.head,
-                "eyes": datum.eyes,
-                "nose": datum.nose,
-                "mouth": datum.mouth,
-                "chin_jaw": datum.chin_and_jaw,
-                "ears": datum.ears
+                "head": datum["head"],
+                "eyes": datum["eyes"],
+                "nose": datum["nose"],
+                "mouth": datum["mouth"],
+                "chin_jaw": datum["chin_and_jaw"],
+                "ears": datum["ears"]
             }
         
         except AttributeError:
@@ -123,11 +143,11 @@ class Symptoms:
         #Creating an object to be passed
         try:
             neck = {
-                "neck": datum.neck,
-                "throat": datum.throat,
-                "upperback": datum.upperback,
-                "lowerback": datum.lowerback,
-                "shoulder": datum.shoulder
+                "neck": datum["neck"],
+                "throat": datum["throat"],
+                "upperback": datum["upperback"],
+                "lowerback": datum["lowerback"],
+                "shoulder": datum["shoulders"]
             }
         
         except AttributeError:
@@ -219,22 +239,16 @@ class Symptoms:
                 "toes": []
             }
 
-        return leg
+        return legs
     
     def map_symptoms(self, data, ctr):
         try:
             if(len(data) == 0):
                 raise AttributeError
             else:
-                finalSymptoms = data[ctr-1].copy
+                finalSymptoms = data[ctr-1].copy()
 
         except AttributeError:
             finalSymptoms = mappings.curis_schema.symptoms
         
         return finalSymptoms
-
-    def _json2obj(self, data): 
-        return json.loads(data, object_hook = self._json_object_hook)
-
-    def _json_object_hook(self, d):
-        return namedtuple('X', d.keys(), rename = True)(*d.values())

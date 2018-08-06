@@ -1,6 +1,18 @@
 
 CouchbaseConstants = {
-    'cuartero': 'Cuartero RHU',
-    'guimbal': 'Guimbal RHU',
-    'pototan': 'Pototan RHU'
+    'philippines': 'Philippines',
+    'cambodia': 'Cambodia'
+}
+
+ElasticsearchConstants = {
+    'index': {
+        'demographics': 'demographics',
+        'health': 'health',
+        'household': 'household',
+        'symptoms': 'symptoms'
+    },
+    'country': {
+        'philippines': 'philippines',
+        'cambodia': 'cambodia'
+    }
 }

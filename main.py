@@ -5,7 +5,7 @@ import logs
 
 from settings.couchbase_conf import CouchbaseConfig, CouchbaseENV
 from settings.elastic_conf import ElasticSearchConfig, ElasticSearchENV
-from settings.constants import CouchbaseConstants
+from settings.constants import CouchbaseConstants, ElasticsearchConstants
 
 #from pipeline.couchbase_n1ql import get_all 
 from pipeline import couchbase_n1ql
@@ -22,7 +22,7 @@ from airflow.operators.python_operator import PythonOperator
 def extract_data():
     #cb_data = couchbase_sync.init_couchbase()
     cb_constants = CouchbaseConstants
-    cb_data = couchbase_n1ql.get_all(cb_constants['cuartero'])
+    cb_data = couchbase_n1ql.get_all(cb_constants['philippines'])
     return cb_data
 
 def transform_data(**kwargs):
@@ -39,13 +39,14 @@ def load_data(**kwargs):
 
 def main():
     cb_constants = CouchbaseConstants
-    cb_data = couchbase_n1ql.get_all(cb_constants['cuartero'])
+    es_constants = ElasticsearchConstants
+    cb_data = couchbase_n1ql.get_all(cb_constants['philippines'])
     etl_data = transform.init_pipeline(cb_data)
-    result = elastic.bulk_dump(etl_data)
+    result = elastic.bulk_dump(etl_data, es_constants['country']['philippines'])
 
-    cb_data = couchbase_n1ql.get_all(cb_constants['pototan'])
-    etl_data = transform.init_pipeline(cb_data)
-    result = elastic.bulk_dump(etl_data)
+    # cb_data = couchbase_n1ql.get_all(cb_constants['cambodia'])
+    # etl_data = transform.init_pipeline(cb_data)
+    # result = elastic.bulk_dump(etl_data)
 
 #run as standalone package
 if __name__ == '__main__':

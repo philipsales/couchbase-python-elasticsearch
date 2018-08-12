@@ -49,6 +49,7 @@ health = {
     "family_history": [],
     "diagnosed": [],
     "medical_equipments": "",
+    "high_cost_medicine": "",
     "maintenance_drugs": ""
 }
 

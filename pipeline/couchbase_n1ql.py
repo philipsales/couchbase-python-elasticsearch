@@ -48,7 +48,7 @@ def _set_statement(**kwargs):
     return ("SELECT meta(" + BUCKET + ").id as cb_id, " 
                 + BUCKET + ".* FROM "
                 + BUCKET + " WHERE address.country='"
-                + country + "' AND _deleted IS MISSING limit 5")
+                + country + "' AND _deleted IS MISSING AND type='user-resident'")
 
 def _dict2json(results):
     counter = 0

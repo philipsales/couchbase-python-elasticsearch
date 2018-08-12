@@ -59,27 +59,6 @@ def bulk_dump(docs, country):
     except (ConnectionError) as err: 
         logger.error(error)
 
-# def batch_dump(docs):
-#         set_mappings()
-#         counter = 0
-
-#         try:
-#             for doc in docs:
-#                 _type = list(doc.keys())
-#                 _body = list(doc.values())
-
-#                 res = es.index(index = INDEX, 
-#                          doc_type = _type[0] , 
-#                          id = uuid.uuid1(), 
-#                          body = _body[0])
-#                 counter += 1
-
-#             _total_entries(counter)
-#             _refresh_index(INDEX)
-
-#         except (ConnectionError) as err: 
-#             logger.error(error)
-
 def _refresh_index(data):
     return es.indices.refresh(index=data)
 
@@ -87,28 +66,11 @@ def _total_entries(count):
     print("Total Batch Entries: {%}", count)
 
 def set_mappings(country):
-    nameOfIndices = constants.ElasticsearchConstants['index']
+    _set_demographics(country)
+    _set_household(country)
+    _set_health(country)
+    _set_symptoms(country)
 
-    for index in nameOfIndices:
-        all_mappings = manage_mapping(index)
-
-        body = '{ "mappings": ' + json.dumps(all_mappings) + ' }'
-        index = _set_index(country, index)
-
-        if es.indices.exists(index):
-            logger.debug("INDEX exists")
-        else:
-            try: 
-                res = es.indices.create(index = index, body = body )
-                logger.info(res)
-
-                if res["acknowledged"] != True:
-                    logger.info("Index creation failed")
-                else:
-                    logger.info("Index created")
-
-            except ConnectionError as err:
-                logger.error(err)
 
 def _set_index(country, schema):
     return (constants.ElasticsearchConstants['country'][country] 
@@ -124,7 +86,94 @@ def manage_mapping(index):
     elif index == constants.ElasticsearchConstants["index"]["symptoms"]:
         return schema.symptoms_mapping
 
+def _set_demographics(country):
+    index = constants.ElasticsearchConstants['index']["demographics"]
+    all_mappings = manage_mapping(index)
+
+    body = '{ "mappings": ' + json.dumps(all_mappings) + ' }'
+    index = _set_index(country, index)
+
+    if es.indices.exists(index):
+        logger.debug("INDEX exists")
+    else:
+        try: 
+            res = es.indices.create(index = index, body = body )
+            logger.info(res)
+
+            if res["acknowledged"] != True:
+                logger.info("Index creation failed")
+            else:
+                logger.info("Index created")
+
+        except ConnectionError as err:
+            logger.error(err)
+
+def _set_household(country):
+    index = constants.ElasticsearchConstants["index"]["household"]
+    all_mappings = manage_mapping(index)
+
+    body = '{ "mappings": ' + json.dumps(all_mappings) + ' }'
+    index = _set_index(country, index)
+
+    if es.indices.exists(index):
+        logger.debug("INDEX exists")
+    else:
+        try: 
+            res = es.indices.create(index = index, body = body )
+            logger.info(res)
+
+            if res["acknowledged"] != True:
+                logger.info("Index creation failed")
+            else:
+                logger.info("Index created")
+
+        except ConnectionError as err:
+            logger.error(err)
+
+def _set_health(country):
+    index = constants.ElasticsearchConstants["index"]["health"]
+    all_mappings = manage_mapping(index)
+
+    body = '{ "mappings": ' + json.dumps(all_mappings) + ' }'
+    index = _set_index(country, index)
+
+    if es.indices.exists(index):
+        logger.debug("INDEX exists")
+    else:
+        try: 
+            res = es.indices.create(index = index, body = body )
+            logger.info(res)
+
+            if res["acknowledged"] != True:
+                logger.info("Index creation failed")
+            else:
+                logger.info("Index created")
+
+        except ConnectionError as err:
+            logger.error(err)
+
+def _set_symptoms(country):
+    index = constants.ElasticsearchConstants["index"]["symptoms"]
+    all_mappings = manage_mapping(index)
+
+    body = '{ "mappings": ' + json.dumps(all_mappings) + ' }'
+    index = _set_index(country, index)
+
+    if es.indices.exists(index):
+        logger.debug("INDEX exists")
+    else:
+        try: 
+            res = es.indices.create(index = index, body = body )
+            logger.info(res)
+
+            if res["acknowledged"] != True:
+                logger.info("Index creation failed")
+            else:
+                logger.info("Index created")
+
+        except ConnectionError as err:
+            logger.error(err)
+
 #run as standalone module
 if __name__ == "__main__":
     bulk_dump(data)
-  

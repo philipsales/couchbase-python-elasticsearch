@@ -7,7 +7,7 @@ import traceback
 import logs.logging_conf, logging
 logger = logging.getLogger("schema.profiles")
 
-import mappings.curis_schema
+import mappings.default_receiver
 from pipeline import mapper
 
 class Profiles:
@@ -19,7 +19,7 @@ class Profiles:
         
     #Extracts the profiles section on each json in Curis
     def extract_profiles(self):
-        logger.info(mappings.curis_schema)
+        logger.info(mappings.default_receiver)
         for j in self.arr:
             # Convert JSON to Python object
             x = json.loads(j)
@@ -49,13 +49,28 @@ class Profiles:
                 obj.update(address1)
                 obj.update(profile1)
 
-                #Append to self.extracted json
-                self.extracted.append(json.dumps(obj))
-
             except AttributeError:
                 logger.info("Something went wrong...")
                 traceback.print_exc()
                 continue
+
+            except KeyError:
+                (cb_id, gender, year_of_birth, address, organization) = (x["cb_id"],x["gender"], x["birthdate"], x["address"], x["organization"])
+                address1 = mapper.mapper(address)
+                profile1 = mappings.default_receiver.profile
+
+                obj = {
+                    "cb_id": cb_id,
+                    "gender":gender,
+                    "year_of_birth":year_of_birth,
+                    "organization":organization
+                }
+
+                obj.update(address1)
+                obj.update(profile1)
+                
+            #Append to self.extracted json
+            self.extracted.append(json.dumps(obj))
             
         return self.extracted
     
@@ -149,7 +164,7 @@ class Profiles:
 
         except AttributeError:
             # Assigning the template of the profile attribute to the variable
-            finalProfiles = mappings.curis_schema.profile
+            finalProfiles = mappings.default_receiver.profile
             traceback.print_exc()
 
         return finalProfiles

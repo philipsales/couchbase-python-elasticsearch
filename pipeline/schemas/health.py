@@ -6,7 +6,7 @@ import traceback
 
 import logs.logging_conf, logging
 logger = logging.getLogger("schema.health")
-import mappings.curis_schema
+import mappings.default_receiver
 from pipeline import mapper
 
 class Health:
@@ -40,12 +40,23 @@ class Health:
                 # Updating the obj with the health informations JSON fields
                 obj.update(lastestHealthInfo)
 
-                #push to a global variable the extracted one
-                self.extracted.append(json.dumps(obj))
             except AttributeError:
                 logger.info("Something went wrong...")
                 traceback.print_exc()
                 continue
+                
+            except KeyError:
+                (cb_id, organization) = (x["cb_id"], x["organization"])
+                lastestHealthInfo = mappings.default_receiver.health
+
+                obj = {
+                    "cb_id": cb_id,
+                    "organization": organization
+                }
+
+                obj.update(lastestHealthInfo)
+            #push to a global variable the extracted one
+            self.extracted.append(json.dumps(obj))
 
         return self.extracted
     
@@ -119,7 +130,6 @@ class Health:
         return bloodPressure
     # Mapping to health informations structure from Curis JSON
     def map_health_informations(self, data, ctr):
-
         healthInformations = {}
 
         try:
@@ -127,11 +137,12 @@ class Health:
                 raise AttributeError
             else:
                 # Copy the data from the json data[ctr-1] to healthInformations
-                healthInformations = data[ctr-1].copy()
+                curis_json = data[ctr-1].copy()
+                healthInformations = mapper.merger(mappings.default_receiver.health, curis_json)
 
         except AttributeError:
             # Passing the object structure of Curis object under health_informations into the variable
-            healthInformations = mappings.curis_schema.health
+            healthInformations = mappings.default_receiver.health
             
         
         return healthInformations
@@ -179,51 +190,28 @@ class Health:
         return bmi_result
 
     def map_es_health(self, health, bmi, bloodPressure):
-        try:
-            obj = {
-                "awh_id": health["cb_id"],
-                "bmi": bmi,
-                "blood_group": health["blood_type"],
-                "blood_rhesus": health["blood_sign"],
-                "allergies": health["allergies"],
-                "bp": bloodPressure,
-                "blood_sugar": health["blood_sugar"],
-                "smoking_habit": health["smoking_habit"],
-                "fruits_in_a_week": health["fruits_in_a_week"],
-                "vegetables_in_a_week": health["vegetables_in_a_week"],
-                "exercise_in_a_week": health["exercise_in_a_week"],
-                "family_history": health["family_history"],
-                "diagnosed": health["diagnosed"],
-                "medical_equipments": health["medical_equipments"],
-                "maintenance_drugs": health["maintenance_drugs"],
-                "org": health["organization"],
-                "version":{
-                    "number": 1,
-                    "date": datetime.datetime.now().isoformat()
-                }
+        obj = {
+            "awh_id": health["cb_id"],
+            "bmi": bmi,
+            "blood_group": health["blood_type"],
+            "blood_rhesus": health["blood_sign"],
+            "allergies": health["allergies"],
+            "bp": bloodPressure,
+            "blood_sugar": health["blood_sugar"],
+            "smoking_habit": health["smoking_habit"],
+            "fruits_in_a_week": health["fruits_in_a_week"],
+            "vegetables_in_a_week": health["vegetables_in_a_week"],
+            "exercise_in_a_week": health["exercise_in_a_week"],
+            "family_history": health["family_history"],
+            "diagnosed": health["diagnosed"],
+            "medical_equipments": health["medical_equipments"],
+            "high_cost_medicine": health["high_cost_medicine"],
+            "maintenance_drugs": health["maintenance_drugs"],
+            "org": health["organization"],
+            "version":{
+                "number": 1,
+                "date": datetime.datetime.now().isoformat()
             }
-        except KeyError:
-            obj = {
-                "awh_id": health["cb_id"],
-                "bmi": bmi,
-                "blood_group": health["blood_type"],
-                "blood_rhesus": health["blood_sign"],
-                "allergies": health["allergies"],
-                "bp": bloodPressure,
-                "blood_sugar": health["blood_sugar"],
-                "smoking_habit": health["smoking_habit"],
-                "fruits_in_a_week": health["fruits_in_a_week"],
-                "vegetables_in_a_week": health["vegetables_in_a_week"],
-                "exercise_in_a_week": health["exercise_in_a_week"],
-                "family_history": health["family_history"],
-                "diagnosed": health["diagnosed"],
-                "high_cost_medicine": health["high_cost_medicine"],
-                "maintenance_drugs": health["maintenance_drugs"],
-                "org": health["organization"],
-                "version":{
-                    "number": 1,
-                    "date": datetime.datetime.now().isoformat()
-                }
-            }
+        }
 
         return obj

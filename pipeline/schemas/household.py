@@ -7,7 +7,7 @@ import traceback
 import logs.logging_conf, logging
 logger = logging.getLogger("schema.household")
 
-import mappings.curis_schema
+import mappings.default_receiver
 
 class Household:
 
@@ -38,6 +38,17 @@ class Household:
                 logger.info("Something went wrong...")
                 traceback.print_exc()
                 continue
+
+            except KeyError:
+                (cb_id, organization) = (x["cb_id"], x["organization"])
+                latestHousehold = mappings.default_receiver.household
+
+                obj = {
+                    "cb_id": cb_id,
+                    "organization": organization
+                }
+
+                obj.update(latestHousehold)
 
             self.extracted.append(json.dumps(obj))
 
@@ -70,7 +81,7 @@ class Household:
                 household = data[counter-1].copy()
 
         except AttributeError:
-            household = mappings.curis_schema.household
+            household = mappings.default_receiver.household
 
         return household
 

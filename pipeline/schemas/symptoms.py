@@ -7,7 +7,7 @@ import traceback
 import logs.logging_conf, logging
 logger = logging.getLogger("schema.symptoms")
 
-import mappings.curis_schema
+import mappings.default_receiver
 
 class Symptoms:
 
@@ -48,7 +48,7 @@ class Symptoms:
 
             except KeyError:
                 (cb_id, organization) = (x["cb_id"], x["organization"])
-                latestSymptoms = mappings.curis_schema.symptoms
+                latestSymptoms = mappings.default_receiver.symptoms
 
                 obj = {
                     "cb_id": cb_id,
@@ -56,8 +56,6 @@ class Symptoms:
                 }
 
                 obj.update(latestSymptoms)
-
-            print(obj)
 
             # Push to self.extracted the JSON
             self.extracted.append(json.dumps(obj))
@@ -249,6 +247,6 @@ class Symptoms:
                 finalSymptoms = data[ctr-1].copy()
 
         except AttributeError:
-            finalSymptoms = mappings.curis_schema.symptoms
+            finalSymptoms = mappings.default_receiver.symptoms
         
         return finalSymptoms

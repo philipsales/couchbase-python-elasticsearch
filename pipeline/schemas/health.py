@@ -6,8 +6,9 @@ import traceback
 
 import logs.logging_conf, logging
 logger = logging.getLogger("schema.health")
-import mappings.default_receiver
+from schemas.input import old_curis_schema
 from pipeline import mapper
+from schemas.mapping import elastic_schema_map
 
 class Health:
 
@@ -17,6 +18,7 @@ class Health:
         self.final = []
         
     # Extracts the health informations section on each json in Curis
+    # TODO: Create a template for single json for the array of self.extracted
     def extract_health(self):
         for i in self.arr:
             # Converts JSON object to Python object
@@ -25,6 +27,7 @@ class Health:
             try:
                 # Destructuring the mother json
                 (cb_id, health_informations, organization) = (x["cb_id"], x["health_informations"], x["organization"])
+                
                 #Gets latest counter of the array of health informations
                 ctr:int = len(health_informations)
 
@@ -47,7 +50,7 @@ class Health:
                 
             except KeyError:
                 (cb_id, organization) = (x["cb_id"], x["organization"])
-                lastestHealthInfo = mappings.default_receiver.health
+                lastestHealthInfo = mapper.convert_to_flat(old_curis_schema.health)
 
                 obj = {
                     "cb_id": cb_id,
@@ -68,66 +71,27 @@ class Health:
 
         # Start mapping to Elasticsearch schema
         for x in self.extracted:
+            
             # Convert JSON object to Python object
             health = json.loads(x)
+            obj = {}
 
             try:
-                # Map blood pressure to expected object structure in elasticsearch schema
-                bloodPressure = self.map_blood_pressure(health["blood_pressure"])
-                # Compute body mass index
-                bmi = self.computeBodyMassIndex(health["height"], health["weight"])
-
                 # Mapping starts here
-                obj = self.map_es_health(health, bmi, bloodPressure)
-            
+                final_obj = mapper.transformer(health,elastic_schema_map.health,obj)
+
             # Happens when there is a missing attribute in the 'health' object
             except AttributeError:
                 logger.info("Something went terribly wrong!")
                 traceback.print_exc()
                 continue
 
-            self.final.append(json.dumps(obj))
+            self.final.append(json.dumps(final_obj))
             counter += 1
             print('--transform: ', counter)
         
         return self.final
 
-    def map_blood_pressure(self, data):
-        
-        try:
-            # Mapping to the object structure of blood pressure in elasticsearch schema
-            bloodPressure = {
-                "first": {
-                    "systole": data.first_reading.systole,
-                    "diastole": data.first_reading.diastole
-                },
-                "second": {
-                    "systole": data.second_reading.systole,
-                    "diastole": data.second_reading.diastole
-                },
-                "third": {
-                    "systole": data.third_reading.systole,
-                    "diastole": data.third_reading.diastole
-                }
-            }
-        except AttributeError:
-            # Creating an empty object structure of blood pressure in elasticsearch schema
-            bloodPressure = {
-                "first": {
-                    "systole": 0.0,
-                    "diastole": 0.0
-                },
-                "second": {
-                    "systole": 0.0,
-                    "diastole": 0.0
-                },
-                "third": {
-                    "systole": 0.0,
-                    "diastole": 0.0
-                }
-            }
-
-        return bloodPressure
     # Mapping to health informations structure from Curis JSON
     def map_health_informations(self, data, ctr):
         healthInformations = {}
@@ -136,16 +100,20 @@ class Health:
             if(len(data) == 0):
                 raise AttributeError
             else:
-                # Copy the data from the json data[ctr-1] to healthInformations
+                # Copy the latest health_informations from curis json
                 curis_json = data[ctr-1].copy()
-                healthInformations = mapper.merger(mappings.default_receiver.health, curis_json)
+                # Fold default json with the copied latest health_informations
+                healthInformations = mapper.merger(old_curis_schema.health, curis_json)
+                # Compute BMI and add to json to be passed to the mapper
+                healthInformations["bmi"] = self.computeBodyMassIndex(healthInformations["height"], healthInformations["weight"])
+                # Flatten health_health informations for the transformer  (look at /schemas/mapping/elastic_schema_map under key_from)
+                final_health = mapper.convert_to_flat(healthInformations)
 
         except AttributeError:
             # Passing the object structure of Curis object under health_informations into the variable
-            healthInformations = mappings.default_receiver.health
-            
+            final_health = mapper.convert_to_flat(old_curis_schema.health)
         
-        return healthInformations
+        return final_health
     
     # Compute body mass weight
     def computeBodyMassIndex(self, height, weight):
@@ -188,30 +156,3 @@ class Health:
             bmi_result = ""
         
         return bmi_result
-
-    def map_es_health(self, health, bmi, bloodPressure):
-        obj = {
-            "awh_id": health["cb_id"],
-            "bmi": bmi,
-            "blood_group": health["blood_type"],
-            "blood_rhesus": health["blood_sign"],
-            "allergies": health["allergies"],
-            "bp": bloodPressure,
-            "blood_sugar": health["blood_sugar"],
-            "smoking_habit": health["smoking_habit"],
-            "fruits_in_a_week": health["fruits_in_a_week"],
-            "vegetables_in_a_week": health["vegetables_in_a_week"],
-            "exercise_in_a_week": health["exercise_in_a_week"],
-            "family_history": health["family_history"],
-            "diagnosed": health["diagnosed"],
-            "medical_equipments": health["medical_equipments"],
-            "high_cost_medicine": health["high_cost_medicine"],
-            "maintenance_drugs": health["maintenance_drugs"],
-            "org": health["organization"],
-            "version":{
-                "number": 1,
-                "date": datetime.datetime.now().isoformat()
-            }
-        }
-
-        return obj

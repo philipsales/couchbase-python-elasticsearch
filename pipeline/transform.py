@@ -10,6 +10,8 @@ from pipeline.schemas import health
 from pipeline.schemas import household
 from pipeline.schemas import symptoms
 
+from settings import constants
+
 import logs.logging_conf, logging
 logger = logging.getLogger("transformer")
 
@@ -22,67 +24,63 @@ from airflow.operators.python_operator import PythonOperator
 def init_pipeline(data, **kwargs):
     etl_data = []
 
-    profiles = map_profile(data)
-    for row in profiles:
-        tmp ={}
-        tmp['demographics'] = json.loads(row)
-        etl_data.append(tmp)
-
-    household = map_household(data)
-    for row in household:
-        tmp ={}
-        tmp['household'] = json.loads(row)
-        etl_data.append(tmp)
-
-    health = map_health(data)
-    for row in health:
-        tmp ={}
-        tmp['health'] = json.loads(row)
-        etl_data.append(tmp)
+    # Mapping demographics...
+    profiles = map_to_schema(data, constants.ElasticsearchConstants['index']['demographics'])
+    etl_data.extend(categorize_data(profiles, constants.ElasticsearchConstants['index']['demographics']))
     
-    symptoms = map_symptoms(data)
-    for row in symptoms:
-        tmp ={}
-        tmp['symptoms'] = json.loads(row)
-        etl_data.append(tmp)
+    # Mapping household...
+    household = map_to_schema(data, constants.ElasticsearchConstants['index']['household'])
+    etl_data.extend(categorize_data(household, constants.ElasticsearchConstants['index']['household']))
 
-    return etl_data 
+    # Mapping health...
+    health = map_to_schema(data, constants.ElasticsearchConstants['index']['health'])
+    etl_data.extend(categorize_data(health, constants.ElasticsearchConstants['index']['health']))
 
-def map_symptoms(data):
+    # Mapping symptoms...
+    symptoms = map_to_schema(data, constants.ElasticsearchConstants['index']['symptoms'])
+    etl_data.extend(categorize_data(symptoms, constants.ElasticsearchConstants['index']['symptoms']))
+
+    return etl_data
+
+"""
+    MAP_TO_SCHEMA function
+
+    data - raw data
+    elastic_schema - name of schema (demographics, health, household, symptoms)
+                    recommend that you use the settings.constants under ElasticsearchConstatant['index']
+
+"""
+def map_to_schema(data, elastic_schema):
     els_data = []
-    symptom = {}
+    raw_data = {}
 
-    symptom = symptoms.Symptoms(data)
-    els_data = symptom.map_extracted()
+    if(elastic_schema == constants.ElasticsearchConstants['index']['demographics']):
+        raw_data = profiles.Profiles(data)
+    elif(elastic_schema == constants.ElasticsearchConstants['index']['household']):
+        raw_data = household.Household(data)
+    elif(elastic_schema == constants.ElasticsearchConstants['index']['health']):
+        raw_data = health.Health(data)
+    elif(elastic_schema == constants.ElasticsearchConstants['index']['symptoms']):
+        raw_data = symptoms.Symptoms(data)
 
-    return els_data 
-
-def map_health(data):
-    els_data = []
-    healths = {}
-
-    healths = health.Health(data)
-    els_data = healths.map_extracted()
-    
+    els_data = raw_data.map_extracted()
     return els_data
 
-def map_profile(data):
-    els_data = []
-    profile = {}
+"""
+    CATEGORIZE_DATA function
+    data - data filtered from map_to_schema function
+    elastic_schema - name of schema (demographics, health, household, symptoms)
+                    recommend that you use the settings.constants under ElasticsearchConstatant['index']
+"""
+def categorize_data(data,elastic_schema):
+    etl_data = []
 
-    profile = profiles.Profiles(data)
-    els_data = profile.map_extracted()
-    
-    return els_data
+    for row in data:
+        tmp ={}
+        tmp[elastic_schema] = json.loads(row)
+        etl_data.append(tmp)
 
-def map_household(data):
-    els_data = []
-    households = {}
-
-    households = household.Household(data)
-    els_data = households.map_extracted()
-
-    return els_data 
+    return etl_data
 
 #run as standalone module
 if __name__ == "__main__":
@@ -99,11 +97,5 @@ with DAG(dag_id='subdg_transform',
     schedule_interval='0 1 * * *',
     ) as dag:
 
-    task_map_profile = PythonOperator(task_id='task_map_profile', 
-            python_callable=map_profile)
-
-    task_maphealth = PythonOperator(task_id='task_maphealth', 
-            python_callable=map_health)
-
-    task_mapsymptoms = PythonOperator(task_id='task_mapsymptoms', 
-            python_callable=map_symptoms)
+    task_map_to_schema = PythonOperator(task_id='task_map_to_schema', 
+            python_callable=map_to_schema)

@@ -7,7 +7,9 @@ import traceback
 import logs.logging_conf, logging
 logger = logging.getLogger("schema.symptoms")
 
-import mappings.default_receiver
+from schemas.input import old_curis_schema
+from pipeline import mapper
+from schemas.mapping import elastic_schema_map
 
 class Symptoms:
 
@@ -17,6 +19,7 @@ class Symptoms:
         self.final = []
         
     #Extracts the symptoms section on each json in Curis
+    # TODO: Create a template for single json for the array of self.extracted
     def extract_symptoms(self):
         for i in self.arr:
             # Convert JSON object to Python object
@@ -48,7 +51,8 @@ class Symptoms:
 
             except KeyError:
                 (cb_id, organization) = (x["cb_id"], x["organization"])
-                latestSymptoms = mappings.default_receiver.symptoms
+                
+                latestSymptoms = mapper.convert_to_flat(old_curis_schema.symptoms)
 
                 obj = {
                     "cb_id": cb_id,
@@ -71,182 +75,33 @@ class Symptoms:
         for x in self.extracted:
             # symptoms = self._json2obj(str(x))
             symptoms = json.loads(x)
+            obj = {}
 
             try:
                 # Mapping the extracted json to the elasticsearch schema
-                head = self.map_head(symptoms["head"])
-                arms = self.map_arms(symptoms["arms"])
-                chest = self.map_chest(symptoms["chest"])
-                legs = self.map_legs(symptoms["legs"])
-                pelvis = self.map_pelvis(symptoms["pelvis"])
-                neck = self.map_neck(symptoms["neck"])
-
-                obj = {
-                    "awh_id": symptoms["cb_id"],
-                    "head": head,
-                    "neck": neck,
-                    "chest": chest,
-                    "arms": arms,
-                    "abdomen": symptoms["abdomen"]["abdomen"],
-                    "pelvis": pelvis,
-                    "legs": legs,
-                    "skin": symptoms["skin"]["skin"],
-                    "org": symptoms["organization"],
-                    "version":{
-                        "number": 1,
-                        "date": datetime.datetime.now().isoformat()
-                    }
-                }
-
-                self.final.append(json.dumps(obj))
+                final_obj = mapper.transformer(symptoms,elastic_schema_map.symptoms,obj)
             
             except:
                 print("Something went terribly wrong!!!")
                 traceback.print_exc()
                 continue
             
+            self.final.append(json.dumps(final_obj))
         return self.final
-
-    """
-    INTERNAL FUNCTIONS
-    """
-
-    #Function for mapping head
-    def map_head(self, datum):
-        #Creating an object to be passed
-        try:
-            head = {
-                "head": datum["head"],
-                "eyes": datum["eyes"],
-                "nose": datum["nose"],
-                "mouth": datum["mouth"],
-                "chin_jaw": datum["chin_and_jaw"],
-                "ears": datum["ears"]
-            }
-        
-        except AttributeError:
-            head = {
-                "head": [],
-                "eyes": [],
-                "nose": [],
-                "mouth": [],
-                "chin_jaw": [],
-                "ears": []
-            }
-
-        return head
-
-    #Function for mapping neck
-    def map_neck(self, datum):
-        #Creating an object to be passed
-        try:
-            neck = {
-                "neck": datum["neck"],
-                "throat": datum["throat"],
-                "upperback": datum["upperback"],
-                "lowerback": datum["lowerback"],
-                "shoulder": datum["shoulders"]
-            }
-        
-        except AttributeError:
-            neck = {
-                "neck": [],
-                "throat": [],
-                "upperback": [],
-                "lowerback": [],
-                "shoulder": []
-            }
-
-        return neck
-
-    #Function for mapping chest
-    def map_chest(self, datum):
-        #Creating an object to be passed
-        try:
-            chest = {
-                "chest": datum["chest"],
-                "lungs": datum["lungs_and_breathing"]
-            }
-        except AttributeError:
-            chest = {
-                "chest": [],
-                "lungs": []
-            }
-
-        return chest
-
-    #Function for mapping arms
-    def map_arms(self, datum):
-        #Creating an object to be passed
-        try:
-            arms = {
-                "upper": datum["upper_arm"],
-                "elbow": datum["elbow"],
-                "lower": datum["lower_arm"],
-                "wrist": datum["wrist"],
-                "hand": datum["hand_and_palm"],
-                "fingers": datum["fingers"]
-            }
-        except AttributeError:
-            arms = {
-                "upper": [],
-                "elbow": [],
-                "lower": [],
-                "wrist": [],
-                "hand": [],
-                "fingers": []
-            }
-
-        return arms
-
-    #Function for mapping pelvis
-    def map_pelvis(self, datum):
-        #Creating an object to be passed
-        try:
-            pelvis = {
-                "hip": datum["hip"],
-                "pelvis": datum["pelvis"],
-                "genitals": datum["genitals"]
-            }
-        except AttributeError:
-            pelvis = {
-                "hip": [],
-                "pelvis": [],
-                "genitals": []
-            }
-
-        return pelvis
-
-    #Function for mapping legs
-    def map_legs(self, datum):
-        #Creating an object to be passed
-        try:
-            legs = {
-                "thigh": datum["thigh"],
-                "shin": datum["shin"],
-                "knee": datum["knee"],
-                "foot": datum["foot"],
-                "toes": datum["toes"]
-            }
-        except AttributeError:
-            legs = {
-                "thigh": [],
-                "shin": [],
-                "knee": [],
-                "foot": [],
-                "toes": []
-            }
-
-        return legs
     
     def map_symptoms(self, data, ctr):
         try:
             if(len(data) == 0):
                 raise AttributeError
             else:
-                finalSymptoms = data[ctr-1].copy()
+                # Copy latest symptoms from array of objects from Curis json
+                curis_data = data[ctr-1].copy()
+                # Fold default json with the copied latest symptoms
+                merged = mapper.merger(old_curis_schema.symptoms, curis_data)
+                # Flatten symptoms for the transformer (look at /schemas/mapping/elastic_schema_map under key_from)
+                finalSymptoms = mapper.convert_to_flat(merged)
 
         except AttributeError:
-            finalSymptoms = mappings.default_receiver.symptoms
+            finalSymptoms = mapper.convert_to_flat(old_curis_schema.symptoms)
         
         return finalSymptoms

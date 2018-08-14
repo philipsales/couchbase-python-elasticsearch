@@ -1,6 +1,6 @@
 
 profile_mapping = {  
-    "patients":{  
+    "demographics":{  
         "_source":{  
             "enabled": True
         },

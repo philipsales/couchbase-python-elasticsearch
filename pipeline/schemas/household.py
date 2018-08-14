@@ -7,7 +7,9 @@ import traceback
 import logs.logging_conf, logging
 logger = logging.getLogger("schema.household")
 
-import mappings.default_receiver
+from schemas.input import old_curis_schema
+from schemas.mapping import elastic_schema_map
+from pipeline import mapper
 
 class Household:
 
@@ -17,6 +19,7 @@ class Household:
         self.final = []
         
     #Extracts the household section on each json in Curis
+    # TODO: Create a template for single json for the array of self.extracted
     def extract_household(self):
         for i in self.arr:
             x = json.loads(i)
@@ -41,7 +44,7 @@ class Household:
 
             except KeyError:
                 (cb_id, organization) = (x["cb_id"], x["organization"])
-                latestHousehold = mappings.default_receiver.household
+                latestHousehold = old_curis_schema.household
 
                 obj = {
                     "cb_id": cb_id,
@@ -59,15 +62,17 @@ class Household:
         self.extract_household()
         for x in self.extracted:
             household = json.loads(x)
+            obj = {}
 
             try:
-                obj = self.map_es_household(household)
+                # obj = self.map_es_household(household)
+                final_obj = mapper.transformer(household,elastic_schema_map.household,obj)
             except AttributeError:
                 print("Something went terribly wrong...")
                 traceback.print_exc()
                 continue
 
-            self.final.append(json.dumps(obj))
+            self.final.append(json.dumps(final_obj))
         
         return self.final
 
@@ -78,29 +83,12 @@ class Household:
             if(len(data) == 0):
                 raise AttributeError
             else:
+                # Copy the latest household from curis json
                 household = data[counter-1].copy()
+                # Flatten household for the transformer (look at /schemas/mapping/elastic_schema_map under key_from)
+                final_household = mapper.convert_to_flat(household)
 
         except AttributeError:
-            household = mappings.default_receiver.household
+            final_household = mapper.convert_to_flat(old_curis_schema.household)
 
-        return household
-
-    def map_es_household(self, household):
-        obj = {
-            "awh_id": household["cb_id"],
-            "families_in_household": household["no_of_families_in_the_household"],
-            "people_in_household": household["no_of_people_in_the_household"],
-            "type_of_accommodation": household["house_ownership"],
-            "construction": household["type_of_house"],
-            "type_of_neighbourhood": household["neighborhood_description"],
-            "utilities": household["amenities_present_in_house"], 
-            "type_of_sanitation": household["sanitary_type"], 
-            "sanitation_ownerships": household["sanitary_ownership"],
-            "org": household["organization"],
-            "version":{
-                "number": 1,
-                "date": datetime.datetime.now().isoformat()
-            }
-        }
-
-        return obj
+        return final_household

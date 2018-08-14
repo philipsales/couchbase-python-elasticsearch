@@ -3,9 +3,11 @@ import sys
 profile = {
     "civil_status":"",
     "religion":"",
-    "is_employed": True,
-    "monthly_income": 0.0,
-    "nature": "",
+    "employment":{
+        "is_employed": True,
+        "monthly_income": 0.0,
+        "nature": "",
+    },
     "education":""
 }
 
@@ -50,7 +52,8 @@ health = {
     "diagnosed": [],
     "medical_equipments": "",
     "high_cost_medicine": "",
-    "maintenance_drugs": ""
+    "maintenance_drugs": "",
+    "bmi": ""
 }
 
 symptoms = {

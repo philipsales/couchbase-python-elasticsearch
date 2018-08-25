@@ -1,7 +1,7 @@
 import os 
 import sys
-
 import logs
+import datetime as dt
 
 from settings.couchbase_conf import CouchbaseConfig, CouchbaseENV
 from settings.elastic_conf import ElasticSearchConfig, ElasticSearchENV
@@ -13,16 +13,14 @@ from pipeline import couchbase_sync
 from pipeline import transform
 from pipeline import elastic
 
-import datetime as dt
-
 from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from airflow.operators.python_operator import PythonOperator
 
 def extract_data():
-    #cb_data = couchbase_sync.init_couchbase()
-    cb_constants = CouchbaseConstants
-    cb_data = couchbase_n1ql.get_all(cb_constants['philippines'])
+    cb_data = couchbase_sync.init_couchbase()
+    # cb_constants = CouchbaseConstants
+    # cb_data = couchbase_n1ql.get_all(cb_constants['philippines'])
     return cb_data
 
 def transform_data(**kwargs):
@@ -37,16 +35,15 @@ def load_data(**kwargs):
     result = elastic.bulk_dump(etl_data)
     return result 
 
-def main():
+def oldcuris2elastic():
     cb_constants = CouchbaseConstants
     es_constants = ElasticsearchConstants
     cb_data = couchbase_n1ql.get_all(cb_constants['philippines'])
     etl_data = transform.init_pipeline(cb_data)
     result = elastic.bulk_dump(etl_data, es_constants['country']['philippines'])
 
-    # cb_data = couchbase_n1ql.get_all(cb_constants['cambodia'])
-    # etl_data = transform.init_pipeline(cb_data)
-    # result = elastic.bulk_dump(etl_data)
+def main():
+    oldcuris2elastic()
 
 #run as standalone package
 if __name__ == '__main__':

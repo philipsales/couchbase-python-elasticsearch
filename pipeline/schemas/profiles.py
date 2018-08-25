@@ -1,7 +1,5 @@
 import sys
-import datetime
 import json
-from collections import namedtuple
 import traceback
 
 import logs.logging_conf, logging

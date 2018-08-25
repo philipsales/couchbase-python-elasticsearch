@@ -16,3 +16,10 @@ ElasticsearchConstants = {
         'cambodia': 'cambodia'
     }
 }
+
+LoggerConstants = {
+    'filenames': {
+        'etl': 'etl',
+        'kobo': 'kobo'
+    }
+}

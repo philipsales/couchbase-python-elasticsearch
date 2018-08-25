@@ -61,6 +61,7 @@ settings/elastic_conf.py
 
 #logs
 logs/error.log
+logs/log_files/*
 
 #remove setup.py build
 build/

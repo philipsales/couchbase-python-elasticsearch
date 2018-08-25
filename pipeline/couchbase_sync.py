@@ -22,7 +22,7 @@ IP_ADDRESS = conn['IP']
 TIMEOUTE = conn['TIMEOUT']
 PROTOCOL = conn['PROTOCOL']
 PORT = conn['PORT']
-API_ENDPOINT = "_all_docs?"
+API_ENDPOINT = "_changes?"
 
 def init_couchbase():
     headers = _conn_headers()
@@ -33,8 +33,8 @@ def init_couchbase():
         r = requests.get(url, headers = headers, params = filters)
         logger.info(r.status_code)
         logger.info(r.elapsed.total_seconds())
-        logger.info(r.text)
-        return r
+        logger.info(r.json())
+        return _dict2json(r.json()["results"])
 
     except (ConnectionError, RequestException, CouchbaseNetworkError) as err: 
         logger.error(err) 
@@ -48,7 +48,7 @@ def _conn_headers():
         "timeout": str(TIMEOUTE),
     }
 
-def _conn_filters():
+def _conn_filters(**kwargs):
     #TODO make dynamic pass kwargs
     return  {
         "access" : "false",
@@ -56,7 +56,8 @@ def _conn_filters():
         "include_docs": "true",
         "revs": "false",
         "update_seq": "false",
-        "limit": "1"
+        "limit":"5",
+        "since":"200"
     }
 
 def _conn_url(**kwargs):
@@ -72,3 +73,16 @@ def _conn_url(**kwargs):
 
 if __name__ == "__main__":
     init_couchbase()
+
+def _dict2json(results):
+    counter = 0
+    data = []
+
+    for row in results: 
+        doc = row["doc"]
+        doc["cb_id"] = doc.pop('_id')
+        data.append(json.dumps(doc))
+        counter += 1
+        logger.info(counter)
+
+    return data

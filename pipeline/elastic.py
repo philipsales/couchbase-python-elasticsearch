@@ -11,6 +11,9 @@ from elasticsearch.exceptions import ConnectionError
 
 import logs.logging_conf, logging
 logger = logging.getLogger("elasticsearch.connection")
+import logs.logger as lg
+
+from settings.constants import LoggerConstants
 
 from settings.elastic_conf import ElasticSearchConfig, ElasticSearchENV 
 
@@ -28,6 +31,29 @@ es = Elasticsearch(
     scheme = conn['SCHEME'],
     port = conn['PORT'],
     timeout = int(conn['TIMEOUT']))
+
+_log_file_name = LoggerConstants['filename']['etl']
+
+def update_latest(docs, country):
+    try:
+        for doc in docs:
+            try:
+                _type = list(doc.keys())
+                _body = list(doc.values())
+
+                index = _set_index(country,_type[0])
+
+                es.update(index=index,
+                        doc_type=_type[0],
+                        id=_body[0]["awh_id"],
+                        body={"doc": _body[0]})
+            except TypeError:
+                print("NoneType object!")
+                continue
+
+    except (ConnectionError) as err: 
+        logger.error(error)
+    
 
 def bulk_dump(docs, country):
     create_mappings(country)
@@ -49,20 +75,44 @@ def bulk_dump(docs, country):
                 bulk_data.append(_header)
                 bulk_data.append(json.dumps(_body[0]))
                 counter += 1
+
             except TypeError:
                 print("NoneType object!")
                 continue
 
         logger.info(bulk_data)
+        _total_entries(counter)
         return es.bulk(bulk_data)
             
     except (ConnectionError) as err: 
         logger.error(error)
 
+def batch_dump(docs, country):
+        create_mappings(country)
+        counter = 0
+
+        try:
+            for doc in docs:
+                _type = list(doc.keys())
+                _body = list(doc.values())
+
+                res = es.index(index = INDEX, 
+                         doc_type = _type[0] , 
+                         id = _body[0]["awh_id"], 
+                         body = _body[0])
+                counter += 1
+
+            _total_entries(counter)
+            _refresh_index(INDEX)
+
+        except (ConnectionError) as err: 
+            logger.error(error)
+
 def _refresh_index(data):
     return es.indices.refresh(index=data)
 
 def _total_entries(count):
+    lg.write_to_log("Total Batch Entries: " + str(count) + "\n", _log_file_name)
     print("Total Batch Entries: {%}", count)
 
 def create_mappings(country):

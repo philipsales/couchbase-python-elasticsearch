@@ -13,8 +13,8 @@ ElasticSearchConfig = {
         'TIMEOUT': 360
     },
     'development': {
-        'USERNAME': 'elkadmin',
-        'PASSWORD': 'admin(1)n@AWH',
+        'USERNAME': '',
+        'PASSWORD': '',
         'INDEX': 'philippines',
         'TYPE': 'patients',
         'SCHEME': 'http',

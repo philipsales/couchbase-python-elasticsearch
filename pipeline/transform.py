@@ -24,21 +24,26 @@ from airflow.operators.python_operator import PythonOperator
 def init_pipeline(data, **kwargs):
     etl_data = []
 
+    demographics_index = constants.ElasticsearchConstants['index']['demographics']
+    household_index = constants.ElasticsearchConstants['index']['household']
+    health_index = constants.ElasticsearchConstants['index']['health']
+    symptoms_index = constants.ElasticsearchConstants['index']['symptoms']
+
     # Mapping demographics...
-    profiles = map_to_schema(data, constants.ElasticsearchConstants['index']['demographics'])
-    etl_data.extend(categorize_data(profiles, constants.ElasticsearchConstants['index']['demographics']))
+    profiles = map_to_schema(data, demographics_index)
+    etl_data.extend(categorize_data(profiles, demographics_index))
     
     # Mapping household...
-    household = map_to_schema(data, constants.ElasticsearchConstants['index']['household'])
-    etl_data.extend(categorize_data(household, constants.ElasticsearchConstants['index']['household']))
+    household = map_to_schema(data, household_index)
+    etl_data.extend(categorize_data(household, household_index))
 
     # Mapping health...
-    health = map_to_schema(data, constants.ElasticsearchConstants['index']['health'])
-    etl_data.extend(categorize_data(health, constants.ElasticsearchConstants['index']['health']))
+    health = map_to_schema(data, health_index)
+    etl_data.extend(categorize_data(health, health_index))
 
     # Mapping symptoms...
-    symptoms = map_to_schema(data, constants.ElasticsearchConstants['index']['symptoms'])
-    etl_data.extend(categorize_data(symptoms, constants.ElasticsearchConstants['index']['symptoms']))
+    symptoms = map_to_schema(data, symptoms_index)
+    etl_data.extend(categorize_data(symptoms, symptoms_index))
 
     return etl_data
 

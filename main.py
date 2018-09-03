@@ -1,21 +1,27 @@
 import os 
 import sys
 import logs
+import json
 import datetime as dt
 
 from settings.couchbase_conf import CouchbaseConfig, CouchbaseENV
 from settings.elastic_conf import ElasticSearchConfig, ElasticSearchENV
-from settings.constants import CouchbaseConstants, ElasticsearchConstants
+from settings.base_conf import CouchbaseConstants, ElasticsearchConstants
 
 #from pipeline.couchbase_n1ql import get_all 
-from pipeline import couchbase_n1ql
-from pipeline import couchbase_sync
-from pipeline import transform
-from pipeline import elastic
+from pipeline.connection import couchbase_n1ql
+from pipeline.connection import couchbase_sync
+from pipeline.transformation import transform
+from pipeline.connection import elastic
+from pipeline.connection import kobo
+from pipeline.transformation import extractor
 
 from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from airflow.operators.python_operator import PythonOperator
+
+cb_constants = CouchbaseConstants
+es_constants = ElasticsearchConstants
 
 def extract_data():
     cb_data = couchbase_sync.init_couchbase()
@@ -35,15 +41,20 @@ def load_data(**kwargs):
     result = elastic.bulk_dump(etl_data)
     return result 
 
+def kobo2oldcuris():
+    kobo_data = kobo._kobo_get()
+    etl_data = transform.kobo2oldcuris(kobo_data)
+    result = couchbase_sync.push_couchbase(etl_data)
+
 def oldcuris2elastic():
-    cb_constants = CouchbaseConstants
-    es_constants = ElasticsearchConstants
-    cb_data = couchbase_n1ql.get_all(cb_constants['philippines'])
-    etl_data = transform.init_pipeline(cb_data)
-    result = elastic.bulk_dump(etl_data, es_constants['country']['philippines'])
+    cb_data = couchbase_n1ql._couchbase_get(cb_constants['philippines'])
+    etl_data = transform.oldcuris2elastic(cb_data)
+    # print(etl_data)
+    # elastic._set_json_dump(etl_data, es_constants['country']['philippines'])
 
 def main():
     oldcuris2elastic()
+    # kobo2oldcuris()
 
 #run as standalone package
 if __name__ == '__main__':

@@ -1,5 +1,7 @@
 import json
 import traceback
+from pipeline.computation import bmi
+from pipeline.hash_maps import hash_map
 
 """
 	CONVERT_TO_FLAT function
@@ -59,7 +61,11 @@ def merger(default, outsider):
 		flag = False
 		for outsider_key, outsider_value in outsider.items():
 			if(default_key == outsider_key):
-				container[default_key] = outsider_value
+				if(type(outsider_value).__name__ == "dict"):
+					container[default_key] = merger(default[default_key], outsider[outsider_key])
+				else:
+					container[default_key] = outsider_value
+
 				flag = True
 		
 		if(flag == False):
@@ -148,7 +154,10 @@ def transformer(extracted_json, mapping_format, final_container):
 	for arr_element in mapping_format:
 		if(arr_element["parent_key_name"] == ""):
 			if(arr_element["key_from"] != ""):
-				final_container[arr_element["key_to"]] = extracted_json[arr_element["key_from"]]
+				if(arr_element["to_compute"]==True):
+					final_container[arr_element["key_to"]] = _computations(arr_element["key_to"], extracted_json, arr_element["fields_for_computation"])
+				else:
+					final_container[arr_element["key_to"]] = extracted_json[arr_element["key_from"]]
 			else:
 				final_container[arr_element["key_to"]] = arr_element["default_value"]
 
@@ -160,3 +169,27 @@ def transformer(extracted_json, mapping_format, final_container):
 				final_container.update(var)
 
 	return final_container
+
+def _computations(_to_compute, extracted_json, fields_needed):
+	# json_attribute = _extract_values(fields_needed, extracted_json)
+	# result = hash_map._execute_computation(json_attribute, _to_compute)
+	# print(result)
+	if(_to_compute == "bmi"):
+		json_attribute = _extract_values(fields_needed, extracted_json)
+		health = bmi.BMI(json_attribute)
+		result = health._do_computation()
+	elif(_to_compute == "organization"):
+		json_attribute = _extract_values(fields_needed, extracted_json)
+		result = json_attribute["Organization"].replace("_", " ")
+	
+	#TODO: Add here if there are new computations
+	
+	return result
+
+def _extract_values(fields_needed, extracted_json):
+	obj = {}
+
+	for attr in fields_needed:
+		obj[attr] = extracted_json[attr]
+
+	return obj

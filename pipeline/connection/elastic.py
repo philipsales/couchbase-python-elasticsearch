@@ -4,7 +4,7 @@ import json
 import logging
 
 from schemas.output import elastic_schema
-from settings import constants
+from settings import base_conf
 
 from elasticsearch import Elasticsearch
 from elasticsearch.exceptions import ConnectionError 
@@ -13,7 +13,7 @@ import logs.logging_conf, logging
 logger = logging.getLogger("elasticsearch.connection")
 import logs.logger as lg
 
-from settings.constants import LoggerConstants
+from settings.base_conf import LoggerConstants
 
 from settings.elastic_conf import ElasticSearchConfig, ElasticSearchENV 
 
@@ -32,7 +32,7 @@ es = Elasticsearch(
     port = conn['PORT'],
     timeout = int(conn['TIMEOUT']))
 
-_log_file_name = LoggerConstants['filename']['etl']
+_log_file_name = LoggerConstants['filenames']['etl']
 
 def update_latest(docs, country):
     try:
@@ -53,37 +53,39 @@ def update_latest(docs, country):
 
     except (ConnectionError) as err: 
         logger.error(error)
-    
 
-def bulk_dump(docs, country):
+def _set_json_dump(docs, country):
     create_mappings(country)
     counter = 0
     bulk_data = []
+
+    for doc in docs:
+        try:
+            _type = list(doc.keys())
+            _body = list(doc.values())
+
+            index = _set_index(country,_type[0])
+
+            _header = { "create" : { "_index" : index,  
+                        "_type" : _type[0], 
+                        "_id" : str(_body[0]["awh_id"]) } }
+
+            bulk_data.append(_header)
+            bulk_data.append(json.dumps(_body[0]))
+            counter += 1
+
+        except TypeError:
+            print("NoneType object!")
+            continue
     
+    logger.info(bulk_data)
+    _total_entries(counter)
+    bulk_dump(bulk_data, country)
+    
+
+def bulk_dump(bulk_data,country):
     try:
-        for doc in docs:
-            try:
-                _type = list(doc.keys())
-                _body = list(doc.values())
-
-                index = _set_index(country,_type[0])
-
-                _header = { "create" : { "_index" : index,  
-                            "_type" : _type[0], 
-                            "_id" : str(_body[0]["awh_id"]) } }
-
-                bulk_data.append(_header)
-                bulk_data.append(json.dumps(_body[0]))
-                counter += 1
-
-            except TypeError:
-                print("NoneType object!")
-                continue
-
-        logger.info(bulk_data)
-        _total_entries(counter)
-        return es.bulk(bulk_data)
-            
+        es.bulk(bulk_data)  
     except (ConnectionError) as err: 
         logger.error(error)
 
@@ -117,13 +119,13 @@ def _total_entries(count):
 
 def create_mappings(country):
     # Crate mapping for demographics
-    _set_mappings(country, constants.ElasticsearchConstants['index']["demographics"])
+    _set_mappings(country, base_conf.ElasticsearchConstants['index']["demographics"])
     # Crate mapping for household
-    _set_mappings(country, constants.ElasticsearchConstants['index']["household"])
+    _set_mappings(country, base_conf.ElasticsearchConstants['index']["household"])
     # Crate mapping for health
-    _set_mappings(country, constants.ElasticsearchConstants["index"]["health"])
+    _set_mappings(country, base_conf.ElasticsearchConstants["index"]["health"])
     # Crate mapping for symptoms
-    _set_mappings(country, constants.ElasticsearchConstants["index"]["symptoms"])
+    _set_mappings(country, base_conf.ElasticsearchConstants["index"]["symptoms"])
 
 def _set_mappings(country, index):
     all_mappings = manage_mapping(index)
@@ -148,17 +150,17 @@ def _set_mappings(country, index):
 
 
 def _set_index(country, schema):
-    return (constants.ElasticsearchConstants['country'][country] 
-            + "_" + constants.ElasticsearchConstants['index'][schema])
+    return (base_conf.ElasticsearchConstants['country'][country] 
+            + "_" + base_conf.ElasticsearchConstants['index'][schema])
 
 def manage_mapping(index):
-    if index == constants.ElasticsearchConstants["index"]["demographics"]:
+    if index == base_conf.ElasticsearchConstants["index"]["demographics"]:
         return elastic_schema.profile_mapping
-    elif index == constants.ElasticsearchConstants["index"]["health"]:
+    elif index == base_conf.ElasticsearchConstants["index"]["health"]:
         return elastic_schema.health_mapping
-    elif index == constants.ElasticsearchConstants["index"]["household"]:
+    elif index == base_conf.ElasticsearchConstants["index"]["household"]:
         return elastic_schema.household_mapping
-    elif index == constants.ElasticsearchConstants["index"]["symptoms"]:
+    elif index == base_conf.ElasticsearchConstants["index"]["symptoms"]:
         return elastic_schema.symptoms_mapping
 
 #run as standalone module

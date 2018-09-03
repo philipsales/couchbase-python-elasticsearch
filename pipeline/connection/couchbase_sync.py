@@ -22,7 +22,7 @@ IP_ADDRESS = conn['IP']
 TIMEOUTE = conn['TIMEOUT']
 PROTOCOL = conn['PROTOCOL']
 PORT = conn['PORT']
-API_ENDPOINT = "_changes?"
+API_ENDPOINT = "_bulk_docs"
 
 def init_couchbase():
     headers = _conn_headers()
@@ -39,6 +39,29 @@ def init_couchbase():
     except (ConnectionError, RequestException, CouchbaseNetworkError) as err: 
         logger.error(err) 
         sys.exit(1)
+
+def push_couchbase(data):
+    headers = _conn_headers()
+    url = _conn_url()
+
+    try:
+
+        couchbase_json = {
+            "docs": data,
+            "new_edits": True
+        }
+        
+        couchbase_json = json.dumps(couchbase_json)
+
+        r = requests.post(url, data=couchbase_json, headers={"Accept":"application/json","Content-type":"application/json"})
+        logger.info(r.status_code)
+        logger.info(r.elapsed.total_seconds())
+        logger.info(r.text)
+        return r
+
+    except (ConnectionError, RequestException, CouchbaseNetworkError) as err: 
+        logger.error(err) 
+        sys.exit(1)  
 
 def _conn_headers():
     #TODO make dynamic pass kwargs

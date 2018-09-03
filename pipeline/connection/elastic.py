@@ -4,7 +4,6 @@ import json
 import logging
 
 from schemas.output import elastic_schema
-from settings import base_conf
 
 from elasticsearch import Elasticsearch
 from elasticsearch.exceptions import ConnectionError 
@@ -13,11 +12,10 @@ import logs.logging_conf, logging
 logger = logging.getLogger("elasticsearch.connection")
 import logs.logger as lg
 
-from settings.base_conf import LoggerConstants
+from settings.base_conf import LOGGER_CONSTANTS, ELASTICSEARCH_CONSTANTS
+from settings.base_conf import elastic_config
 
-from settings.elastic_conf import ElasticSearchConfig, ElasticSearchENV 
-
-conn = ElasticSearchConfig[ElasticSearchENV]
+conn = elastic_config.ElasticSearchConfig[elastic_config.ElasticSearchENV]
 
 INDEX = conn['INDEX']
 DOC_TYPE = conn['TYPE']
@@ -32,7 +30,7 @@ es = Elasticsearch(
     port = conn['PORT'],
     timeout = int(conn['TIMEOUT']))
 
-_log_file_name = LoggerConstants['filenames']['etl']
+_log_file_name = LOGGER_CONSTANTS['filenames']['etl']
 
 def update_latest(docs, country):
     try:
@@ -119,13 +117,13 @@ def _total_entries(count):
 
 def create_mappings(country):
     # Crate mapping for demographics
-    _set_mappings(country, base_conf.ElasticsearchConstants['index']["demographics"])
+    _set_mappings(country, ELASTICSEARCH_CONSTANTS['index']["demographics"])
     # Crate mapping for household
-    _set_mappings(country, base_conf.ElasticsearchConstants['index']["household"])
+    _set_mappings(country, ELASTICSEARCH_CONSTANTS['index']["household"])
     # Crate mapping for health
-    _set_mappings(country, base_conf.ElasticsearchConstants["index"]["health"])
+    _set_mappings(country, ELASTICSEARCH_CONSTANTS["index"]["health"])
     # Crate mapping for symptoms
-    _set_mappings(country, base_conf.ElasticsearchConstants["index"]["symptoms"])
+    _set_mappings(country, ELASTICSEARCH_CONSTANTS["index"]["symptoms"])
 
 def _set_mappings(country, index):
     all_mappings = manage_mapping(index)
@@ -150,17 +148,17 @@ def _set_mappings(country, index):
 
 
 def _set_index(country, schema):
-    return (base_conf.ElasticsearchConstants['country'][country] 
-            + "_" + base_conf.ElasticsearchConstants['index'][schema])
+    return (ELASTICSEARCH_CONSTANTS['country'][country] 
+            + "_" + ELASTICSEARCH_CONSTANTS['index'][schema])
 
 def manage_mapping(index):
-    if index == base_conf.ElasticsearchConstants["index"]["demographics"]:
+    if index == ELASTICSEARCH_CONSTANTS["index"]["demographics"]:
         return elastic_schema.profile_mapping
-    elif index == base_conf.ElasticsearchConstants["index"]["health"]:
+    elif index == ELASTICSEARCH_CONSTANTS["index"]["health"]:
         return elastic_schema.health_mapping
-    elif index == base_conf.ElasticsearchConstants["index"]["household"]:
+    elif index == ELASTICSEARCH_CONSTANTS["index"]["household"]:
         return elastic_schema.household_mapping
-    elif index == base_conf.ElasticsearchConstants["index"]["symptoms"]:
+    elif index == ELASTICSEARCH_CONSTANTS["index"]["symptoms"]:
         return elastic_schema.symptoms_mapping
 
 #run as standalone module

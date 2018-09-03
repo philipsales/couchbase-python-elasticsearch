@@ -1,10 +1,13 @@
+import settings.couchbase_conf as couchbase_config
+import settings.elastic_conf as elastic_config
+import settings.kobo_conf as kobo_config
 
-CouchbaseConstants = {
+COUCHBASE_CONSTANTS = {
     'philippines': 'Philippines',
     'cambodia': 'Cambodia'
 }
 
-ElasticsearchConstants = {
+ELASTICSEARCH_CONSTANTS = {
     'index': {
         'demographics': 'demographics',
         'health': 'health',
@@ -17,7 +20,7 @@ ElasticsearchConstants = {
     }
 }
 
-LoggerConstants = {
+LOGGER_CONSTANTS = {
     'filenames': {
         'etl': 'etl',
         'kobo': 'kobo'

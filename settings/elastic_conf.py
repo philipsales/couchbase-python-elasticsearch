@@ -1,5 +1,5 @@
 
-ElasticSearchENV = "local"
+ElasticSearchENV = "production"
 
 ElasticSearchConfig = {
     'local': {

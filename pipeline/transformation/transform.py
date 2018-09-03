@@ -1,21 +1,17 @@
 import os 
 import sys
-
 import json
-
-from collections import namedtuple
+import datetime as dt
 
 from pipeline.transformation import extractor
 
 from schemas.mapping import oldcuris2elastic_extractor
 from schemas.mapping import kobo2oldcuris_extractor
 
-from settings import base_conf
+from settings.base_conf import ELASTICSEARCH_CONSTANTS
 
 import logs.logging_conf, logging
 logger = logging.getLogger("transformer")
-
-import datetime as dt
 
 from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
@@ -24,10 +20,10 @@ from airflow.operators.python_operator import PythonOperator
 def oldcuris2elastic(data, **kwargs):
     etl_data = []
 
-    demographics_index = base_conf.ElasticsearchConstants['index']['demographics']
-    household_index = base_conf.ElasticsearchConstants['index']['household']
-    health_index = base_conf.ElasticsearchConstants['index']['health']
-    symptoms_index = base_conf.ElasticsearchConstants['index']['symptoms']
+    demographics_index = ELASTICSEARCH_CONSTANTS['index']['demographics']
+    household_index = ELASTICSEARCH_CONSTANTS['index']['household']
+    health_index = ELASTICSEARCH_CONSTANTS['index']['health']
+    symptoms_index = ELASTICSEARCH_CONSTANTS['index']['symptoms']
 
     # Mapping demographics...
     profiles = extractor.map_to_output(data, oldcuris2elastic_extractor.demographics)

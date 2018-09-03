@@ -12,13 +12,13 @@ from requests.exceptions import ConnectionError, RequestException
 
 import logs.logger as lg
 
-from settings.couchbase_conf import CouchbaseConfig, CouchbaseENV
-from settings.base_conf import LoggerConstants
+from settings.base_conf import LOGGER_CONSTANTS
+from settings.base_conf import couchbase_config
 
 import logs.logging_conf, logging
 logger = logging.getLogger("couchbase.n1q1")
 
-conn = CouchbaseConfig[CouchbaseENV]
+conn = couchbase_config.CouchbaseConfig[couchbase_config.CouchbaseENV]
 
 BUCKET = conn['BUCKET'] 
 URL = conn['HOST'] + conn['BUCKET']
@@ -28,7 +28,7 @@ PROTOCOL = conn['PROTOCOL']
 PORT = conn['PORT']
 API_ENDPOINT = "_all_docs?"
 
-_log_file_name = LoggerConstants['filenames']['etl']
+_log_file_name = LOGGER_CONSTANTS['filenames']['etl']
 
 def _couchbase_get(country):
     try:
@@ -72,21 +72,24 @@ def _set_statement(**kwargs):
         query = ("SELECT meta(" + BUCKET + ").id as cb_id, " 
                     + BUCKET + ".* FROM "
                     + BUCKET + " WHERE address.country='"
-                    + country + "' AND _deleted IS MISSING AND type='user-resident'")
+                    + country + "' AND _deleted IS MISSING"
+                    "AND type='user-resident'")
     elif query_type=="batch":
         date_sync = kwargs.get('sync_date', "")
 
         query = ("SELECT meta(" + BUCKET + ").id as cb_id, " 
                     + BUCKET + ".* FROM "
                     + BUCKET + " WHERE address.country='"
-                    + country + "' AND _deleted IS MISSING AND type='user-resident' AND _sync.time_saved LIKE '"
+                    + country + "' AND _deleted IS MISSING " 
+                    "AND type='user-resident' AND _sync.time_saved LIKE '"
                     + date_sync + "%'")
 
     return query
     # return ("SELECT meta(" + BUCKET + ").id as cb_id, " 
     #                 + BUCKET + ".* FROM "
     #                 + BUCKET + " WHERE address.country='"
-    #                 + country + "' AND _deleted IS MISSING AND type='user-resident' LIMIT 20")
+    #                 + country + "' AND _deleted IS MISSING AND "
+    #                 + "type='user-resident' LIMIT 20")
 
 def _dict2json(results):
     counter = 0
@@ -97,7 +100,9 @@ def _dict2json(results):
         counter += 1
         logger.info(counter)
 
-    lg.write_to_log("Count From Couchbase: " + str(counter) + "; ", _log_file_name)
+    lg.write_to_log("Count From Couchbase: " 
+                    + str(counter) 
+                    + "; ", _log_file_name)
 
     return data
 

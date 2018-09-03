@@ -9,10 +9,10 @@ import logs.logger as lg
 import logs.logging_conf, logging
 logger = logging.getLogger("kobo")
 
-from settings.kobo_conf import KoboConfig, KoboENV
-from settings.base_conf import LoggerConstants
+from settings.base_conf import LOGGER_CONSTANTS
+from settings.base_conf import kobo_config
 
-conn = KoboConfig[KoboENV]
+conn = kobo_config.KoboConfig[kobo_config.KoboENV]
 
 URL = conn['HOST']
 IP_ADDRESS = conn['IP'] 
@@ -25,7 +25,7 @@ PK = "5"
 USERNAME = conn['USERNAME']
 PASSWORD = conn['PASSWORD']
 
-_log_file_name = LoggerConstants['filenames']['kobo']
+_log_file_name = LOGGER_CONSTANTS['filenames']['kobo']
 
 def _kobo_get():
     try:

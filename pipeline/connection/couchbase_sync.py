@@ -9,12 +9,12 @@ from couchbase.exceptions import CouchbaseTransientError
 from couchbase.exceptions import CouchbaseNetworkError
 from requests.exceptions import ConnectionError, RequestException 
 
-from settings.couchbase_conf import CouchbaseConfig, CouchbaseENV
+from settings.base_conf import couchbase_config
 
 import logs.logging_conf, logging
 logger = logging.getLogger("couchbase.syncgateway")
 
-conn = CouchbaseConfig[CouchbaseENV]
+conn = couchbase_config.CouchbaseConfig[couchbase_config.CouchbaseENV]
 
 BUCKET = conn['BUCKET'] 
 URL = conn['HOST'] + conn['BUCKET']

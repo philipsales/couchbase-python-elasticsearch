@@ -1,6 +1,6 @@
 import json
 import traceback
-from pipeline.hash_maps import hash_map
+from pipeline.auxiliary import function_map
 
 import logs.logging_conf, logging
 logger = logging.getLogger("mapper")
@@ -27,7 +27,7 @@ logger = logging.getLogger("mapper")
 	@ parameters:
 		obj - json object to be flatten
 
-	Note: This is made for /schemas/mapping/elastic_schema_map under "key_from"
+	Note: This is made for /schemas/mapping/mappers/* under "key_from"
 """
 def convert_to_flat(obj):
 	container = {}
@@ -82,7 +82,7 @@ def merger(default, outsider):
 	
 	@ parameters
 		mapper_json - mapping created to map easily from input to output
-						refer to /schemas/mapping/elastic_schema_map to further understand
+						refer to /schemas/mapping/mappers/* to further understand
 		extracted_json - json extracted from the input
 """
 def dept_creator(mapper_json, extracted_json):
@@ -113,7 +113,7 @@ def dept_creator(mapper_json, extracted_json):
 	
 	@ parameters
 		mapper_json - mapping created to map easily from input to output
-						refer to /schemas/mapping/elastic_schema_map to further understand
+						refer to /schemas/mapping/mappers/* to further understand
 		final_container - final_container from where the final mapped json should be
 		extracted_json - json extracted from the input
 """
@@ -149,7 +149,7 @@ def dept_finder(mapper_json, final_container, extracted_json):
 	@ parameters
 		extracted_json - json extracted from the input
 		mapping_format - mapping created to map easily from input to output
-						refer to /schemas/mapping/elastic_schema_map to further understand
+						refer to /schemas/mapping/mappers/* to further understand
 		final_container - final_container from where the final mapped json should be
 """
 def transformer(extracted_json, mapping_format, final_container):
@@ -172,12 +172,34 @@ def transformer(extracted_json, mapping_format, final_container):
 
 	return final_container
 
+'''
+	COMPUTATIONS function
+	description: This function is responsible for computations
+	params:
+		_to_compute = which of the computations is to be done. Check out
+					/auxiliary/function_map under EXTERNAL FUNCTIONS for
+					reference
+		
+		extracted_json = json extracted from the source
+		fields_needed = array of fields needed for the computation. Checkout 
+						/schemas/mapping/mappers/* under "fields_for_computation"
+						to further understand
+'''
 def _computations(_to_compute, extracted_json, fields_needed):
 	json_attribute = _extract_values(fields_needed, extracted_json)
-	result = hash_map._execute_computation(json_attribute, _to_compute)
+	result = function_map._execute_computation(json_attribute, _to_compute)
 	
 	return result
 
+'''
+	EXTRACT_VALUES function
+	description: The values needed for computations is to be extracted
+	params:
+		fields_needed = array of fields needed for the computation. Checkout 
+						/schemas/mapping/mappers/* under "fields_for_computation"
+						to further understand
+		extracted_json = json extracted from the source
+'''
 def _extract_values(fields_needed, extracted_json):
 	obj = {}
 

@@ -68,6 +68,9 @@ build/
 *.egg-info
 dist/
 
+#data
+data/*
+
 #python compiled cache
 */__pycache__
 __pycache__

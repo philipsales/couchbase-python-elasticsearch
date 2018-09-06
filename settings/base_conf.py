@@ -2,6 +2,10 @@ import settings.couchbase_conf as couchbase_config
 import settings.elastic_conf as elastic_config
 import settings.kobo_conf as kobo_config
 
+# SQLITE CONSTANTS
+SQLITE_DATABASE = './data/kobosqlite.db'
+SQLITE_DATABASE_NAME = 'kobosqlite'
+
 COUCHBASE_CONSTANTS = {
     'philippines': 'Philippines',
     'cambodia': 'Cambodia'

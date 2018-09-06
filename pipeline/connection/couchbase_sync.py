@@ -9,7 +9,12 @@ from couchbase.exceptions import CouchbaseTransientError
 from couchbase.exceptions import CouchbaseNetworkError
 from requests.exceptions import ConnectionError, RequestException 
 
+from settings.base_conf import SQLITE_DATABASE
 from settings.base_conf import couchbase_config
+
+from pipeline.connection import sqlite
+
+from pipeline.auxiliary import sqlite_checker
 
 import logs.logging_conf, logging
 logger = logging.getLogger("couchbase.syncgateway")
@@ -41,9 +46,16 @@ def init_couchbase():
         sys.exit(1)
 
 def push_couchbase(data):
-    headers = _conn_headers()
-    url = _conn_url()
+    url_bulk_docs = _conn_url(api_endpoint="_bulk_docs")
+    conn = sqlite.create_connection(SQLITE_DATABASE)
 
+    if(data["new_data"] != []):
+        _bulk_push_to_couchbase(conn, url_bulk_docs, data['new_data'])
+
+    if(data["old_data"] != []):
+        _push_doc_to_couchbase(conn, data["old_data"])
+
+def _bulk_push_to_couchbase(conn, url, data):
     try:
 
         couchbase_json = {
@@ -53,15 +65,51 @@ def push_couchbase(data):
         
         couchbase_json = json.dumps(couchbase_json)
 
-        r = requests.post(url, data=couchbase_json, headers={"Accept":"application/json","Content-type":"application/json"})
+        r = requests.post(url, 
+            data=couchbase_json, 
+            headers={"Accept":"application/json",
+                "Content-type":"application/json"})
         logger.info(r.status_code)
         logger.info(r.elapsed.total_seconds())
         logger.info(r.text)
+
+        sqlite_checker.update_kobo(conn, data, r.json(), "multiple")
+
         return r
 
     except (ConnectionError, RequestException, CouchbaseNetworkError) as err: 
         logger.error(err) 
-        sys.exit(1)  
+        sys.exit(1) 
+
+def _push_doc_to_couchbase(conn, data):
+
+    try:
+
+        for datum in data:
+        
+            (kobo_id, cb_id, rev_id) = sqlite_checker._get_id(conn, datum["kobo_id"])
+            url_update_doc = _conn_url(api_endpoint=cb_id)
+
+            couchbase_json = datum.copy()
+            couchbase_json["_rev"] = rev_id
+            couchbase_json["_id"] = cb_id
+
+            couchbase_json = json.dumps(couchbase_json)
+
+            r = requests.put(url_update_doc, 
+                data=couchbase_json, 
+                headers={"Accept":"application/json",
+                        "Content-type":"application/json"})
+
+            logger.info(r.status_code)
+            logger.info(r.elapsed.total_seconds())
+            logger.info(r.text)
+
+            sqlite_checker.update_kobo(conn, couchbase_json, r.json(), "single")
+
+    except (ConnectionError, RequestException, CouchbaseNetworkError) as err: 
+            logger.error(err) 
+            sys.exit(1) 
 
 def _conn_headers():
     #TODO make dynamic pass kwargs
@@ -88,7 +136,7 @@ def _conn_url(**kwargs):
     ip_address = IP_ADDRESS
     port = PORT 
     bucket = BUCKET
-    api_endpoint = API_ENDPOINT 
+    api_endpoint = kwargs.get('api_endpoint', "")
 
     urls = protocol + "://"  + ip_address + ":" + port + "/"  + bucket + "/" + api_endpoint  
     logger.info(urls)

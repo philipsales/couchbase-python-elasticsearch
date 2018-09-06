@@ -4,10 +4,12 @@ import logs
 import json
 import datetime as dt
 
-from settings.base_conf import ELASTICSEARCH_CONSTANTS, COUCHBASE_CONSTANTS
+from settings.base_conf import ELASTICSEARCH_CONSTANTS, COUCHBASE_CONSTANTS, SQLITE_DATABASE
 from settings.base_conf import elastic_config, couchbase_config 
 
-from pipeline.connection import couchbase_n1ql, couchbase_sync, elastic, kobo
+from pipeline.auxiliary import sqlite_checker
+
+from pipeline.connection import couchbase_n1ql, couchbase_sync, elastic, kobo, sqlite
 
 from pipeline.transformation import transform
 
@@ -36,7 +38,13 @@ def load_data(**kwargs):
 def kobo2oldcuris():
     kobo_data = kobo._kobo_get()
     etl_data = transform.kobo2oldcuris(kobo_data)
-    result = couchbase_sync.push_couchbase(etl_data)
+
+    conn = sqlite.create_connection(SQLITE_DATABASE) 
+    sqlite._create_table(conn) 
+    sqlite_data = sqlite_checker.segregate_ids(conn,etl_data)
+    
+    result = couchbase_sync.push_couchbase(sqlite_data)
+    sqlite._close_db(conn)
 
 def oldcuris2elastic():
     cb_data = couchbase_n1ql._couchbase_get(COUCHBASE_CONSTANTS['philippines'])

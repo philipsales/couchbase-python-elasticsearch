@@ -279,7 +279,7 @@ old_curis = [
     {
         "key_from": "",
         "key_to": "type",
-        "default_value": "",
+        "default_value": "user-resident",
         "type":"string",
         "parent_key_name":"",
         "to_compute": False,

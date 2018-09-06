@@ -1,3 +1,6 @@
+FEET_TO_INCH = .3048
+HEIGHT_NOT_METRIC = 10.0
+
 class Computations:
     def __init__(self, params):
         self.params = params
@@ -18,15 +21,12 @@ class Computations:
 
             (height, weight) = (variable["height"], variable["weight"])
 
-            # If height is less than 10, the height is probably not in metric
-            if height <= 10.0:
-                # So.. we convert it to metric (inch)
-                height = height * .3048
+            final_height = self._height_to_metric(height)
                 
-            # Computation of BMI happens here
-            bmi = weight / (height * height)
+            # Computation of BMI
+            bmi = weight / (final_height * final_height)
 
-            # Assigning the BMI result here
+            # Assigning the BMI result
             bmi_result = self._categorize_bmi(bmi)
         # This happens when height and weight is a string
         except TypeError:
@@ -35,7 +35,7 @@ class Computations:
         # This happens when the values are zeros
         except ZeroDivisionError:
             bmi_result = ""
-        
+            
         return bmi_result
 
     def organization(self):
@@ -74,3 +74,9 @@ class Computations:
             weight = 0.0
 
         return {"height": height, "weight": weight}
+
+    def _height_to_metric(self,height):
+        if height <= HEIGHT_NOT_METRIC:
+            height = height * FEET_TO_INCH
+
+        return height

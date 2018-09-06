@@ -3,7 +3,7 @@ import uuid
 import json
 import logging
 
-from schemas.output import elastic_schema
+from schemas.output_conf import demographics, health, household, symptoms
 
 from elasticsearch import Elasticsearch
 from elasticsearch.exceptions import ConnectionError 
@@ -86,6 +86,9 @@ def bulk_dump(bulk_data,country):
         es.bulk(bulk_data)  
     except (ConnectionError) as err: 
         logger.error(error)
+    except ValueError as e:
+        logger.error(e)
+        sys.exit(1)
 
 def batch_dump(docs, country):
         create_mappings(country)
@@ -153,13 +156,13 @@ def _set_index(country, schema):
 
 def manage_mapping(index):
     if index == ELASTICSEARCH_CONSTANTS["index"]["demographics"]:
-        return elastic_schema.profile_mapping
+        return demographics.profile_mapping
     elif index == ELASTICSEARCH_CONSTANTS["index"]["health"]:
-        return elastic_schema.health_mapping
+        return health.health_mapping
     elif index == ELASTICSEARCH_CONSTANTS["index"]["household"]:
-        return elastic_schema.household_mapping
+        return household.household_mapping
     elif index == ELASTICSEARCH_CONSTANTS["index"]["symptoms"]:
-        return elastic_schema.symptoms_mapping
+        return symptoms.symptoms_mapping
 
 #run as standalone module
 if __name__ == "__main__":

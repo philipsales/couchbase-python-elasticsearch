@@ -1,5 +1,3 @@
-import sys
-
 personal_info = {
     "_notes": [],
     "What_is_your_gender": "",

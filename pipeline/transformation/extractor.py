@@ -4,7 +4,8 @@ import traceback
 
 from pipeline.transformation import mapper
 
-final = []
+import logs.logging_conf, logging
+logger = logging.getLogger("extractor")
     
 def extract_from_input(arr, extract_settings):
 
@@ -49,6 +50,7 @@ def _deconstruct(data, extract_settings):
     return _flat_json
 
 def map_to_output(raw_data, extract_settings):
+    final = []
     extracted = extract_from_input(raw_data, extract_settings)
     counter = 0
 
@@ -66,7 +68,7 @@ def map_to_output(raw_data, extract_settings):
         final_obj = _json_format(extract_settings["destination"],final_obj)
         final.append(final_obj)
         counter += 1
-        print('--transform: ', counter)
+        logger.info('--transform: ' + str(counter))
 
     return final
 

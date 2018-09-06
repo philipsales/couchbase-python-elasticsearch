@@ -1,10 +1,13 @@
 import sys
-from pipeline.computation import bmi
+from pipeline.computation import utilities
 
+#TODO: Add new function names here if there are new computations
 computations = {
-    "bmi" : "bmi.BMI"
+    "bmi" : "bmi",
+    "organization" : "organization"
 }
 
 def _execute_computation(params, fn):
-    getattr(computations[fn](), "_do_computations")
+    utility = utilities.Computations(params)
+    return getattr(utility, computations[fn])()
     

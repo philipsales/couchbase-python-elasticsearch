@@ -4,7 +4,7 @@ CouchbaseENV = "production"
 
 CouchbaseConfig = {
     'local': {
-        'BUCKET': 'awhcurisdb_dev',
+        'BUCKET': 'awhcurisdb',
         'USERNAME': '',
         'PASSWORD': '',
         'PROTOCOL': 'http',

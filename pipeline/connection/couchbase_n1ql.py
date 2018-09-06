@@ -72,16 +72,18 @@ def _set_statement(**kwargs):
         query = ("SELECT meta(" + BUCKET + ").id as cb_id, " 
                     + BUCKET + ".* FROM "
                     + BUCKET + " WHERE address.country='"
-                    + country + "' AND _deleted IS MISSING"
-                    "AND type='user-resident'")
+                    + country + "' AND _deleted IS MISSING AND "
+                    + "LOWER(organization)!='test rhu' AND "
+                    + "type='user-resident'")
     elif query_type=="batch":
         date_sync = kwargs.get('sync_date', "")
 
         query = ("SELECT meta(" + BUCKET + ").id as cb_id, " 
                     + BUCKET + ".* FROM "
                     + BUCKET + " WHERE address.country='"
-                    + country + "' AND _deleted IS MISSING " 
-                    "AND type='user-resident' AND _sync.time_saved LIKE '"
+                    + country + "' AND _deleted IS MISSING AND " 
+                    + "LOWER(organization)!='test rhu' AND "
+                    + "type='user-resident' AND _sync.time_saved LIKE '"
                     + date_sync + "%'")
 
     return query
@@ -89,7 +91,8 @@ def _set_statement(**kwargs):
     #                 + BUCKET + ".* FROM "
     #                 + BUCKET + " WHERE address.country='"
     #                 + country + "' AND _deleted IS MISSING AND "
-    #                 + "type='user-resident' LIMIT 20")
+    #                 + "LOWER(organization)!='test rhu' AND "
+    #                 + "type='user-resident' LIMIT 5")
 
 def _dict2json(results):
     counter = 0

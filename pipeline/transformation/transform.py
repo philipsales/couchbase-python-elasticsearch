@@ -5,8 +5,8 @@ import datetime as dt
 
 from pipeline.transformation import extractor
 
-from schemas.mapping import oldcuris2elastic_extractor
-from schemas.mapping import kobo2oldcuris_extractor
+from schemas.mapping_conf import oldcuris2elastic_extractor
+from schemas.mapping_conf import kobo2oldcuris_extractor
 
 from settings.base_conf import ELASTICSEARCH_CONSTANTS
 

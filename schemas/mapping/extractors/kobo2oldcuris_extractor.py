@@ -1,6 +1,6 @@
 import sys
-from schemas.mapping import kobo_oldcuris_map
-from schemas.input import kobo_schema
+from schemas.mapping_conf import kobo_oldcuris_map
+from schemas.input_conf import personal_info
 
 '''
 
@@ -16,8 +16,8 @@ destination - destination database
 personal_informations = {
     "json_structure": [],
     "mapping_format": kobo_oldcuris_map.old_curis,
-    "input_format": kobo_schema.personal_info,
-    "final_format": kobo_schema.personal_info,
+    "input_format": personal_info.personal_info,
+    "final_format": personal_info.personal_info,
     "source": "kobo",
     "destination": "couchbase"
 }

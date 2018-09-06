@@ -1,7 +1,9 @@
 import json
 import traceback
-from pipeline.computation import bmi
 from pipeline.hash_maps import hash_map
+
+import logs.logging_conf, logging
+logger = logging.getLogger("mapper")
 
 """
 	CONVERT_TO_FLAT function
@@ -171,18 +173,8 @@ def transformer(extracted_json, mapping_format, final_container):
 	return final_container
 
 def _computations(_to_compute, extracted_json, fields_needed):
-	# json_attribute = _extract_values(fields_needed, extracted_json)
-	# result = hash_map._execute_computation(json_attribute, _to_compute)
-	# print(result)
-	if(_to_compute == "bmi"):
-		json_attribute = _extract_values(fields_needed, extracted_json)
-		health = bmi.BMI(json_attribute)
-		result = health._do_computation()
-	elif(_to_compute == "organization"):
-		json_attribute = _extract_values(fields_needed, extracted_json)
-		result = json_attribute["Organization"].replace("_", " ")
-	
-	#TODO: Add here if there are new computations
+	json_attribute = _extract_values(fields_needed, extracted_json)
+	result = hash_map._execute_computation(json_attribute, _to_compute)
 	
 	return result
 

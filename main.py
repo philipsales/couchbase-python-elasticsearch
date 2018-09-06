@@ -7,17 +7,13 @@ import datetime as dt
 from settings.base_conf import ELASTICSEARCH_CONSTANTS, COUCHBASE_CONSTANTS
 from settings.base_conf import elastic_config, couchbase_config 
 
-#from pipeline.couchbase_n1ql import get_all 
 from pipeline.connection import couchbase_n1ql, couchbase_sync, elastic, kobo
 
-from pipeline.transformation import transform, extractor
+from pipeline.transformation import transform
 
 from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from airflow.operators.python_operator import PythonOperator
-
-cb_constants = CouchbaseConstants
-es_constants = ElasticsearchConstants
 
 def extract_data():
     cb_data = couchbase_sync.init_couchbase()

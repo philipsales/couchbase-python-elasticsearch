@@ -39,7 +39,7 @@ class Computations:
         return bmi_result
 
     def organization(self):
-        org = self.params["Organization"]
+        org = next(iter(self.params.values()))
         return org.replace("_"," ")
 
     '''

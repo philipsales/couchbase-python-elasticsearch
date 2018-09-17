@@ -5,10 +5,16 @@ import datetime as dt
 
 from pipeline.transformation import extractor
 
+from pipeline.auxiliary import sqlite_checker
+from pipeline.auxiliary import getter
+
+from pipeline.connection import sqlite
+
 from schemas.mapping_conf import oldcuris2elastic_extractor
 from schemas.mapping_conf import kobo2oldcuris_extractor
 
-from settings.base_conf import ELASTICSEARCH_CONSTANTS
+from settings.base_conf import ELASTICSEARCH
+from settings.base_conf import sqlite_conf
 
 import logs.logging_conf, logging
 logger = logging.getLogger("transformer")
@@ -17,47 +23,62 @@ from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from airflow.operators.python_operator import PythonOperator
 
+sqlite_conn = sqlite_conf.SQLiteConfig[sqlite_conf.SQLiteENV]
+
+SQLITE_CONN = sqlite_conn['PATH']
+OLD_CURIS = 'old_curis'
+KOBO = 'kobo'
+
 def oldcuris2elastic(data, **kwargs):
     etl_data = []
 
-    demographics_index = ELASTICSEARCH_CONSTANTS['index']['demographics']
-    household_index = ELASTICSEARCH_CONSTANTS['index']['household']
-    health_index = ELASTICSEARCH_CONSTANTS['index']['health']
-    symptoms_index = ELASTICSEARCH_CONSTANTS['index']['symptoms']
-
-    # Mapping demographics...
-    profiles = extractor.map_to_output(data, oldcuris2elastic_extractor.demographics)
-    etl_data.extend(categorize_data(profiles, demographics_index))
+    demographics_index = ELASTICSEARCH['index']['demographics']
+    household_index = ELASTICSEARCH['index']['household']
+    health_index = ELASTICSEARCH['index']['health']
+    symptoms_index = ELASTICSEARCH['index']['symptoms']
     
-    # # Mapping household...
-    household = extractor.map_to_output(data, oldcuris2elastic_extractor.household)
-    etl_data.extend(categorize_data(household, household_index))
+    demographics = _transform(OLD_CURIS, demographics_index, 
+        data, oldcuris2elastic_extractor.demographics)
+    etl_data.extend(_categorize_data(demographics, demographics_index))
 
-    # # Mapping health...
-    health = extractor.map_to_output(data, oldcuris2elastic_extractor.health)
-    etl_data.extend(categorize_data(health, health_index))
+    household = _transform(OLD_CURIS, household_index, 
+        data, oldcuris2elastic_extractor.household)
+    etl_data.extend(_categorize_data(household, household_index))
 
-    # # Mapping symptoms...
-    symptoms = extractor.map_to_output(data, oldcuris2elastic_extractor.symptoms)
-    etl_data.extend(categorize_data(symptoms, symptoms_index))
+    health = _transform(OLD_CURIS, health_index, 
+        data, oldcuris2elastic_extractor.health)
+    etl_data.extend(_categorize_data(health, health_index))
+
+    symptoms = _transform(OLD_CURIS, symptoms_index, 
+        data, oldcuris2elastic_extractor.symptoms)
+    etl_data.extend(_categorize_data(symptoms, symptoms_index))
 
     return etl_data
 
 def kobo2oldcuris(data, **kwargs):
     couchbase_data = []
 
-    mapped_json = extractor.map_to_output(data, kobo2oldcuris_extractor.personal_informations)
+    mapped_json = _transform(KOBO, OLD_CURIS, 
+        data, kobo2oldcuris_extractor.personal_informations)
+
     couchbase_data.extend(mapped_json)
 
-    return couchbase_data
+    conn = sqlite.create_connection(SQLITE_CONN) 
+    sqlite.create_table(conn) 
+    sqlite_data = sqlite_checker.segregate_ids(conn,couchbase_data)
+
+    return sqlite_data
 
 """
     CATEGORIZE_DATA function
+    
+    @params
     data - data filtered from map_to_schema function
     elastic_schema - name of schema (demographics, health, household, symptoms)
-                    recommend that you use the settings.base_conf under ElasticsearchConstatant['index']
+                    recommend that you use the settings.base_conf 
+                    under ElasticsearchConstatant['index']
 """
-def categorize_data(data,elastic_schema):
+def _categorize_data(data,elastic_schema):
     etl_data = []
 
     for row in data:
@@ -67,9 +88,22 @@ def categorize_data(data,elastic_schema):
 
     return etl_data
 
+def _transform(source_project, specific_schema, raw_data, extract_settings):
+    input_schema = getter.get_input_schema(source_project, 
+                extract_settings['json_structure'])
+    output_schema = getter.get_output_schema(source_project, specific_schema)
+
+    extracted_data = extractor.extract_from_input(raw_data, extract_settings, 
+                        input_schema)
+
+    transformed_data = extractor.transform(extracted_data, extract_settings, 
+                            output_schema)
+
+    return transformed_data
+
 #run as standalone module
 if __name__ == "__main__":
-    init_pipeline(data)
+    pass
 
 #run as workflow 
 default_args = {
@@ -83,4 +117,4 @@ with DAG(dag_id='subdg_transform',
     ) as dag:
 
     task_map_to_schema = PythonOperator(task_id='task_map_to_schema', 
-            python_callable=extractor.map_to_output)
+            python_callable=extractor.transform)

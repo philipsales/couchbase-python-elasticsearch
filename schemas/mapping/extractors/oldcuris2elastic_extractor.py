@@ -1,5 +1,4 @@
 import sys
-from schemas.input_conf import profile, demographics, health, symptoms, household
 from schemas.mapping_conf import oldcuris_elastic_map
 
 '''
@@ -16,8 +15,6 @@ destination - destination database
 demographics = {
     "json_structure": ["cb_id", "gender", "birthdate","organization","address","profiles"],
     "mapping_format": oldcuris_elastic_map.demographics,
-    "input_format": profile.profile,
-    "final_format": demographics.demographics,
     "source": "couchbase",
     "destination": "elasticsearch"
 }
@@ -25,8 +22,6 @@ demographics = {
 household = {
     "json_structure": ["cb_id", "organization", "households"],
     "mapping_format": oldcuris_elastic_map.household,
-    "input_format": household.household,
-    "final_format": household.household,
     "source": "couchbase",
     "destination": "elasticsearch"
 }
@@ -34,8 +29,6 @@ household = {
 health = {
     "json_structure": ["cb_id", "organization", "health_informations"],
     "mapping_format": oldcuris_elastic_map.health,
-    "input_format": health.health,
-    "final_format": health.health,
     "source": "couchbase",
     "destination": "elasticsearch"
 }
@@ -43,8 +36,6 @@ health = {
 symptoms = {
     "json_structure": ["cb_id", "organization", "symptoms_collection"],
     "mapping_format": oldcuris_elastic_map.symptoms,
-    "input_format": symptoms.symptoms,
-    "final_format": symptoms.symptoms,
     "source": "couchbase",
     "destination": "elasticsearch"
 }

@@ -4,10 +4,8 @@ import logs
 import json
 import datetime as dt
 
-from settings.base_conf import ELASTICSEARCH_CONSTANTS, COUCHBASE_CONSTANTS, SQLITE_DATABASE
+from settings.base_conf import ELASTICSEARCH, COUCHBASE
 from settings.base_conf import elastic_config, couchbase_config 
-
-from pipeline.auxiliary import sqlite_checker
 
 from pipeline.connection import couchbase_n1ql, couchbase_sync, elastic, kobo, sqlite
 
@@ -17,10 +15,12 @@ from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from airflow.operators.python_operator import PythonOperator
 
+PHILIPPINES = 'philippines'
+CAMBODIA = 'cambodia'
+
 def extract_data():
     cb_data = couchbase_sync.init_couchbase()
-    # cb_constants = CouchbaseConstants
-    # cb_data = couchbase_n1ql.get_all(cb_constants['philippines'])
+    # cb_data = couchbase_n1ql.couchbase_get(COUCHBASE['philippines'])
     return cb_data
 
 def transform_data(**kwargs):
@@ -36,24 +36,19 @@ def load_data(**kwargs):
     return result 
 
 def kobo2oldcuris():
-    kobo_data = kobo._kobo_get()
+    kobo_data = kobo.kobo_get()
     etl_data = transform.kobo2oldcuris(kobo_data)
+    result = couchbase_sync.push_couchbase(etl_data)
 
-    conn = sqlite.create_connection(SQLITE_DATABASE) 
-    sqlite._create_table(conn) 
-    sqlite_data = sqlite_checker.segregate_ids(conn,etl_data)
-    
-    result = couchbase_sync.push_couchbase(sqlite_data)
-    sqlite._close_db(conn)
-
-def oldcuris2elastic():
-    cb_data = couchbase_n1ql._couchbase_get(COUCHBASE_CONSTANTS['philippines'])
+def oldcuris2elastic(country):
+    cb_data = couchbase_n1ql.couchbase_get(COUCHBASE[country])
     etl_data = transform.oldcuris2elastic(cb_data)
-    elastic._set_json_dump(etl_data, ELASTICSEARCH_CONSTANTS['country']['philippines'])
+    elastic.set_json_dump(etl_data, ELASTICSEARCH['country'][country])
 
 def main():
-    oldcuris2elastic()
     # kobo2oldcuris()
+    oldcuris2elastic(PHILIPPINES)
+    
 
 #run as standalone package
 if __name__ == '__main__':

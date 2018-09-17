@@ -1,17 +1,14 @@
 import settings.couchbase_conf as couchbase_config
 import settings.elastic_conf as elastic_config
 import settings.kobo_conf as kobo_config
+import settings.sqlite_conf as sqlite_conf
 
-# SQLITE CONSTANTS
-SQLITE_DATABASE = './data/kobosqlite.db'
-SQLITE_DATABASE_NAME = 'kobosqlite'
-
-COUCHBASE_CONSTANTS = {
+COUCHBASE = {
     'philippines': 'Philippines',
     'cambodia': 'Cambodia'
 }
 
-ELASTICSEARCH_CONSTANTS = {
+ELASTICSEARCH = {
     'index': {
         'demographics': 'demographics',
         'health': 'health',
@@ -24,7 +21,7 @@ ELASTICSEARCH_CONSTANTS = {
     }
 }
 
-LOGGER_CONSTANTS = {
+LOGGER = {
     'filenames': {
         'etl': 'etl',
         'kobo': 'kobo'

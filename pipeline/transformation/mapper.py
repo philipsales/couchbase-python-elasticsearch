@@ -76,29 +76,29 @@ def merger(default, outsider):
 	return container
 
 """
-	DEPT_CREATOR function
-	description: If the dept does not exist, this function will create the mother dept then
+	DEPTH CREATOR function
+	description: If the depth does not exist, this function will create the mother dept then
 					append the leaf key and value
 	
-	@ parameters
+	@ params
 		mapper_json - mapping created to map easily from input to output
 						refer to /schemas/mapping/mappers/* to further understand
 		extracted_json - json extracted from the input
 """
-def dept_creator(mapper_json, extracted_json):
+def _depth_creator(mapper_json, extracted_json):
 	container = {}
 	
-	arr = mapper_json["parent_key_name"].split(".")
+	tmp_arr = mapper_json["parent_key_name"].split(".")
 	mother = {}
-	for i in range(len(arr)):
+	for i in range(len(tmp_arr)):
 		if(i == 0):
-			container[arr[i]] = {}
-			mother = container[arr[i]]
+			container[tmp_arr[i]] = {}
+			mother = container[tmp_arr[i]]
 		else:
-			newMother = mother[arr[i]] = {}
+			newMother = mother[tmp_arr[i]] = {}
 			mother = newMother
 
-		if(i == (len(arr)-1)):
+		if(i == (len(tmp_arr)-1)):
 			try:
 				mother[mapper_json["key_to"]] = extracted_json[mapper_json["key_from"]]
 			except KeyError:
@@ -107,34 +107,34 @@ def dept_creator(mapper_json, extracted_json):
 	return container
 
 """
-	DEPT_FINDER function
+	DEPTH FINDER function
 	description: If the dept already exist, this function will find the mother dept 
 					from the final_container then append the leaf key and value
 	
-	@ parameters
+	@ params
 		mapper_json - mapping created to map easily from input to output
 						refer to /schemas/mapping/mappers/* to further understand
 		final_container - final_container from where the final mapped json should be
 		extracted_json - json extracted from the input
 """
-def dept_finder(mapper_json, final_container, extracted_json):
-	arr = mapper_json["parent_key_name"].split(".")
+def _depth_finder(mapper_json, final_container, extracted_json):
+	tmp_arr = mapper_json["parent_key_name"].split(".")
 	mother = {}
-	for i in range(len(arr)):
+	for i in range(len(tmp_arr)):
 		if(i == 0):
 			try:
-				mother = final_container[arr[i]]
+				mother = final_container[tmp_arr[i]]
 			except KeyError:
 				return False
 		else:
 			try:
-				newMother = mother[arr[i]]
+				newMother = mother[tmp_arr[i]]
 				mother = newMother
 			except KeyError:
-				newMother = mother[arr[i]] = {}
+				newMother = mother[tmp_arr[i]] = {}
 				mother = newMother
 
-		if(i == (len(arr)-1)):
+		if(i == (len(tmp_arr)-1)):
 			try:
 				mother[mapper_json["key_to"]] = extracted_json[mapper_json["key_from"]]
 			except KeyError:
@@ -146,7 +146,7 @@ def dept_finder(mapper_json, final_container, extracted_json):
 	TRANSFORMER function
 	description: Creates the mapping using the mapping_format provided
 
-	@ parameters
+	@ params
 		extracted_json - json extracted from the input
 		mapping_format - mapping created to map easily from input to output
 						refer to /schemas/mapping/mappers/* to further understand
@@ -164,9 +164,9 @@ def transformer(extracted_json, mapping_format, final_container):
 				final_container[arr_element["key_to"]] = arr_element["default_value"]
 
 		elif(arr_element["parent_key_name"] != ""):
-			var = dept_finder(arr_element,final_container,extracted_json)
+			var = _depth_finder(arr_element,final_container,extracted_json)
 			if(var == False):
-				final_container.update(dept_creator(arr_element,extracted_json))
+				final_container.update(_depth_creator(arr_element,extracted_json))
 			else:
 				final_container.update(var)
 
@@ -174,8 +174,8 @@ def transformer(extracted_json, mapping_format, final_container):
 
 '''
 	COMPUTATIONS function
-	description: This function is responsible for computations
-	params:
+	
+	@ params
 		_to_compute = which of the computations is to be done. Check out
 					/auxiliary/function_map under EXTERNAL FUNCTIONS for
 					reference
@@ -187,14 +187,14 @@ def transformer(extracted_json, mapping_format, final_container):
 '''
 def _computations(_to_compute, extracted_json, fields_needed):
 	json_attribute = _extract_values(fields_needed, extracted_json)
-	result = function_map._execute_computation(json_attribute, _to_compute)
+	result = function_map.execute_computation(json_attribute, _to_compute)
 	
 	return result
 
 '''
 	EXTRACT_VALUES function
 	description: The values needed for computations is to be extracted
-	params:
+	@ params
 		fields_needed = array of fields needed for the computation. Checkout 
 						/schemas/mapping/mappers/* under "fields_for_computation"
 						to further understand

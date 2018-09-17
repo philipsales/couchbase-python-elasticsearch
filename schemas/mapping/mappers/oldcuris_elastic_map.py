@@ -301,7 +301,7 @@ health = [
         "fields_for_computation": []
 	},
 	{
-        "key_from": "bmi",
+        "key_from": "",
         "key_to": "bmi",
         "default_value": "",
         "type":"string",
@@ -611,7 +611,7 @@ symptoms = [
 	},
 	{
         "key_from": "symptoms_collection.neck.shoulders",
-        "key_to": "shoulders",
+        "key_to": "shoulder",
         "default_value": [],
         "type":"array",
         "parent_key_name":"neck",

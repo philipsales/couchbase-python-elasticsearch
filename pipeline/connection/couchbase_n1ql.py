@@ -12,7 +12,7 @@ from requests.exceptions import ConnectionError, RequestException
 
 import logs.logger as lg
 
-from settings.base_conf import LOGGER_CONSTANTS
+from settings.base_conf import LOGGER
 from settings.base_conf import couchbase_config
 
 import logs.logging_conf, logging
@@ -28,11 +28,11 @@ PROTOCOL = conn['PROTOCOL']
 PORT = conn['PORT']
 API_ENDPOINT = "_all_docs?"
 
-_log_file_name = LOGGER_CONSTANTS['filenames']['etl']
+_log_file_name = LOGGER['filenames']['etl']
 
-def _couchbase_get(country):
+def couchbase_get(country):
     try:
-        sync_date = lg._get_last_batch_log(_log_file_name)
+        sync_date = lg.get_last_batch_log(_log_file_name)
 
         statement = _set_statement(type='batch',country=country,sync_date=sync_date)
 
@@ -42,10 +42,10 @@ def _couchbase_get(country):
         statement = _set_statement(type='initial',country=country)
         logger.info(statement)
 
-    res = get_all(statement, country)
+    res = _get_all(statement, country)
     return _dict2json(res)
 
-def get_all(statement, country): 
+def _get_all(statement, country): 
     try:
         bucket = Bucket(URL)
         bucket.n1ql_timeout = TIMEOUT

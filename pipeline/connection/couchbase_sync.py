@@ -9,8 +9,7 @@ from couchbase.exceptions import CouchbaseTransientError
 from couchbase.exceptions import CouchbaseNetworkError
 from requests.exceptions import ConnectionError, RequestException 
 
-from settings.base_conf import SQLITE_DATABASE
-from settings.base_conf import couchbase_config
+from settings.base_conf import couchbase_config, sqlite_conf
 
 from pipeline.connection import sqlite
 
@@ -19,15 +18,18 @@ from pipeline.auxiliary import sqlite_checker
 import logs.logging_conf, logging
 logger = logging.getLogger("couchbase.syncgateway")
 
-conn = couchbase_config.CouchbaseConfig[couchbase_config.CouchbaseENV]
+cb_conn = couchbase_config.CouchbaseConfig[couchbase_config.CouchbaseENV]
+sqlite_conn = sqlite_conf.SQLiteConfig[sqlite_conf.SQLiteENV]
 
-BUCKET = conn['BUCKET'] 
-URL = conn['HOST'] + conn['BUCKET']
-IP_ADDRESS = conn['IP'] 
-TIMEOUTE = conn['TIMEOUT']
-PROTOCOL = conn['PROTOCOL']
-PORT = conn['PORT']
+BUCKET = cb_conn['BUCKET'] 
+URL = cb_conn['HOST'] + cb_conn['BUCKET']
+IP_ADDRESS = cb_conn['IP'] 
+TIMEOUTE = cb_conn['TIMEOUT']
+PROTOCOL = cb_conn['PROTOCOL']
+PORT = cb_conn['PORT']
 API_ENDPOINT = "_bulk_docs"
+
+SQLITE_PATH = sqlite_conn['PATH']
 
 def init_couchbase():
     headers = _conn_headers()
@@ -47,13 +49,15 @@ def init_couchbase():
 
 def push_couchbase(data):
     url_bulk_docs = _conn_url(api_endpoint="_bulk_docs")
-    conn = sqlite.create_connection(SQLITE_DATABASE)
+    conn = sqlite.create_connection(SQLITE_PATH)
 
     if(data["new_data"] != []):
         _bulk_push_to_couchbase(conn, url_bulk_docs, data['new_data'])
 
     if(data["old_data"] != []):
         _push_doc_to_couchbase(conn, data["old_data"])
+
+    sqlite.close_db(conn)
 
 def _bulk_push_to_couchbase(conn, url, data):
     try:
@@ -69,11 +73,12 @@ def _bulk_push_to_couchbase(conn, url, data):
             data=couchbase_json, 
             headers={"Accept":"application/json",
                 "Content-type":"application/json"})
+                
         logger.info(r.status_code)
         logger.info(r.elapsed.total_seconds())
         logger.info(r.text)
 
-        sqlite_checker.update_kobo(conn, data, r.json(), "multiple")
+        sqlite_checker.update_many_kobo(conn, data, r.json())
 
         return r
 
@@ -87,7 +92,7 @@ def _push_doc_to_couchbase(conn, data):
 
         for datum in data:
         
-            (kobo_id, cb_id, rev_id) = sqlite_checker._get_id(conn, datum["kobo_id"])
+            (kobo_id, cb_id, rev_id) = sqlite_checker.get_id(conn, datum["kobo_id"])
             url_update_doc = _conn_url(api_endpoint=cb_id)
 
             couchbase_json = datum.copy()
@@ -105,7 +110,7 @@ def _push_doc_to_couchbase(conn, data):
             logger.info(r.elapsed.total_seconds())
             logger.info(r.text)
 
-            sqlite_checker.update_kobo(conn, couchbase_json, r.json(), "single")
+            sqlite_checker.update_one_kobo(conn, couchbase_json, r.json())
 
     except (ConnectionError, RequestException, CouchbaseNetworkError) as err: 
             logger.error(err) 

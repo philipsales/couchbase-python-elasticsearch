@@ -287,3 +287,276 @@ old_curis = [
     }
 
 ]
+
+old_curis_v1 = [
+    {
+        "key_from": "group_xt7zz39/What_is_your_gender",
+        "key_to": "gender",
+        "default_value": "unknown",
+        "type":"string",
+        "parent_key_name":"",
+        "to_compute": False,
+        "fields_for_computation": []
+    },
+    {
+        "key_from": "group_xt7zz39/What_is_your_Post_Zip_Code",
+        "key_to": "postal_code",
+        "default_value": "",
+        "type":"string",
+        "parent_key_name":"address",
+        "to_compute": False,
+        "fields_for_computation": []
+    },
+    {
+        "key_from": "group_sd0ep41/What_is_this_town",
+        "key_to": "province",
+        "default_value": "",
+        "type":"string",
+        "parent_key_name":"address",
+        "to_compute": False,
+        "fields_for_computation": []
+    },
+    {
+        "key_from": "",
+        "key_to": "barangay",
+        "default_value": "",
+        "type":"string",
+        "parent_key_name":"address",
+        "to_compute": False,
+        "fields_for_computation": []
+    },
+    {
+        "key_from": "group_xt7zz39/What_is_your_Post_Zip_Code",
+        "key_to": "postal_code",
+        "default_value": "",
+        "type":"string",
+        "parent_key_name":"address",
+        "to_compute": False,
+        "fields_for_computation": []
+    },
+    {
+        "key_from": "group_xt7zz39/What_is_Line_1_of_your_address",
+        "key_to": "lot_or_house_number",
+        "default_value": "",
+        "type":"string",
+        "parent_key_name":"address",
+        "to_compute": False,
+        "fields_for_computation": []
+    },
+    {
+        "key_from": "group_sd0ep41/What_is_this_country",
+        "key_to": "country",
+        "default_value": "",
+        "type":"string",
+        "parent_key_name":"address",
+        "to_compute": False,
+        "fields_for_computation": []
+    },
+    {
+        "key_from": "group_xt7zz39/What_is_your_First_Name",
+        "key_to": "first_name",
+        "default_value": "",
+        "type":"string",
+        "parent_key_name":"",
+        "to_compute": False,
+        "fields_for_computation": []
+    },
+    {
+        "key_from": "group_xt7zz39/Do_you_have_an_Alias",
+        "key_to": "middle_name",
+        "default_value": "",
+        "type":"string",
+        "parent_key_name":"",
+        "to_compute": False,
+        "fields_for_computation": []
+    },
+    {
+        "key_from": "group_xt7zz39/What_is_your_Family_Name",
+        "key_to": "last_name",
+        "default_value": "",
+        "type":"string",
+        "parent_key_name":"",
+        "to_compute": False,
+        "fields_for_computation": []
+    },
+    {
+        "key_from": "group_xt7zz39/What_is_your_date_of_birth",
+        "key_to": "birthdate",
+        "default_value": "",
+        "type":"string",
+        "parent_key_name":"",
+        "to_compute": False,
+        "fields_for_computation": []
+    },
+    {
+        "key_from": "_submission_time",
+        "key_to": "registered_at",
+        "default_value": "",
+        "type":"string",
+        "parent_key_name":"",
+        "to_compute": False,
+        "fields_for_computation": []
+    },
+    {
+        "key_from": "_uuid",
+        "key_to": "kobo_id",
+        "default_value": "",
+        "type":"string",
+        "parent_key_name":"",
+        "to_compute": False,
+        "fields_for_computation": []
+    },
+    {
+        "key_from": "",
+        "key_to": "profiles",
+        "default_value": [],
+        "type":"array",
+        "parent_key_name":"",
+        "to_compute": False,
+        "fields_for_computation": []
+    },
+    {
+        "key_from": "",
+        "key_to": "health_informations",
+        "default_value": [],
+        "type":"array",
+        "parent_key_name":"",
+        "to_compute": False,
+        "fields_for_computation": []
+    },
+    {
+        "key_from": "",
+        "key_to": "households",
+        "default_value": [],
+        "type":"array",
+        "parent_key_name":"",
+        "to_compute": False,
+        "fields_for_computation": []
+    },
+    {
+        "key_from": "",
+        "key_to": "last_name_suffix",
+        "default_value": "",
+        "type":"string",
+        "parent_key_name":"",
+        "to_compute": False,
+        "fields_for_computation": []
+    },
+    {
+        "key_from": "",
+        "key_to": "name",
+        "default_value": "",
+        "type":"string",
+        "parent_key_name":"profile_picture",
+        "to_compute": False,
+        "fields_for_computation": []
+    },
+    {
+        "key_from": "",
+        "key_to": "path",
+        "default_value": "",
+        "type":"string",
+        "parent_key_name":"profile_picture",
+        "to_compute": False,
+        "fields_for_computation": []
+    },
+    {
+        "key_from": "",
+        "key_to": "country_code",
+        "default_value": "",
+        "type":"string",
+        "parent_key_name":"contact_number",
+        "to_compute": False,
+        "fields_for_computation": []
+    },
+    {
+        "key_from": "",
+        "key_to": "number",
+        "default_value": "",
+        "type":"string",
+        "parent_key_name":"contact_number",
+        "to_compute": False,
+        "fields_for_computation": []
+    },
+    {
+        "key_from": "",
+        "key_to": "email_address",
+        "default_value": "",
+        "type":"string",
+        "parent_key_name":"",
+        "to_compute": False,
+        "fields_for_computation": []
+    },
+    {
+        "key_from": "",
+        "key_to": "child_healths",
+        "default_value": [],
+        "type":"array",
+        "parent_key_name":"",
+        "to_compute": False,
+        "fields_for_computation": []
+    },
+    {
+        "key_from": "",
+        "key_to": "family_members",
+        "default_value": [],
+        "type":"array",
+        "parent_key_name":"",
+        "to_compute": False,
+        "fields_for_computation": []
+    },
+    {
+        "key_from": "",
+        "key_to": "symptoms_collection",
+        "default_value": [],
+        "type":"array",
+        "parent_key_name":"",
+        "to_compute": False,
+        "fields_for_computation": []
+    },
+    {
+        "key_from": "",
+        "key_to": "date_visits",
+        "default_value": [],
+        "type":"array",
+        "parent_key_name":"",
+        "to_compute": False,
+        "fields_for_computation": []
+    },
+    {
+        "key_from": "group_sd0ep41/What_AWH_organisatio_his_registered_under",
+        "key_to": "organization",
+        "default_value": "",
+        "type":"string",
+        "parent_key_name":"",
+        "to_compute": True,
+        "fields_for_computation": ["group_sd0ep41/What_AWH_organisatio_his_registered_under"]
+    },
+    {
+        "key_from": "group_sd0ep41/What_is_the_name_of_resident_is_assigned",
+        "key_to": "id",
+        "default_value": "",
+        "type":"string",
+        "parent_key_name":"user-cam",
+        "to_compute": False,
+        "fields_for_computation": []
+    },
+    {
+        "key_from": "group_sd0ep41/What_is_the_name_of_resident_is_assigned",
+        "key_to": "owner",
+        "default_value": "",
+        "type":"string",
+        "parent_key_name":"user-cam",
+        "to_compute": False,
+        "fields_for_computation": []
+    },
+    {
+        "key_from": "",
+        "key_to": "type",
+        "default_value": "user-resident",
+        "type":"string",
+        "parent_key_name":"",
+        "to_compute": False,
+        "fields_for_computation": []
+    }
+]

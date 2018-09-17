@@ -1,8 +1,12 @@
 import sqlite3
 
-from settings import base_conf
+from settings.base_conf import sqlite_conf
 import logs.logging_conf, logging
 logger = logging.getLogger("sqlite.sqlite")
+
+sqlite_conn = sqlite_conf.SQLiteConfig[sqlite_conf.SQLiteENV]
+
+DB_NAME = sqlite_conn['DB_NAME']
 
 def create_connection(db_file):
     """ create a database connection to the SQLite database
@@ -18,11 +22,11 @@ def create_connection(db_file):
  
     return None
 
-def _create_table(conn):
+def create_table(conn):
     cursor = conn.cursor()
     try:
         query = ("CREATE TABLE IF NOT EXISTS "
-            + base_conf.SQLITE_DATABASE_NAME
+            + DB_NAME
             + "(id INTEGER PRIMARY KEY, kobo_id TEXT, "
             + "cb_id TEXT, rev_id TEXT)")
 
@@ -34,11 +38,11 @@ def _create_table(conn):
         conn.rollback()
         raise e
 
-def _insert_data(conn, kobo_id):
+def insert_data(conn, kobo_id):
     cursor = conn.cursor()
     try:
         query = ("INSERT INTO " 
-            + base_conf.SQLITE_DATABASE_NAME  
+            + DB_NAME 
             + "(kobo_id, cb_id, rev_id) "
             + "VALUES(?,?,?)")
 
@@ -50,29 +54,31 @@ def _insert_data(conn, kobo_id):
     except sqlite3.IntegrityError:
         logger.info('Record already exists')
 
-def _get_data(conn,kobo_id):
+def get_data(conn,kobo_id):
     cursor = conn.cursor()
     query = ("SELECT kobo_id, cb_id, rev_id FROM "
-        + base_conf.SQLITE_DATABASE_NAME  
+        + DB_NAME
         + " WHERE kobo_id=?")
 
     values = (kobo_id,)
 
     cursor.execute(query, values)
     user = cursor.fetchone()
-    logger.info(user)
+    
+    if(user != None):
+        logger.info("User found!")
 
     return user
 
-def _update_data(conn,cb_id, rev_id, kobo_id):
+def update_data(conn,cb_id, rev_id, kobo_id):
     cursor = conn.cursor()
     query = ("UPDATE "
-        + base_conf.SQLITE_DATABASE_NAME
+        + DB_NAME
         + " SET cb_id=?, rev_id=? WHERE kobo_id=?")
     values = (cb_id, rev_id, kobo_id)
     cursor.execute(query,values)
 
     conn.commit()
 
-def _close_db(conn):
+def close_db(conn):
     conn.close()

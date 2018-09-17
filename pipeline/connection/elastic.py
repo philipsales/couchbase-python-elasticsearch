@@ -12,7 +12,7 @@ import logs.logging_conf, logging
 logger = logging.getLogger("elasticsearch.connection")
 import logs.logger as lg
 
-from settings.base_conf import LOGGER_CONSTANTS, ELASTICSEARCH_CONSTANTS
+from settings.base_conf import LOGGER, ELASTICSEARCH
 from settings.base_conf import elastic_config
 
 conn = elastic_config.ElasticSearchConfig[elastic_config.ElasticSearchENV]
@@ -30,7 +30,7 @@ es = Elasticsearch(
     port = conn['PORT'],
     timeout = int(conn['TIMEOUT']))
 
-_log_file_name = LOGGER_CONSTANTS['filenames']['etl']
+_log_file_name = LOGGER['filenames']['etl']
 
 def update_latest(docs, country):
     try:
@@ -52,8 +52,8 @@ def update_latest(docs, country):
     except (ConnectionError) as err: 
         logger.error(error)
 
-def _set_json_dump(docs, country):
-    create_mappings(country)
+def set_json_dump(docs, country):
+    _create_mappings(country)
     counter = 0
     bulk_data = []
 
@@ -78,10 +78,9 @@ def _set_json_dump(docs, country):
     
     logger.info(bulk_data)
     _total_entries(counter)
-    bulk_dump(bulk_data, country)
+    _bulk_dump(bulk_data, country)
     
-
-def bulk_dump(bulk_data,country):
+def _bulk_dump(bulk_data,country):
     try:
         es.bulk(bulk_data)  
     except (ConnectionError) as err: 
@@ -90,8 +89,8 @@ def bulk_dump(bulk_data,country):
         logger.error(e)
         sys.exit(1)
 
-def batch_dump(docs, country):
-        create_mappings(country)
+def _batch_dump(docs, country):
+        _create_mappings(country)
         counter = 0
 
         try:
@@ -118,18 +117,18 @@ def _total_entries(count):
     lg.write_to_log("Total Batch Entries: " + str(count) + "\n", _log_file_name)
     print("Total Batch Entries: {%}", count)
 
-def create_mappings(country):
+def _create_mappings(country):
     # Crate mapping for demographics
-    _set_mappings(country, ELASTICSEARCH_CONSTANTS['index']["demographics"])
+    _set_mappings(country, ELASTICSEARCH['index']["demographics"])
     # Crate mapping for household
-    _set_mappings(country, ELASTICSEARCH_CONSTANTS['index']["household"])
+    _set_mappings(country, ELASTICSEARCH['index']["household"])
     # Crate mapping for health
-    _set_mappings(country, ELASTICSEARCH_CONSTANTS["index"]["health"])
+    _set_mappings(country, ELASTICSEARCH["index"]["health"])
     # Crate mapping for symptoms
-    _set_mappings(country, ELASTICSEARCH_CONSTANTS["index"]["symptoms"])
+    _set_mappings(country, ELASTICSEARCH["index"]["symptoms"])
 
 def _set_mappings(country, index):
-    all_mappings = manage_mapping(index)
+    all_mappings = _manage_mapping(index)
 
     body = '{ "mappings": ' + json.dumps(all_mappings) + ' }'
     main_index = _set_index(country, index)
@@ -151,17 +150,17 @@ def _set_mappings(country, index):
 
 
 def _set_index(country, schema):
-    return (ELASTICSEARCH_CONSTANTS['country'][country] 
-            + "_" + ELASTICSEARCH_CONSTANTS['index'][schema])
+    return (ELASTICSEARCH['country'][country] 
+            + "_" + ELASTICSEARCH['index'][schema])
 
-def manage_mapping(index):
-    if index == ELASTICSEARCH_CONSTANTS["index"]["demographics"]:
+def _manage_mapping(index):
+    if index == ELASTICSEARCH["index"]["demographics"]:
         return demographics.profile_mapping
-    elif index == ELASTICSEARCH_CONSTANTS["index"]["health"]:
+    elif index == ELASTICSEARCH["index"]["health"]:
         return health.health_mapping
-    elif index == ELASTICSEARCH_CONSTANTS["index"]["household"]:
+    elif index == ELASTICSEARCH["index"]["household"]:
         return household.household_mapping
-    elif index == ELASTICSEARCH_CONSTANTS["index"]["symptoms"]:
+    elif index == ELASTICSEARCH["index"]["symptoms"]:
         return symptoms.symptoms_mapping
 
 #run as standalone module

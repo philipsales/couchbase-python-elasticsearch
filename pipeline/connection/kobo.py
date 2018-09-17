@@ -9,27 +9,27 @@ import logs.logger as lg
 import logs.logging_conf, logging
 logger = logging.getLogger("kobo")
 
-from settings.base_conf import LOGGER_CONSTANTS
+from settings.base_conf import LOGGER
 from settings.base_conf import kobo_config
 
-conn = kobo_config.KoboConfig[kobo_config.KoboENV]
+kobo_conn = kobo_config.KoboConfig[kobo_config.KoboENV]
 
-URL = conn['HOST']
-IP_ADDRESS = conn['IP'] 
-TIMEOUT = conn['TIMEOUT']
-PROTOCOL = conn['PROTOCOL']
-PORT = conn['PORT']
-VERSION = conn['VERSION']
+URL = kobo_conn['HOST']
+IP_ADDRESS = kobo_conn['IP'] 
+TIMEOUT = kobo_conn['TIMEOUT']
+PROTOCOL = kobo_conn['PROTOCOL']
+PORT = kobo_conn['PORT']
+VERSION = kobo_conn['VERSION']
 API_ENDPOINT = "data"
-PK = "5"
-USERNAME = conn['USERNAME']
-PASSWORD = conn['PASSWORD']
+PK = "11"
+USERNAME = kobo_conn['USERNAME']
+PASSWORD = kobo_conn['PASSWORD']
 
-_log_file_name = LOGGER_CONSTANTS['filenames']['kobo']
+_log_file_name = LOGGER['filenames']['kobo']
 
-def _kobo_get():
+def kobo_get():
     try:
-        sync_date = lg._get_last_batch_log(_log_file_name)
+        sync_date = lg.get_last_batch_log(_log_file_name)
         _parsed_date = dateutil.parser.parse(sync_date)
         _iso_format_date = dt.datetime.isoformat(_parsed_date)
 
@@ -38,9 +38,9 @@ def _kobo_get():
     except FileNotFoundError:
         url = _conn_url(query=_set_query(type='initial'))
 
-    return get_data(url)
+    return _get_data(url)
 
-def get_data(url):
+def _get_data(url):
     try:
         
         lg.write_to_log("<" + str(dt.datetime.utcnow()) + "> : ", _log_file_name)

@@ -28,30 +28,52 @@ sqlite_conn = sqlite_conf.SQLiteConfig[sqlite_conf.SQLiteENV]
 SQLITE_CONN = sqlite_conn['PATH']
 OLD_CURIS = 'old_curis'
 KOBO = 'kobo'
+DEMOGRAPHICS_INDEX = ELASTICSEARCH['index']['demographics']
+HOUSEHOLD_INDEX = ELASTICSEARCH['index']['household']
+HEALTH_INDEX = ELASTICSEARCH['index']['health']
+SYMPTOMS_INDEX = ELASTICSEARCH['index']['symptoms']
+CHILD_HEALTH_INDEX = ELASTICSEARCH['index']['child_health']
+FAMILY_PLANNING_MATERNAL_HEALTH_INDEX = ELASTICSEARCH['index']['family_planning_and_maternal_health']
+DENTAL_HEALTH = ELASTICSEARCH['index']['dental_health']
 
 def oldcuris2elastic(data, **kwargs):
     etl_data = []
 
-    demographics_index = ELASTICSEARCH['index']['demographics']
-    household_index = ELASTICSEARCH['index']['household']
-    health_index = ELASTICSEARCH['index']['health']
-    symptoms_index = ELASTICSEARCH['index']['symptoms']
-    
-    demographics = _transform(OLD_CURIS, demographics_index, 
+    demographics = _transform(OLD_CURIS, DEMOGRAPHICS_INDEX, 
         data, oldcuris2elastic_extractor.demographics)
-    etl_data.extend(_categorize_data(demographics, demographics_index))
-
-    household = _transform(OLD_CURIS, household_index, 
+    
+    household = _transform(OLD_CURIS, HOUSEHOLD_INDEX, 
         data, oldcuris2elastic_extractor.household)
-    etl_data.extend(_categorize_data(household, household_index))
-
-    health = _transform(OLD_CURIS, health_index, 
+    
+    health = _transform(OLD_CURIS, HEALTH_INDEX, 
         data, oldcuris2elastic_extractor.health)
-    etl_data.extend(_categorize_data(health, health_index))
 
-    symptoms = _transform(OLD_CURIS, symptoms_index, 
+    symptoms = _transform(OLD_CURIS, SYMPTOMS_INDEX, 
         data, oldcuris2elastic_extractor.symptoms)
-    etl_data.extend(_categorize_data(symptoms, symptoms_index))
+
+    child_health = _transform(OLD_CURIS, CHILD_HEALTH_INDEX, 
+        data, oldcuris2elastic_extractor.child_health)
+
+    family_planning_maternal_health = _transform(OLD_CURIS, 
+        FAMILY_PLANNING_MATERNAL_HEALTH_INDEX, 
+        data, oldcuris2elastic_extractor.family_planning_maternal_health)
+    
+    dental_health = _transform(OLD_CURIS, DENTAL_HEALTH, 
+        data, oldcuris2elastic_extractor.dental_health)
+    
+    child_health_tuple = (child_health, CHILD_HEALTH_INDEX)
+    demographics_tuple = (demographics, DEMOGRAPHICS_INDEX)
+    household_tuple = (household, HOUSEHOLD_INDEX)
+    health_tuple = (health, HEALTH_INDEX)
+    symptoms_tuple = (symptoms, SYMPTOMS_INDEX)
+    fpmh_tuple = (family_planning_maternal_health, FAMILY_PLANNING_MATERNAL_HEALTH_INDEX)
+    dental_health_tuple = (dental_health, DENTAL_HEALTH)
+
+    group_tuple = (demographics_tuple, household_tuple, health_tuple, 
+        symptoms_tuple, child_health_tuple,fpmh_tuple, dental_health_tuple)
+    
+
+    etl_data.extend(_load_data(group_tuple))
 
     return etl_data
 
@@ -65,6 +87,8 @@ def kobo2oldcuris(data, **kwargs):
 
     conn = sqlite.create_connection(SQLITE_CONN) 
     sqlite.create_table(conn) 
+    sqlite_checker.update_rev_ids(conn)
+    print(couchbase_data)
     sqlite_data = sqlite_checker.segregate_ids(conn,couchbase_data)
 
     return sqlite_data
@@ -94,12 +118,20 @@ def _transform(source_project, specific_schema, raw_data, extract_settings):
     output_schema = getter.get_output_schema(source_project, specific_schema)
 
     extracted_data = extractor.extract_from_input(raw_data, extract_settings, 
-                        input_schema)
+                    input_schema)
 
     transformed_data = extractor.transform(extracted_data, extract_settings, 
-                            output_schema)
+                    output_schema)
 
     return transformed_data
+
+def _load_data(data_tuple):
+	etl_data = []
+
+	for i in data_tuple:
+		etl_data.extend(_categorize_data(i[0], i[1]))
+
+	return etl_data
 
 #run as standalone module
 if __name__ == "__main__":

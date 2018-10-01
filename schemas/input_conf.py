@@ -1,4 +1,4 @@
-from schemas.input.kobo import personal_info as personal_info
+from schemas.input.kobo import personal_info_522 as personal_info
 from schemas.input.old_curis import old_curis as old_curis
 
 input_schemas = {

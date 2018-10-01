@@ -64,14 +64,14 @@ def merger(default, outsider):
 		for outsider_key, outsider_value in outsider.items():
 			if(default_key == outsider_key):
 				if(type(outsider_value).__name__ == "dict"):
-					container[default_key] = merger(default[default_key], outsider[outsider_key])
+					container[default_key] = merger(default[default_key]['default'], outsider[outsider_key])
 				else:
 					container[default_key] = outsider_value
 
 				flag = True
 		
 		if(flag == False):
-			container[default_key] = default_value
+			container[default_key] = default_value['default']
 	
 	return container
 
@@ -157,7 +157,8 @@ def transformer(extracted_json, mapping_format, final_container):
 		if(arr_element["parent_key_name"] == ""):
 			if(arr_element["key_from"] != ""):
 				if(arr_element["to_compute"]==True):
-					final_container[arr_element["key_to"]] = _computations(arr_element["key_to"], extracted_json, arr_element["fields_for_computation"])
+					final_container[arr_element["key_to"]] = _computations(arr_element["key_to"], 
+						extracted_json, arr_element["fields_for_computation"])
 				else:
 					final_container[arr_element["key_to"]] = extracted_json[arr_element["key_from"]]
 			else:

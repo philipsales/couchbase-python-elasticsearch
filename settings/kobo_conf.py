@@ -12,7 +12,8 @@ KoboConfig = {
         'HOST': '',
         'PORT': '',
         'VERSION':'v1',
-        'TIMEOUT': 7200
+        'TIMEOUT': 7200,
+        'FORM': ''
     },
     'development': {
         'USERNAME': 'admin',
@@ -23,7 +24,8 @@ KoboConfig = {
         'HOST': 'kc.aqm.space',
         'PORT': '',
         'VERSION':'v1',
-        'TIMEOUT': 7200
+        'TIMEOUT': 7200,
+        'FORM': '13'
     },
     'uat': {
         'USERNAME': '',
@@ -34,17 +36,19 @@ KoboConfig = {
         'HOST': '',
         'PORT': '',
         'VERSION':'v1',
-        'TIMEOUT': 7200
+        'TIMEOUT': 7200,
+        'FORM': ''
     },
     'production': {
-        'USERNAME': '',
-        'PASSWORD': '',
-        'PROTOCOL': 'http',
+        'USERNAME': 'koboadmin',
+        'PASSWORD': 'AWH~adm!n123',
+        'PROTOCOL': 'https',
         'SCHEME': 'kobo',
         'IP': '',
-        'HOST': '',
+        'HOST': 'kc.curis.online',
         'PORT': '',
         'VERSION':'v1',
-        'TIMEOUT': 7200
+        'TIMEOUT': 7200,
+        'FORM': '3'
     }
 }

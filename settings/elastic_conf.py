@@ -17,8 +17,8 @@ ElasticSearchConfig = {
         'PASSWORD': '',
         'INDEX': 'philippines',
         'TYPE': 'patients',
-        'SCHEME': 'http',
-        'HOST': '172.104.184.192',
+        'SCHEME': 'https',
+        'HOST': 'elk.curis.online',
         'PORT': 9200,
         'TIMEOUT': 360
     },

@@ -46,6 +46,14 @@ health_mapping = {
             "maintenance_drugs": {"type":"keyword"},
             "high_cost_medicine": {"type": "keyword"},
             "org": {"type":"keyword"},
+            "alcohol_in_a_week": {"type":"keyword"},
+            "taking_long_term_medication": {"type":"keyword"},
+            "why_take_or_not_prescribed_dose": {"type":"keyword"},
+            "how_travel_for_long_term_meds": {"type":"keyword"},
+            "times_exposed_to_smoke": {"type":"keyword"},
+            "do_u_have_disability": {"type":"keyword"},
+            "do_u_have_health_insurance_plan": {"type":"keyword"},
+            "traditional_medicine": {"type":"keyword"},
             "version":{
                 "type":"object",
                 "properties": {
@@ -82,6 +90,14 @@ health_schema = {
     "maintenance_drugs",
     "high_cost_medicine",
     "org",
+    "alcohol_in_a_week",
+    "taking_long_term_medication",
+    "why_take_or_not_prescribed_dose",
+    "how_travel_for_long_term_meds",
+    "times_exposed_to_smoke",
+    "do_u_have_disability",
+    "do_u_have_health_insurance_plan",
+    "traditional_medicine",
     "version"
   ],
   "properties": {
@@ -151,21 +167,21 @@ health_schema = {
           "properties": {
             "systole": {
               "$id": "#/properties/bp/properties/first/properties/systole",
-              "type": "number",
+              "type": "string",
               "title": "The Systole Schema",
-              "default": 0.0,
+              "default": "",
               "examples": [
-                0.0
+                ""
               ],
               "pattern": "^(.*)$"
             },
             "diastole": {
               "$id": "#/properties/bp/properties/first/properties/diastole",
-              "type": "number",
+              "type": "string",
               "title": "The Diastole Schema",
-              "default": 0.0,
+              "default": "",
               "examples": [
-                0.0
+                ""
               ],
               "pattern": "^(.*)$"
             }
@@ -182,21 +198,21 @@ health_schema = {
           "properties": {
             "systole": {
               "$id": "#/properties/bp/properties/second/properties/systole",
-              "type": "number",
+              "type": "string",
               "title": "The Systole Schema",
-              "default": 0.0,
+              "default": "",
               "examples": [
-                0.0
+                ""
               ],
               "pattern": "^(.*)$"
             },
             "diastole": {
               "$id": "#/properties/bp/properties/second/properties/diastole",
-              "type": "number",
+              "type": "string",
               "title": "The Diastole Schema",
-              "default": 0.0,
+              "default": "",
               "examples": [
-                0.0
+                ""
               ],
               "pattern": "^(.*)$"
             }
@@ -213,21 +229,21 @@ health_schema = {
           "properties": {
             "systole": {
               "$id": "#/properties/bp/properties/third/properties/systole",
-              "type": "number",
+              "type": "string",
               "title": "The Systole Schema",
-              "default": 0.0,
+              "default": "",
               "examples": [
-                0.0
+                ""
               ],
               "pattern": "^(.*)$"
             },
             "diastole": {
               "$id": "#/properties/bp/properties/third/properties/diastole",
-              "type": "number",
+              "type": "string",
               "title": "The Diastole Schema",
-              "default": 0.0,
+              "default": "",
               "examples": [
-                0.0
+                ""
               ],
               "pattern": "^(.*)$"
             }
@@ -329,6 +345,86 @@ health_schema = {
       "$id": "#/properties/org",
       "type": "string",
       "title": "The Org Schema",
+      "default": "",
+      "examples": [
+        ""
+      ],
+      "pattern": "^(.*)$"
+    },
+    "alcohol_in_a_week": {
+      "$id": "#/properties/alcohol_in_a_week",
+      "type": "string",
+      "title": "The Alcohol_in_a_week Schema",
+      "default": "",
+      "examples": [
+        ""
+      ],
+      "pattern": "^(.*)$"
+    },
+    "taking_long_term_medication": {
+      "$id": "#/properties/taking_long_term_medication",
+      "type": "string",
+      "title": "The Taking_long_term_medication Schema",
+      "default": "",
+      "examples": [
+        ""
+      ],
+      "pattern": "^(.*)$"
+    },
+    "why_take_or_not_prescribed_dose": {
+      "$id": "#/properties/why_take_or_not_prescribed_dose",
+      "type": "string",
+      "title": "The Why_take_or_not_prescribed_dose Schema",
+      "default": "",
+      "examples": [
+        ""
+      ],
+      "pattern": "^(.*)$"
+    },
+    "how_travel_for_long_term_meds": {
+      "$id": "#/properties/how_travel_for_long_term_meds",
+      "type": "string",
+      "title": "The How_travel_for_long_term_meds Schema",
+      "default": "",
+      "examples": [
+        ""
+      ],
+      "pattern": "^(.*)$"
+    },
+    "times_exposed_to_smoke": {
+      "$id": "#/properties/times_exposed_to_smoke",
+      "type": "string",
+      "title": "The Times_exposed_to_smoke Schema",
+      "default": "",
+      "examples": [
+        ""
+      ],
+      "pattern": "^(.*)$"
+    },
+    "do_u_have_disability": {
+      "$id": "#/properties/do_u_have_disability",
+      "type": "string",
+      "title": "The Do_u_have_disability Schema",
+      "default": "",
+      "examples": [
+        ""
+      ],
+      "pattern": "^(.*)$"
+    },
+    "do_u_have_health_insurance_plan": {
+      "$id": "#/properties/do_u_have_health_insurance_plan",
+      "type": "string",
+      "title": "The Do_u_have_health_insurance_plan Schema",
+      "default": "",
+      "examples": [
+        ""
+      ],
+      "pattern": "^(.*)$"
+    },
+    "traditional_medicine": {
+      "$id": "#/properties/traditional_medicine",
+      "type": "string",
+      "title": "The Traditional_medicine Schema",
       "default": "",
       "examples": [
         ""

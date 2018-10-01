@@ -12,7 +12,7 @@ from requests.exceptions import ConnectionError, RequestException
 
 import logs.logger as lg
 
-from settings.base_conf import LOGGER
+from settings.base_conf import LOGGER, COUCHBASE
 from settings.base_conf import couchbase_config
 
 import logs.logging_conf, logging
@@ -43,7 +43,25 @@ def couchbase_get(country):
         logger.info(statement)
 
     res = _get_all(statement, country)
-    return _dict2json(res)
+    return _dict2json(res, True)
+
+def get_rev_ids(cb_id_arr):
+    statement = ("SELECT _sync.rev as rev_id FROM "
+                + BUCKET + " USE KEYS " + str(cb_id_arr))
+
+    try:
+        bucket = Bucket(URL)
+        bucket.n1ql_timeout = TIMEOUT
+
+        query = N1QLQuery(statement)
+        query.timeout = TIMEOUT 
+
+        res = bucket.n1ql_query(query)
+
+    except (RequestException, CouchbaseTransientError, CouchbaseNetworkError) as err: 
+        logger.error(err)
+
+    return _dict2json(res, False)
 
 def _get_all(statement, country): 
     try:
@@ -67,12 +85,14 @@ def _get_all(statement, country):
 def _set_statement(**kwargs):
     query_type = kwargs.get('type', "")
     country = kwargs.get('country',"")
+    country_iso = country.lower() + "_iso"
 
     if query_type=="initial":
         query = ("SELECT meta(" + BUCKET + ").id as cb_id, " 
                     + BUCKET + ".* FROM "
-                    + BUCKET + " WHERE address.country='"
-                    + country + "' AND _deleted IS MISSING AND "
+                    + BUCKET + " WHERE (address.country='"
+                    + country + "' OR address.country='"
+                    + COUCHBASE[country_iso] + "') AND _deleted IS MISSING AND "
                     + "LOWER(organization)!='test rhu' AND "
                     + "type='user-resident'")
     elif query_type=="batch":
@@ -80,8 +100,9 @@ def _set_statement(**kwargs):
 
         query = ("SELECT meta(" + BUCKET + ").id as cb_id, " 
                     + BUCKET + ".* FROM "
-                    + BUCKET + " WHERE address.country='"
-                    + country + "' AND _deleted IS MISSING AND " 
+                    + BUCKET + " WHERE (address.country='"
+                    + country + "' OR address.country='"
+                    + COUCHBASE[country_iso] + "') AND _deleted IS MISSING AND " 
                     + "LOWER(organization)!='test rhu' AND "
                     + "type='user-resident' AND _sync.time_saved LIKE '"
                     + date_sync + "%'")
@@ -92,9 +113,9 @@ def _set_statement(**kwargs):
     #                 + BUCKET + " WHERE address.country='"
     #                 + country + "' AND _deleted IS MISSING AND "
     #                 + "LOWER(organization)!='test rhu' AND "
-    #                 + "type='user-resident' LIMIT 5")
+    #                 + "type='user-resident' LIMIT 12")
 
-def _dict2json(results):
+def _dict2json(results, is_etl):
     counter = 0
     data = []
 
@@ -103,9 +124,9 @@ def _dict2json(results):
         counter += 1
         logger.info(counter)
 
-    lg.write_to_log("Count From Couchbase: " 
-                    + str(counter) 
-                    + "; ", _log_file_name)
+    if(is_etl == True):
+        lg.write_to_log("Count From Couchbase: " + str(counter) 
+                        + "; ", _log_file_name)
 
     return data
 

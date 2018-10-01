@@ -5,7 +5,9 @@ import settings.sqlite_conf as sqlite_conf
 
 COUCHBASE = {
     'philippines': 'Philippines',
-    'cambodia': 'Cambodia'
+    'philippines_iso': 'PHL',
+    'cambodia': 'Cambodia',
+    'cambodia_iso': 'KHM'
 }
 
 ELASTICSEARCH = {
@@ -13,7 +15,10 @@ ELASTICSEARCH = {
         'demographics': 'demographics',
         'health': 'health',
         'household': 'household',
-        'symptoms': 'symptoms'
+        'symptoms': 'symptoms',
+        'child_health': 'child_health',
+        'family_planning_and_maternal_health' : 'family_planning_and_maternal_health',
+        'dental_health': 'dental_health'
     },
     'country': {
         'philippines': 'philippines',

@@ -9,7 +9,7 @@ profile_mapping = {
             "sex": { "type": "keyword" },
             "birth_date": { 
                 "type": "date",
-                "format": "MM/dd/yyyy"
+                "format": "MM/dd/yyyy||yyyy-MM-dd"
             },
             "deceased": {
                 "type": "object",
@@ -37,9 +37,12 @@ profile_mapping = {
                 "properties": {
                     "is_empl": { "type": "boolean" },
                     "m_income": { "type": "float" },
-                    "nature": { "type": "keyword" }
+                    "nature": { "type": "keyword" },
+                    "currency": { "type": "keyword" }
                 }
             },
+            "where_income_from": { "type": "keyword" },
+            "are_you_currently_earning": { "type": "keyword" },
             "version": {
                 "type": "object",
                 "properties": {
@@ -69,6 +72,8 @@ demographics_schema = {
     "religion",
     "educ",
     "employed",
+    "where_income_from",
+    "are_you_currently_earning",
     "version"
   ],
   "properties": {
@@ -266,11 +271,11 @@ demographics_schema = {
         },
         "m_income": {
           "$id": "#/properties/employed/properties/m_income",
-          "type": "number",
+          "type": "integer",
           "title": "The M_income Schema",
-          "default": 0.0,
+          "default": 0,
           "examples": [
-            0.0
+            0
           ]
         },
         "nature": {
@@ -282,8 +287,38 @@ demographics_schema = {
             ""
           ],
           "pattern": "^(.*)$"
+        },
+        "currency": {
+          "$id": "#/properties/employed/properties/currency",
+          "type": "string",
+          "title": "The Currency Schema",
+          "default": "",
+          "examples": [
+            ""
+          ],
+          "pattern": "^(.*)$"
         }
       }
+    },
+    "where_income_from": {
+      "$id": "#/properties/where_income_from",
+      "type": "string",
+      "title": "The Where_income_from Schema",
+      "default": "",
+      "examples": [
+        ""
+      ],
+      "pattern": "^(.*)$"
+    },
+    "are_you_currently_earning": {
+      "$id": "#/properties/are_you_currently_earning",
+      "type": "string",
+      "title": "The Are_you_currently_earning Schema",
+      "default": "",
+      "examples": [
+        ""
+      ],
+      "pattern": "^(.*)$"
     },
     "version": {
       "$id": "#/properties/version",

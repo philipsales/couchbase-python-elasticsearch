@@ -35,19 +35,30 @@ def _classify_datatype(final_json_struct, schema_properties, field):
 
         try:
             inner_schema = schema_properties[field]['properties']
-            final_json_struct[field] = _extract_json_structure(inner_schema, [])
+            final_json_struct[field] = {}
+            final_json_struct[field]["type"] = schema_properties[field]['type']
+            final_json_struct[field]["default"] = _extract_json_structure(inner_schema, [])
         except KeyError:
             final_json_struct[field] = {}
+            final_json_struct[field]["type"] = 'object'
+            final_json_struct[field]["default"] = {}
 
     elif(schema_properties[field]['type'] == 'array'):
 
         try:
             inner_schema = schema_properties[field]['items']['properties']
-            final_json_struct[field] = _extract_json_structure(inner_schema, [])
+            final_json_struct[field] = {}
+            final_json_struct[field]["type"] = schema_properties[field]['type']
+            final_json_struct[field]["default"] = _extract_json_structure(inner_schema, [])
         except KeyError:
-            final_json_struct[field] = []
+            final_json_struct[field] = {}
+            final_json_struct[field]["type"] = 'array'
+            final_json_struct[field]["default"] = []
             
     else:
-        final_json_struct[field] = schema_properties[field]['default']
+        final_json_struct[field] = {}
+        final_json_struct[field]["type"] = schema_properties[field]['type']
+        final_json_struct[field]["default"] = schema_properties[field]['default']
 
     return final_json_struct
+

@@ -31,8 +31,7 @@ old_curis_schema = {
     "dental_health",
     "disability",
     "type",
-    "user-cam",
-    "date_completed"
+    "user-cam"
   ],
   "properties": {
     "cb_id": {
@@ -2093,16 +2092,6 @@ old_curis_schema = {
           "pattern": "^(.*)$"
         }
       }
-    },
-    "date_completed": {
-      "$id": "#/properties/date_completed",
-      "type": "string",
-      "title": "The Date_completed Schema",
-      "default": "",
-      "examples": [
-        ""
-      ],
-      "pattern": "^(.*)$"
     }
   }
 }

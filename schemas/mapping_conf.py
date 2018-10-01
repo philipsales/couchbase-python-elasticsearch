@@ -1,5 +1,11 @@
-from schemas.mapping.mappers import kobo_oldcuris_map as kobo_oldcuris_map
-from schemas.mapping.mappers import oldcuris_elastic_map as oldcuris_elastic_map
+from schemas.mapping.mappers import kobo_oldcuris_map_522 as kobo_oldcuris_map
+from schemas.mapping.mappers.old_curis2elastic import demographics_map as demographics_map
+from schemas.mapping.mappers.old_curis2elastic import household_map as household_map
+from schemas.mapping.mappers.old_curis2elastic import health_map as health_map
+from schemas.mapping.mappers.old_curis2elastic import symptoms_map as symptoms_map
+from schemas.mapping.mappers.old_curis2elastic import child_health_map as child_health_map
+from schemas.mapping.mappers.old_curis2elastic import fam_planning_maternal_map as fam_planning_maternal_map
+from schemas.mapping.mappers.old_curis2elastic import dental_health_map as dental_health_map
 
 from schemas.mapping.extractors import kobo2oldcuris_extractor as kobo2oldcuris_extractor
 from schemas.mapping.extractors import oldcuris2elastic_extractor as oldcuris2elastic_extractor

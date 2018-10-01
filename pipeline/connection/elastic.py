@@ -3,7 +3,13 @@ import uuid
 import json
 import logging
 
-from schemas.output_conf import demographics, health, household, symptoms
+from schemas.output_conf import demographics
+from schemas.output_conf import health
+from schemas.output_conf import household
+from schemas.output_conf import symptoms
+from schemas.output_conf import child_health
+from schemas.output_conf import fam_planning_maternal
+from schemas.output_conf import dental_health
 
 from elasticsearch import Elasticsearch
 from elasticsearch.exceptions import ConnectionError 
@@ -26,11 +32,19 @@ nodes = [HOST1, HOST2]
 es = Elasticsearch( 
     nodes,
     http_auth = (conn['USERNAME'], conn['PASSWORD']),
-    scheme = conn['SCHEME'],
-    port = conn['PORT'],
+    # scheme = conn['SCHEME'],
+    # port = conn['PORT'],
     timeout = int(conn['TIMEOUT']))
 
 _log_file_name = LOGGER['filenames']['etl']
+
+DEMOGRAPHICS = ELASTICSEARCH['index']['demographics']
+HOUSEHOLD = ELASTICSEARCH['index']['household']
+HEALTH = ELASTICSEARCH['index']['health']
+SYMPTOMS = ELASTICSEARCH['index']['symptoms']
+CHILD_HEALTH = ELASTICSEARCH['index']['child_health']
+FAM_PLAN_MATERNAL = ELASTICSEARCH['index']['family_planning_and_maternal_health']
+DENTAL_HEALTH = ELASTICSEARCH['index']['dental_health']
 
 def update_latest(docs, country):
     try:
@@ -46,7 +60,7 @@ def update_latest(docs, country):
                         id=_body[0]["awh_id"],
                         body={"doc": _body[0]})
             except TypeError:
-                print("NoneType object!")
+                logger.error("NoneType object!")
                 continue
 
     except (ConnectionError) as err: 
@@ -73,7 +87,7 @@ def set_json_dump(docs, country):
             counter += 1
 
         except TypeError:
-            print("NoneType object!")
+            logger.error("NoneType object!")
             continue
     
     logger.info(bulk_data)
@@ -87,7 +101,6 @@ def _bulk_dump(bulk_data,country):
         logger.error(error)
     except ValueError as e:
         logger.error(e)
-        sys.exit(1)
 
 def _batch_dump(docs, country):
         _create_mappings(country)
@@ -118,14 +131,13 @@ def _total_entries(count):
     print("Total Batch Entries: {%}", count)
 
 def _create_mappings(country):
-    # Crate mapping for demographics
-    _set_mappings(country, ELASTICSEARCH['index']["demographics"])
-    # Crate mapping for household
-    _set_mappings(country, ELASTICSEARCH['index']["household"])
-    # Crate mapping for health
-    _set_mappings(country, ELASTICSEARCH["index"]["health"])
-    # Crate mapping for symptoms
-    _set_mappings(country, ELASTICSEARCH["index"]["symptoms"])
+    _set_mappings(country, DEMOGRAPHICS)
+    _set_mappings(country, HOUSEHOLD)
+    _set_mappings(country, HEALTH)
+    _set_mappings(country, SYMPTOMS)
+    _set_mappings(country, CHILD_HEALTH)
+    _set_mappings(country, FAM_PLAN_MATERNAL)
+    _set_mappings(country, DENTAL_HEALTH)
 
 def _set_mappings(country, index):
     all_mappings = _manage_mapping(index)
@@ -154,14 +166,20 @@ def _set_index(country, schema):
             + "_" + ELASTICSEARCH['index'][schema])
 
 def _manage_mapping(index):
-    if index == ELASTICSEARCH["index"]["demographics"]:
+    if index == DEMOGRAPHICS:
         return demographics.profile_mapping
-    elif index == ELASTICSEARCH["index"]["health"]:
+    elif index == HEALTH:
         return health.health_mapping
-    elif index == ELASTICSEARCH["index"]["household"]:
+    elif index == HOUSEHOLD:
         return household.household_mapping
-    elif index == ELASTICSEARCH["index"]["symptoms"]:
+    elif index == SYMPTOMS:
         return symptoms.symptoms_mapping
+    elif index == CHILD_HEALTH:
+        return child_health.child_health_mapping
+    elif index == FAM_PLAN_MATERNAL:
+        return fam_planning_maternal.family_planning_mapping
+    elif index == DENTAL_HEALTH:
+        return dental_health.dental_health_mapping
 
 #run as standalone module
 if __name__ == "__main__":

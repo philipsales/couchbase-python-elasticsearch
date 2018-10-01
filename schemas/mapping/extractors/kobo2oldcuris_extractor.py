@@ -15,7 +15,7 @@ destination - destination database
 
 personal_informations = {
     "json_structure": [],
-    "mapping_format": kobo_oldcuris_map.old_curis_v1,
+    "mapping_format": kobo_oldcuris_map.old_curis,
     "source": "kobo",
     "destination": "couchbase"
 }

@@ -1,6 +1,6 @@
 
 #SERVER Configuration
-CouchbaseENV = "production"
+CouchbaseENV = "development"
 
 CouchbaseConfig = {
     'local': {

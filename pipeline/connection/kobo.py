@@ -21,13 +21,14 @@ PROTOCOL = kobo_conn['PROTOCOL']
 PORT = kobo_conn['PORT']
 VERSION = kobo_conn['VERSION']
 API_ENDPOINT = "data"
-PK = "11"
+PK = kobo_conn['FORM']
 USERNAME = kobo_conn['USERNAME']
 PASSWORD = kobo_conn['PASSWORD']
 
 _log_file_name = LOGGER['filenames']['kobo']
 
 def kobo_get():
+
     try:
         sync_date = lg.get_last_batch_log(_log_file_name)
         _parsed_date = dateutil.parser.parse(sync_date)

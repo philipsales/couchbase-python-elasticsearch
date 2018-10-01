@@ -18,7 +18,7 @@ def create_connection(db_file):
         conn = sqlite3.connect(db_file)
         return conn
     except Error as e:
-        print(e)
+        logger.error(e)
  
     return None
 
@@ -54,7 +54,7 @@ def insert_data(conn, kobo_id):
     except sqlite3.IntegrityError:
         logger.info('Record already exists')
 
-def get_data(conn,kobo_id):
+def get_one_data(conn, kobo_id):
     cursor = conn.cursor()
     query = ("SELECT kobo_id, cb_id, rev_id FROM "
         + DB_NAME
@@ -70,7 +70,18 @@ def get_data(conn,kobo_id):
 
     return user
 
-def update_data(conn,cb_id, rev_id, kobo_id):
+def get_many_data(conn):
+    cursor = conn.cursor()
+    query = ("SELECT cb_id, kobo_id FROM " + DB_NAME)
+    cursor.execute(query)
+    all_rows = cursor.fetchall()
+
+    return all_rows
+
+def update_data(conn, sqlite_data, kobo_id):
+
+    (cb_id, rev_id) = (sqlite_data['id'], sqlite_data['rev'])
+
     cursor = conn.cursor()
     query = ("UPDATE "
         + DB_NAME

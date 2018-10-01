@@ -41,7 +41,7 @@ def transform(extracted, extract_settings, output_schema):
             traceback.print_exc()
             continue
 
-        _datatype_checker(output_schema, final_obj)
+        final_obj = _datatype_checker(output_schema, final_obj)
 
         final_obj = _json_format(extract_settings["destination"], final_obj)
         final.append(final_obj)
@@ -60,18 +60,19 @@ def _deconstruct(data, extract_settings, input_schema):
                 if(type(data[json_attribute]).__name__ == "list"):
                     ctr = len(data[json_attribute])
                     if(ctr==0):
-                        json_obj[json_attribute] = input_schema[json_attribute]
+                        json_obj[json_attribute] = _get_key_and_values(
+                                    input_schema[json_attribute]['default'])
                     else:
                         json_obj[json_attribute] = _get_latest(data[json_attribute], ctr)
                 else:
                     json_obj[json_attribute] = data[json_attribute]
 
             except KeyError:
-                json_obj[json_attribute] = input_schema[json_attribute]
+                json_obj[json_attribute] = _get_key_and_values(input_schema[json_attribute]['default'])
 
     elif len(extract_settings["json_structure"]) == 0:
         json_obj = data
-    
+
     final_json_obj = mapper.merger(input_schema, json_obj)
     # final_json_obj = cleaner.clean_data(final_json_obj)
 
@@ -92,19 +93,34 @@ def _json_format(destination, obj):
 def _datatype_checker(output_schema, final_obj):
     for key, value in final_obj.items():
         try:
-            schema_datatype = type(output_schema[key]).__name__
+            schema_datatype = type(output_schema[key]['default']).__name__
             obj_datatype = type(value).__name__
 
             if(schema_datatype == obj_datatype):
-                if(schema_datatype == 'dict'):
-                    _datatype_checker(output_schema[key],value)
+                if(output_schema[key]['type'] == 'object'):
+                    _datatype_checker(output_schema[key]['default'], value)
+                elif(output_schema[key]['type'] == 'array'):
+                    tmp_array = []
+
+                    if(type(value).__name__ == 'list'):
+                        tmp_array.extend(value)
+                    else:
+                        tmp_array.extend([value])
+
+                    final_obj[key] = tmp_array
                 else:
                     continue
             else:
-                final_obj[key] = _type_casting(output_schema[key], value)
+                if((str(schema_datatype) == 'dict') or (str(schema_datatype) == 'list')):
+                    continue
+                else:
+                    final_obj[key] = _type_casting(output_schema[key]['default'], value)
+                    
 
         except KeyError:
             logger.warn(str(key) + " does not exist on the output schema")
+
+    return final_obj
 
 def _type_casting(default_value, final_value):
     try:
@@ -115,3 +131,13 @@ def _type_casting(default_value, final_value):
         logger.err("key does not exist")
 
     return final_value
+
+def _get_key_and_values(json_obj):
+    final_json = {}
+    for key, value in json_obj.items():
+        if(type(value['default']).__name__ == "dict"):
+            final_json[key] = _get_key_and_values(value['default'])
+        else:
+            final_json[key] = value['default']
+
+    return final_json

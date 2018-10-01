@@ -14,6 +14,9 @@ household_mapping = {
             "type_of_sanitation": {"type":"keyword"}, 
             "sanitation_ownerships": {"type":"keyword"},
             "org": {"type":"keyword"},
+            "water_sources": {"type":"keyword"},
+            "how_u_ensure_water_safe": {"type":"keyword"},
+            "what_do_u_use_to_wash_hands": {"type":"keyword"},
             "version":{
                 "type":"object",
                 "properties": {
@@ -42,6 +45,9 @@ household_schema = {
     "type_of_sanitation",
     "sanitation_ownerships",
     "org",
+    "water_sources",
+    "how_u_ensure_water_safe",
+    "what_do_u_use_to_wash_hands",
     "version"
   ],
   "properties": {
@@ -127,6 +133,26 @@ household_schema = {
       "$id": "#/properties/org",
       "type": "string",
       "title": "The Org Schema",
+      "default": "",
+      "examples": [
+        ""
+      ],
+      "pattern": "^(.*)$"
+    },
+    "water_sources": {
+      "$id": "#/properties/water_sources",
+      "type": "array",
+      "title": "The Water_sources Schema"
+    },
+    "how_u_ensure_water_safe": {
+      "$id": "#/properties/how_u_ensure_water_safe",
+      "type": "array",
+      "title": "The How_u_ensure_water_safe Schema"
+    },
+    "what_do_u_use_to_wash_hands": {
+      "$id": "#/properties/what_do_u_use_to_wash_hands",
+      "type": "string",
+      "title": "The What_do_u_use_to_wash_hands Schema",
       "default": "",
       "examples": [
         ""

@@ -5,6 +5,8 @@ import traceback
 from pipeline.transformation import mapper
 from pipeline.cleaning import cleaner
 
+from pipeline.transformation import converter
+
 import logs.logging_conf, logging
 logger = logging.getLogger("extractor")
 
@@ -34,8 +36,11 @@ def transform(extracted, extract_settings, output_schema):
         obj = {}
 
         try:
-            final_obj = mapper.transformer(_json_object, 
-                        extract_settings['mapping_format'], obj)
+            mapping_format = converter.csv2json(extract_settings['mapping_file'])
+            # final_obj = mapper.transformer(_json_object, 
+            #             extract_settings['mapping_format'], obj)
+
+            final_obj = mapper.transformer(_json_object, mapping_format, obj)
         except AttributeError:
             logger.info("Something went terribly wrong!")
             traceback.print_exc()

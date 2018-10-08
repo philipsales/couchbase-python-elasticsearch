@@ -21,11 +21,9 @@ def _extract_json_structure(schema_properties, fields_needed):
     
     if fields_needed != []:
         for field in fields_needed:
-            # Change to much sophisticated code
             final_json_struct.update(_classify_datatype(final_json_struct, schema_properties, field))
     else:
         for field in schema_properties:
-            # Change to much sophisticated code
             final_json_struct.update(_classify_datatype(final_json_struct, schema_properties, field))
     
     return final_json_struct

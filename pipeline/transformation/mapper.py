@@ -1,9 +1,12 @@
 import json
 import traceback
+import datetime
 from pipeline.auxiliary import function_map
 
 import logs.logging_conf, logging
 logger = logging.getLogger("mapper")
+
+DEFAULT_DATE = "date_now"
 
 """
 	CONVERT_TO_FLAT function
@@ -102,7 +105,8 @@ def _depth_creator(mapper_json, extracted_json):
 			try:
 				parent[mapper_json["key_to"]] = extracted_json[mapper_json["key_from"]]
 			except KeyError:
-				parent[mapper_json["key_to"]] = mapper_json["default_value"]
+				parent[mapper_json["key_to"]] = _default_value_checker(mapper_json["type"], 
+						mapper_json["default_value"])
 			
 	return container
 
@@ -138,7 +142,8 @@ def _depth_finder(mapper_json, final_container, extracted_json):
 			try:
 				parent[mapper_json["key_to"]] = extracted_json[mapper_json["key_from"]]
 			except KeyError:
-				parent[mapper_json["key_to"]] = mapper_json["default_value"]
+				parent[mapper_json["key_to"]] = _default_value_checker(mapper_json["type"], 
+						mapper_json["default_value"])
 
 	return final_container
 
@@ -166,7 +171,8 @@ def transformer(extracted_json, mapping_format, final_container):
 					final_container[arr_element["key_to"]] = _computations(arr_element["key_to"], 
 						extracted_json, arr_element["fields_for_computation"])
 				else:
-					final_container[arr_element["key_to"]] = arr_element["default_value"]
+					final_container[arr_element["key_to"]] = _default_value_checker(arr_element["type"], 
+						arr_element["default_value"])
 
 		elif(arr_element["parent_key_name"] != ""):
 			var = _depth_finder(arr_element,final_container,extracted_json)
@@ -212,3 +218,23 @@ def _extract_values(fields_needed, extracted_json):
 		obj[attr] = extracted_json[attr]
 
 	return obj
+
+def _default_value_checker(data_type, default_value):
+	default_val = ""
+
+	if(data_type == "array"):
+		if(default_value == DEFAULT_DATE):
+			default_val = []
+			default_val = default_val.extend([datetime.datetime.now().isoformat()])
+		elif(default_value != ""):
+			default_val = []
+			default_val = default_val.extend([default_value])
+		else:
+			default_val = []
+	
+	elif(data_type == "date"):
+		default_val = datetime.datetime.now().isoformat()
+	else:
+		default_val = default_value
+	
+	return default_val

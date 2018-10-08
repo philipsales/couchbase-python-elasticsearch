@@ -2,8 +2,6 @@ import json
 from schemas.input_conf import input_schemas
 from schemas.output_conf import output_schemas
 
-OLD_CURIS = 'old_curis'
-
 def get_input_schema(source_project, fields_needed):
     schema = input_schemas[source_project]
     schema_properties = schema['properties']
@@ -23,10 +21,12 @@ def _extract_json_structure(schema_properties, fields_needed):
     
     if fields_needed != []:
         for field in fields_needed:
-            final_json_struct = _classify_datatype(final_json_struct, schema_properties, field)
+            # Change to much sophisticated code
+            final_json_struct.update(_classify_datatype(final_json_struct, schema_properties, field))
     else:
         for field in schema_properties:
-            final_json_struct = _classify_datatype(final_json_struct, schema_properties, field)
+            # Change to much sophisticated code
+            final_json_struct.update(_classify_datatype(final_json_struct, schema_properties, field))
     
     return final_json_struct
 

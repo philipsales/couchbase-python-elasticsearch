@@ -9,10 +9,11 @@ dental_health_mapping = {
 			"dental_health": {
 				"type":"object",
 				"properties": {
-				    "do_you_own_toothbrush": {"type": "boolean"},
-				    "times_clean_teeth_daily": {"type": "keyword"},
+          "do_you_own_toothbrush": {"type": "boolean"},
+          "times_clean_teeth_daily": {"type": "keyword"},
 					"what_problems": {"type": "keyword"},
-					"what_do_u_use_to_clean_teeth": {"type": "keyword"}
+					"what_do_u_use_to_clean_teeth": {"type": "keyword"},
+          "family_members_d_problems_last_6_months": {"type": "keyword"}
 				}
 			},
 			"version":{
@@ -67,7 +68,8 @@ dental_health_schema = {
         "do_you_own_toothbrush",
         "times_clean_teeth_daily",
         "what_problems",
-        "what_do_u_use_to_clean_teeth"
+        "what_do_u_use_to_clean_teeth",
+        "family_members_d_problems_last_6_months"
       ],
       "properties": {
         "do_you_own_toothbrush": {
@@ -98,6 +100,16 @@ dental_health_schema = {
           "$id": "#/properties/dental_health/properties/what_do_u_use_to_clean_teeth",
           "type": "string",
           "title": "The What_do_u_use_to_clean_teeth Schema",
+          "default": "",
+          "examples": [
+            ""
+          ],
+          "pattern": "^(.*)$"
+        },
+        "family_members_d_problems_last_6_months": {
+          "$id": "#/properties/dental_health/properties/family_members_d_problems_last_6_months",
+          "type": "string",
+          "title": "The Family_members_d_problems_last_6_months Schema",
           "default": "",
           "examples": [
             ""

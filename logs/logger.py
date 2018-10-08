@@ -11,12 +11,15 @@ def get_last_batch_log(filename):
     lineList = fileHandle.readlines()
     fileHandle.close()
 
-    theDate = __get_date_from_string(lineList[-1], "<", ">")
-    theDate = theDate[:-16]
+    try:
+        theDate = _get_date_from_string(lineList[-1], "<", ">")
+        theDate = theDate[:-16]
+    except:
+        theDate = None
 
     return theDate
 
-def __get_date_from_string(string, first, last):
+def _get_date_from_string(string, first, last):
     try:
         start = string.index( first ) + len( first )
         end = string.index( last, start )

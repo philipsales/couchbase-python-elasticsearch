@@ -6,7 +6,7 @@ from schemas.output.elastic import child_health as child_health
 from schemas.output.elastic import fam_planning_maternal as fam_planning_maternal
 from schemas.output.elastic import dental_health as dental_health
 
-from schemas.output.old_curis import old_curis_522 as old_curis
+from schemas.output.old_curis import old_curis_5_2_2 as old_curis
 
 output_schemas = {
     'old_curis': {

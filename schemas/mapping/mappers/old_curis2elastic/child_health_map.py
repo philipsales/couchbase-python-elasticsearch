@@ -153,7 +153,7 @@ child_health = [
         {
                 'default_value': '',
                 'fields_for_computation': [],
-                'key_from': 'child_healths.others.times_struggled_to_provide_food_for_child',
+                'key_from': 'child_healths.child.times_struggled_to_provide_food_for_child',
                 'key_to': 'times_struggled_to_provide_food_for_child',
                 'parent_key_name': 'child',
                 'to_compute': False,
@@ -162,7 +162,7 @@ child_health = [
         {
                 'default_value': '',
                 'fields_for_computation': [],
-                'key_from': 'child_healths.others.treatment_for_malnutrition',
+                'key_from': 'child_healths.child.treatment_for_malnutrition',
                 'key_to': 'treatment_for_malnutrition',
                 'parent_key_name': 'child',
                 'to_compute': False,
@@ -171,7 +171,7 @@ child_health = [
         {
                 'default_value': '',
                 'fields_for_computation': [],
-                'key_from': 'child_healths.others.if_yes_what_treatment',
+                'key_from': 'child_healths.child.if_yes_what_treatment',
                 'key_to': 'if_yes_what_treatment',
                 'parent_key_name': 'child',
                 'to_compute': False,
@@ -200,7 +200,7 @@ child_health = [
                 'fields_for_computation': [],
                 'key_from': 'child_healths.infant.where_was_baby_delivered',
                 'key_to': 'where_was_baby_delivered',
-                'parent_key_name': 'child_healths.infant',
+                'parent_key_name': 'infant',
                 'to_compute': False,
                 'type': 'string'
         },
@@ -209,7 +209,7 @@ child_health = [
                 'fields_for_computation': [],
                 'key_from': 'child_healths.infant.how_soon_colostrum_br_milk_after_delivery',
                 'key_to': 'how_soon_colostrum_br_milk_after_delivery',
-                'parent_key_name': 'child_healths.infant',
+                'parent_key_name': 'infant',
                 'to_compute': False,
                 'type': 'string'
         },
@@ -218,7 +218,7 @@ child_health = [
                 'fields_for_computation': [],
                 'key_from': 'child_healths.newborn.where_was_baby_delivered',
                 'key_to': 'where_was_baby_delivered',
-                'parent_key_name': 'child_healths.newborn',
+                'parent_key_name': 'newborn',
                 'to_compute': False,
                 'type': 'string'
         },
@@ -227,7 +227,7 @@ child_health = [
                 'fields_for_computation': [],
                 'key_from': 'child_healths.infant.why_not_deliver_in_health_center',
                 'key_to': 'why_not_deliver_in_health_center',
-                'parent_key_name': 'child_healths.infant',
+                'parent_key_name': 'infant',
                 'to_compute': False,
                 'type': 'string'
         },
@@ -236,7 +236,7 @@ child_health = [
                 'fields_for_computation': [],
                 'key_from': 'child_healths.infant.place_receive_ANC',
                 'key_to': 'place_receive_ANC',
-                'parent_key_name': 'child_healths.infant',
+                'parent_key_name': 'infant',
                 'to_compute': False,
                 'type': 'string'
         },
@@ -245,7 +245,7 @@ child_health = [
                 'fields_for_computation': [],
                 'key_from': 'child_healths.newborn.why_not_deliver_in_health_center',
                 'key_to': 'why_not_deliver_in_health_center',
-                'parent_key_name': 'child_healths.newborn',
+                'parent_key_name': 'newborn',
                 'to_compute': False,
                 'type': 'string'
         },
@@ -254,7 +254,7 @@ child_health = [
                 'fields_for_computation': [],
                 'key_from': 'child_healths.infant.months_of_exclusive_breast_feeding',
                 'key_to': 'months_of_exclusive_breast_feeding',
-                'parent_key_name': 'child_healths.infant',
+                'parent_key_name': 'infant',
                 'to_compute': False,
                 'type': 'string'
         },
@@ -263,7 +263,7 @@ child_health = [
                 'fields_for_computation': [],
                 'key_from': 'child_healths.infant.kind_of_solid_food',
                 'key_to': 'kind_of_solid_food',
-                'parent_key_name': 'child_healths.infant',
+                'parent_key_name': 'infant',
                 'to_compute': False,
                 'type': 'string'
         },
@@ -272,7 +272,7 @@ child_health = [
                 'fields_for_computation': [],
                 'key_from': 'child_healths.infant.provided_first_breast_milk',
                 'key_to': 'provided_first_breast_milk',
-                'parent_key_name': 'child_healths.infant',
+                'parent_key_name': 'infant',
                 'to_compute': False,
                 'type': 'string'
         },
@@ -281,7 +281,7 @@ child_health = [
                 'fields_for_computation': [],
                 'key_from': 'child_healths.newborn.provide_colostrum_or_breast_milk_after_delivery',
                 'key_to': 'provide_colostrum_or_breast_milk_after_delivery',
-                'parent_key_name': 'child_healths.newborn',
+                'parent_key_name': 'newborn',
                 'to_compute': False,
                 'type': 'string'
         },
@@ -290,7 +290,7 @@ child_health = [
                 'fields_for_computation': [],
                 'key_from': 'child_healths.newborn.ANC_visits',
                 'key_to': 'ANC_visits',
-                'parent_key_name': 'child_healths.newborn',
+                'parent_key_name': 'newborn',
                 'to_compute': False,
                 'type': 'integer'
         },
@@ -299,7 +299,7 @@ child_health = [
                 'fields_for_computation': [],
                 'key_from': 'child_healths.newborn.provided_first_breast_milk',
                 'key_to': 'provided_first_breast_milk',
-                'parent_key_name': 'child_healths.newborn',
+                'parent_key_name': 'newborn',
                 'to_compute': False,
                 'type': 'string'
         },
@@ -308,7 +308,7 @@ child_health = [
                 'fields_for_computation': [],
                 'key_from': 'child_healths.newborn.place_receive_ANC',
                 'key_to': 'place_receive_ANC',
-                'parent_key_name': 'child_healths.newborn',
+                'parent_key_name': 'newborn',
                 'to_compute': False,
                 'type': 'string'
         },
@@ -317,7 +317,7 @@ child_health = [
                 'fields_for_computation': [],
                 'key_from': 'child_healths.infant.ANC_visits',
                 'key_to': 'ANC_visits',
-                'parent_key_name': 'child_healths.infant',
+                'parent_key_name': 'infant',
                 'to_compute': False,
                 'type': 'integer'
         },
@@ -326,7 +326,7 @@ child_health = [
                 'fields_for_computation': [],
                 'key_from': 'child_healths.newborn.how_soon_colostrum_br_milk_after_delivery',
                 'key_to': 'how_soon_colostrum_br_milk_after_delivery',
-                'parent_key_name': 'child_healths.newborn',
+                'parent_key_name': 'newborn',
                 'to_compute': False,
                 'type': 'string'
         }

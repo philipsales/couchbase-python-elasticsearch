@@ -1,4 +1,4 @@
-from schemas.mapping.mappers import kobo_oldcuris_map_522 as kobo_oldcuris_map
+from schemas.mapping.mappers import kobo_oldcuris_map_5_2_2 as kobo_oldcuris_map
 from schemas.mapping.mappers.old_curis2elastic import demographics_map as demographics_map
 from schemas.mapping.mappers.old_curis2elastic import household_map as household_map
 from schemas.mapping.mappers.old_curis2elastic import health_map as health_map

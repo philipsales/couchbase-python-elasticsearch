@@ -7,7 +7,7 @@ computations = {
     "organization" : "organization"
 }
 
-def execute_computation(params, fn):
+def compute(params, fn):
     utility = utilities.Computations(params)
     return getattr(utility, computations[fn])()
     

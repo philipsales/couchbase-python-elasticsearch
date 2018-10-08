@@ -181,6 +181,12 @@ def _manage_mapping(index):
     elif index == DENTAL_HEALTH:
         return dental_health.dental_health_mapping
 
+def _set_log_filename(country):
+    if country == PHILIPPINES:
+        return LOG_PHL
+    elif country == CAMBODIA:
+        return LOG_KHM
+
 #run as standalone module
 if __name__ == "__main__":
     bulk_dump(data)

@@ -31,6 +31,10 @@ def kobo_get():
 
     try:
         sync_date = lg.get_last_batch_log(_log_file_name)
+
+        if(sync_date == None):
+            raise FileNotFoundError
+
         _parsed_date = dateutil.parser.parse(sync_date)
         _iso_format_date = dt.datetime.isoformat(_parsed_date)
 

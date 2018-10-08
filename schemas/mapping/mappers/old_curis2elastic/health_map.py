@@ -245,7 +245,7 @@ health = [
                 'fields_for_computation': [],
                 'key_from': 'health_informations.times_exposed_to_smoke',
                 'key_to': 'times_exposed_to_smoke',
-                'parent_key_name': 'health_informations',
+                'parent_key_name': '',
                 'to_compute': False,
                 'type': 'string'
         },
@@ -254,7 +254,7 @@ health = [
                 'fields_for_computation': [],
                 'key_from': 'health_informations.times_exposed_to_smoke',
                 'key_to': 'how_travel_for_long_term_meds',
-                'parent_key_name': 'health_informations',
+                'parent_key_name': '',
                 'to_compute': False,
                 'type': 'string'
         },
@@ -263,7 +263,7 @@ health = [
                 'fields_for_computation': [],
                 'key_from': 'health_informations.do_u_have_disability',
                 'key_to': 'do_u_have_disability',
-                'parent_key_name': 'health_informations',
+                'parent_key_name': '',
                 'to_compute': False,
                 'type': 'string'
         },
@@ -272,7 +272,7 @@ health = [
                 'fields_for_computation': [],
                 'key_from': 'health_informations.alcohol_in_a_week',
                 'key_to': 'alcohol_in_a_week',
-                'parent_key_name': 'health_informations',
+                'parent_key_name': '',
                 'to_compute': False,
                 'type': 'string'
         },
@@ -281,7 +281,7 @@ health = [
                 'fields_for_computation': [],
                 'key_from': 'health_informations.traditional_medicine',
                 'key_to': 'traditional_medicine',
-                'parent_key_name': 'health_informations',
+                'parent_key_name': '',
                 'to_compute': False,
                 'type': 'string'
         },
@@ -290,7 +290,7 @@ health = [
                 'fields_for_computation': [],
                 'key_from': 'health_informations.taking_long_term_medication',
                 'key_to': 'taking_long_term_medication',
-                'parent_key_name': 'health_informations',
+                'parent_key_name': '',
                 'to_compute': False,
                 'type': 'string'
         },
@@ -299,7 +299,7 @@ health = [
                 'fields_for_computation': [],
                 'key_from': 'health_informations.why_take_or_not_prescribed_dose',
                 'key_to': 'why_take_or_not_prescribed_dose',
-                'parent_key_name': 'health_informations',
+                'parent_key_name': '',
                 'to_compute': False,
                 'type': 'string'
         },
@@ -308,7 +308,7 @@ health = [
                 'fields_for_computation': [],
                 'key_from': 'health_informations.do_u_have_health_insurance_plan',
                 'key_to': 'do_u_have_health_insurance_plan',
-                'parent_key_name': 'health_informations',
+                'parent_key_name': '',
                 'to_compute': False,
                 'type': 'string'
         }

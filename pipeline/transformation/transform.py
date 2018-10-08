@@ -88,7 +88,6 @@ def kobo2oldcuris(data, **kwargs):
     conn = sqlite.create_connection(SQLITE_CONN) 
     sqlite.create_table(conn) 
     sqlite_checker.update_rev_ids(conn)
-    print(couchbase_data)
     sqlite_data = sqlite_checker.segregate_ids(conn,couchbase_data)
 
     return sqlite_data

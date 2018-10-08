@@ -34,15 +34,6 @@ old_curis =[
         "type": "string"
     },
     {
-        "parent_key_name": "",
-        "key_to": "",
-        "key_from": "identity_consent/questions_to_be_asked",
-        "default_value": "",
-        "fields_for_computation": [],
-        "to_compute": False,
-        "type": "string"
-    },
-    {
         "parent_key_name": "user-cam",
         "key_to": "id",
         "key_from": "identity_consent/cam_account",
@@ -80,20 +71,11 @@ old_curis =[
     },
     {
         "parent_key_name": "",
-        "key_to": "",
-        "key_from": "identity_consent/region",
-        "default_value": "",
-        "fields_for_computation": [],
-        "to_compute": False,
-        "type": "string"
-    },
-    {
-        "parent_key_name": "",
         "key_to": "organization",
         "key_from": "identity_consent/organization",
         "default_value": "",
-        "fields_for_computation": [],
-        "to_compute": False,
+        "fields_for_computation": ["identity_consent/organization"],
+        "to_compute": True,
         "type": "string"
     },
     {
@@ -154,15 +136,6 @@ old_curis =[
         "parent_key_name": "",
         "key_to": "last_name",
         "key_from": "personal_info/last_name",
-        "default_value": "",
-        "fields_for_computation": [],
-        "to_compute": False,
-        "type": "string"
-    },
-    {
-        "parent_key_name": "",
-        "key_to": "",
-        "key_from": "personal_info/type_of_registration",
         "default_value": "",
         "fields_for_computation": [],
         "to_compute": False,
@@ -616,15 +589,6 @@ old_curis =[
         "default_value": "",
         "fields_for_computation": [],
         "to_compute": False,
-        "type": "string"
-    },
-    {
-        "parent_key_name": "family_planning_and_maternal_healths",
-        "key_to": "",
-        "key_from": "",
-        "default_value": "",
-        "fields_for_computation": "",
-        "to_compute": "",
         "type": "string"
     },
     {

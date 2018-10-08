@@ -34,6 +34,9 @@ def couchbase_get(country):
     try:
         sync_date = lg.get_last_batch_log(_log_file_name)
 
+        if(sync_date == None):
+            raise FileNotFoundError
+
         statement = _set_statement(type='batch',country=country,sync_date=sync_date)
 
         logger.info(statement)
@@ -42,7 +45,7 @@ def couchbase_get(country):
         statement = _set_statement(type='initial',country=country)
         logger.info(statement)
 
-    res = _get_all(statement, country)
+    res = _get_all(statement)
     return _dict2json(res, True)
 
 def get_rev_ids(cb_id_arr):
@@ -63,7 +66,7 @@ def get_rev_ids(cb_id_arr):
 
     return _dict2json(res, False)
 
-def _get_all(statement, country): 
+def _get_all(statement): 
     try:
         bucket = Bucket(URL)
         bucket.n1ql_timeout = TIMEOUT
@@ -130,7 +133,16 @@ def _dict2json(results, is_etl):
 
     return data
 
+def _set_log_filename(country):
+    file_name = ""
+    if country == PHILIPPINES:
+        file_name = LOG_PHL
+
+    elif country == CAMBODIA:
+        file_name = LOG_KHM
+    
+    return file_name
+
 #run as standalone module
 if __name__ == "__main__":
     get_all()
-    

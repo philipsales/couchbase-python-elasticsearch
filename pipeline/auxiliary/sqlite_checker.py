@@ -51,15 +51,17 @@ def _organize_data(sqlite_data, rev_ids):
     tmp_arr = []
     tmp_json = {}
 
-    for idx, datum in enumerate(sqlite_data):
+    if(rev_ids != []):
+        for idx, datum in enumerate(sqlite_data):
+            one_rev = json.loads(rev_ids[idx])
+        
+            tmp_json["id"] = datum[0]
+            tmp_json["rev"] = one_rev["rev_id"]
+            tmp_json["kobo_id"] = datum[1]
 
-        one_rev = json.loads(rev_ids[idx])
-    
-        tmp_json["id"] = datum[0]
-        tmp_json["rev"] = one_rev["rev_id"]
-        tmp_json["kobo_id"] = datum[1]
-
-        tmp_arr.extend([tmp_json])
+            tmp_arr.extend([tmp_json])
+    else:
+        tmp_arr = []
 
     return tmp_arr
 

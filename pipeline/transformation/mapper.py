@@ -77,8 +77,8 @@ def merger(default, outsider):
 
 """
 	DEPTH CREATOR function
-	description: If the depth does not exist, this function will create the mother dept then
-					append the leaf key and value
+	description: If the depth does not exist, this function will create the parent dept then
+					append the child key and value
 	
 	@ params
 		mapper_json - mapping created to map easily from input to output
@@ -89,27 +89,27 @@ def _depth_creator(mapper_json, extracted_json):
 	container = {}
 	
 	tmp_arr = mapper_json["parent_key_name"].split(".")
-	mother = {}
+	parent = {}
 	for i in range(len(tmp_arr)):
 		if(i == 0):
 			container[tmp_arr[i]] = {}
-			mother = container[tmp_arr[i]]
+			parent = container[tmp_arr[i]]
 		else:
-			newMother = mother[tmp_arr[i]] = {}
-			mother = newMother
+			new_parent = parent[tmp_arr[i]] = {}
+			parent = new_parent
 
 		if(i == (len(tmp_arr)-1)):
 			try:
-				mother[mapper_json["key_to"]] = extracted_json[mapper_json["key_from"]]
+				parent[mapper_json["key_to"]] = extracted_json[mapper_json["key_from"]]
 			except KeyError:
-				mother[mapper_json["key_to"]] = mapper_json["default_value"]
+				parent[mapper_json["key_to"]] = mapper_json["default_value"]
 			
 	return container
 
 """
 	DEPTH FINDER function
-	description: If the dept already exist, this function will find the mother dept 
-					from the final_container then append the leaf key and value
+	description: If the dept already exist, this function will find the parent dept 
+					from the final_container then append the child key and value
 	
 	@ params
 		mapper_json - mapping created to map easily from input to output
@@ -119,26 +119,26 @@ def _depth_creator(mapper_json, extracted_json):
 """
 def _depth_finder(mapper_json, final_container, extracted_json):
 	tmp_arr = mapper_json["parent_key_name"].split(".")
-	mother = {}
+	parent = {}
 	for i in range(len(tmp_arr)):
 		if(i == 0):
 			try:
-				mother = final_container[tmp_arr[i]]
+				parent = final_container[tmp_arr[i]]
 			except KeyError:
 				return False
 		else:
 			try:
-				newMother = mother[tmp_arr[i]]
-				mother = newMother
+				new_parent = parent[tmp_arr[i]]
+				parent = new_parent
 			except KeyError:
-				newMother = mother[tmp_arr[i]] = {}
-				mother = newMother
+				new_parent = parent[tmp_arr[i]] = {}
+				parent = new_parent
 
 		if(i == (len(tmp_arr)-1)):
 			try:
-				mother[mapper_json["key_to"]] = extracted_json[mapper_json["key_from"]]
+				parent[mapper_json["key_to"]] = extracted_json[mapper_json["key_from"]]
 			except KeyError:
-				mother[mapper_json["key_to"]] = mapper_json["default_value"]
+				parent[mapper_json["key_to"]] = mapper_json["default_value"]
 
 	return final_container
 
@@ -162,7 +162,11 @@ def transformer(extracted_json, mapping_format, final_container):
 				else:
 					final_container[arr_element["key_to"]] = extracted_json[arr_element["key_from"]]
 			else:
-				final_container[arr_element["key_to"]] = arr_element["default_value"]
+				if(arr_element["to_compute"] == True):
+					final_container[arr_element["key_to"]] = _computations(arr_element["key_to"], 
+						extracted_json, arr_element["fields_for_computation"])
+				else:
+					final_container[arr_element["key_to"]] = arr_element["default_value"]
 
 		elif(arr_element["parent_key_name"] != ""):
 			var = _depth_finder(arr_element,final_container,extracted_json)
@@ -188,7 +192,7 @@ def transformer(extracted_json, mapping_format, final_container):
 '''
 def _computations(_to_compute, extracted_json, fields_needed):
 	json_attribute = _extract_values(fields_needed, extracted_json)
-	result = function_map.execute_computation(json_attribute, _to_compute)
+	result = function_map.compute(json_attribute, _to_compute)
 	
 	return result
 

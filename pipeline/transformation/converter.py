@@ -2,6 +2,7 @@ import sys
 import json
 import csv
 
+from settings.base_conf import DATA_TYPE
 import logs.logging_conf, logging
 logger = logging.getLogger("converter")
 
@@ -23,7 +24,9 @@ def csv2json(csv_filename):
 
 		final_container = _set_json_mapping(out)
 	except FileNotFoundError:
-		logger.error("CSV file does not exist!")
+		logger.error("CSV file with a file name "
+			+ csv_filename + " does not exist!")
+			
 		sys.exit(0)
 
 	return final_container
@@ -60,32 +63,32 @@ def _set_to_compute(the_value):
 def _set_default_value(data_type, the_value):
 	default_val = ""
 
-	if(data_type == "array"):
+	if(data_type == DATA_TYPE['array']):
 		if(the_value != ""):
 			default_val = the_value
 		else:
 			default_val = []
 
-	elif(data_type == "boolean"):
+	elif(data_type == DATA_TYPE['boolean']):
 		if(the_value != ""):
 			default_val = bool(the_value)
 		else:
 			default_val = DEFAULT_BOOL
 
-	elif(data_type == "date"):
+	elif(data_type == DATA_TYPE['date']):
 		default_val = DEFAULT_DATE
 
-	elif(data_type == "integer"):
+	elif(data_type == DATA_TYPE['integer']):
 		if(the_value != ""):
 			default_val = int(the_value)
 		else:
 			default_val = DEFAULT_INT
 
-	elif(data_type == "string"):
+	elif(data_type == DATA_TYPE['string']):
 		if(the_value != ""):
 			default_val = the_value
 
-	elif(data_type == "float"):
+	elif(data_type == DATA_TYPE['float']):
 		if(the_value != ""):
 			default_val = float(the_value)
 		else:

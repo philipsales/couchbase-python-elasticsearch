@@ -7,6 +7,8 @@ from pipeline.cleaning import cleaner
 
 from pipeline.transformation import converter
 
+from settings.base_conf import DATA_TYPE
+
 import logs.logging_conf, logging
 logger = logging.getLogger("extractor")
 
@@ -102,9 +104,9 @@ def _datatype_checker(output_schema, final_obj):
             obj_datatype = type(value).__name__
 
             if(schema_datatype == obj_datatype):
-                if(output_schema[key]['type'] == 'object'):
+                if(output_schema[key]['type'] == DATA_TYPE['object']):
                     _datatype_checker(output_schema[key]['default'], value)
-                elif(output_schema[key]['type'] == 'array'):
+                elif(output_schema[key]['type'] == DATA_TYPE['array']):
                     tmp_array = []
 
                     if(type(value).__name__ == 'list'):

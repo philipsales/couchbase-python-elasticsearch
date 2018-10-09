@@ -1,9 +1,9 @@
+from pathlib import Path
+
 import settings.couchbase_conf as couchbase_config
 import settings.elastic_conf as elastic_config
 import settings.kobo_conf as kobo_config
 import settings.sqlite_conf as sqlite_conf
-
-from pathlib import Path
 
 KOBO_CSV_MAPPING_PATH = Path("schemas/mapping/csv_mappers/")
 OLDCURIS_CSV_MAPPING_PATH = Path("schemas/mapping/csv_mappers/oldcuris2elastic/")
@@ -54,5 +54,6 @@ DATA_TYPE = {
     'date': 'date',
     'integer': 'integer',
     'float': 'float',
-    'object': 'object'
+    'object': 'object',
+    'boolean': 'boolean'
 }

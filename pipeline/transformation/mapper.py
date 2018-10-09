@@ -4,6 +4,8 @@ import traceback
 import datetime
 from pipeline.auxiliary import function_map
 
+from settings.base_conf import DATA_TYPE
+
 import logs.logging_conf, logging
 logger = logging.getLogger("mapper")
 
@@ -231,7 +233,7 @@ def _extract_values(fields_needed, extracted_json):
 def _default_value_checker(data_type, default_value):
 	default_val = ""
 
-	if(data_type == "array"):
+	if(data_type == DATA_TYPE['array']):
 		default_val = []
 		if(default_value == DEFAULT_DATE):
 			default_val.extend([datetime.datetime.now().isoformat()])
@@ -239,7 +241,7 @@ def _default_value_checker(data_type, default_value):
 			if(type(default_value).__name__ != "list"):
 				default_val.extend([default_value])
 	
-	elif(data_type == "date"):
+	elif(data_type == DATA_TYPE['date']):
 		default_val = datetime.datetime.now().isoformat()
 	else:
 		default_val = default_value

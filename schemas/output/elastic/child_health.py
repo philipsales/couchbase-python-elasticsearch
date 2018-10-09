@@ -4,7 +4,10 @@ child_health_mapping = {
             "enabled": True
 		},
 		"properties":{
-			"awh_id": {"type": "keyword"},
+			"awh_id": {
+        "type": "keyword",
+        "index": "not_analyzed"
+      },
 			"org": {"type": "keyword"},
       "newborn": {
         "type": "object",

@@ -4,7 +4,10 @@ health_mapping = {
             "enabled": True
         },
         "properties":{
-            "awh_id": {"type":"keyword"},
+            "awh_id": {
+              "type": "keyword",
+              "index": "not_analyzed"
+            },
             "bmi": {"type":"keyword"},
             "blood_group": {"type":"keyword"},
             "blood_rhesus": {"type":"keyword"},

@@ -4,7 +4,10 @@ profile_mapping = {
             "enabled": True
         },
         "properties":{
-            "awh_id": { "type": "keyword" },
+            "awh_id": {
+              "type": "keyword",
+              "index": "not_analyzed"
+            },
             "active": { "type": "boolean" },
             "sex": { "type": "keyword" },
             "birth_date": { 

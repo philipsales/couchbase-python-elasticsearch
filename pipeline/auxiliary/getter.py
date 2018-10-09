@@ -59,4 +59,3 @@ def _classify_datatype(final_json_struct, schema_properties, field):
         final_json_struct[field]["default"] = schema_properties[field]['default']
 
     return final_json_struct
-

@@ -116,7 +116,7 @@ def _set_statement(**kwargs):
     #                 + BUCKET + " WHERE address.country='"
     #                 + country + "' AND _deleted IS MISSING AND "
     #                 + "LOWER(organization)!='test rhu' AND "
-    #                 + "type='user-resident' LIMIT 12")
+    #                 + "type='user-resident' LIMIT 10")
 
 def _dict2json(results, is_etl):
     counter = 0

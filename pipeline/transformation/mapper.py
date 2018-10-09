@@ -1,3 +1,4 @@
+import sys
 import json
 import traceback
 import datetime
@@ -214,8 +215,16 @@ def _computations(_to_compute, extracted_json, fields_needed):
 def _extract_values(fields_needed, extracted_json):
 	obj = {}
 
-	for attr in fields_needed:
-		obj[attr] = extracted_json[attr]
+	try:
+		for attr in fields_needed:
+			obj[attr] = extracted_json[attr]
+	except KeyError:
+
+		logger.error("'" + str(attr) + "' attribute does not exist"
+			+ " in the extracted JSON." 
+			+ " Please check your attribute spelling in the CSV")
+
+		sys.exit(0)
 
 	return obj
 
@@ -223,14 +232,12 @@ def _default_value_checker(data_type, default_value):
 	default_val = ""
 
 	if(data_type == "array"):
+		default_val = []
 		if(default_value == DEFAULT_DATE):
-			default_val = []
-			default_val = default_val.extend([datetime.datetime.now().isoformat()])
+			default_val.extend([datetime.datetime.now().isoformat()])
 		elif(default_value != ""):
-			default_val = []
-			default_val = default_val.extend([default_value])
-		else:
-			default_val = []
+			if(type(default_value).__name__ != "list"):
+				default_val.extend([default_value])
 	
 	elif(data_type == "date"):
 		default_val = datetime.datetime.now().isoformat()

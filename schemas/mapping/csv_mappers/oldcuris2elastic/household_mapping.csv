@@ -1,0 +1,16 @@
+parent_key_name,key_to,key_from,default_value,fields_for_computation,to_compute,type
+,awh_id,cb_id,,,,string
+,families_in_household,households.no_of_families_in_the_household,,,,integer
+,people_in_household,households.no_of_people_in_the_household,,,,integer
+,type_of_accommodation,households.house_ownership,,,,string
+,construction,households.type_of_house,,,,string
+,type_of_neighbourhood,households.neighborhood_description,,,,string
+,utilities,households.amenities_present_in_house,,,,array
+,type_of_sanitation,households.sanitary_type,,,,array
+,sanitation_ownerships,households.sanitary_ownership,,,,string
+,org,organization,,,,string
+,water_sources,households.water_sources,,,,array
+,how_u_ensure_water_safe,households.how_ensure_water_safe,,,,array
+,what_do_u_use_to_wash_hands,households.what_u_se_to_wash_hands,,,,string
+version,number,,1,,,integer
+version,date,,,,,date

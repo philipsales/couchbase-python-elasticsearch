@@ -1,12 +1,10 @@
 parent_key_name,key_to,key_from,default_value,fields_for_computation,to_compute,type
 identification.id1,type,identity_consent/identity_document,,,,string
 identification.id1,identifier,identity_consent/personal_id_no,,,,string
-,,identity_consent/questions_to_be_asked,,,,string
 user-cam,id,identity_consent/cam_account,,,,string
 user-cam,owner,identity_consent/cam_account,,,,string
 address,province,identity_consent/town,,,,string
 address,country,identity_consent/country,,,,string
-,,identity_consent/region,,,,string
 ,organization,identity_consent/organization,,,,string
 profiles.employment,currency,personal_info/currency,,,,string
 profiles,where_income_from,personal_info/source_of_income,,,,string
@@ -15,7 +13,6 @@ address,lot_or_house_number,personal_info/address_line_1,,,,string
 ,birthdate,personal_info/date_of_birth,,,,string
 address,postal_code,personal_info/postal_code,,,,string
 ,last_name,personal_info/last_name,,,,string
-,,personal_info/type_of_registration,,,,string
 profiles.employment,nature,personal_info/work_nature,,,,string
 ,gender,personal_info/gender,,,,string
 profiles,are_you_currently_earning,personal_info/is_earning_currently,,,,boolean
@@ -87,14 +84,14 @@ child_healths.child,if_yes_what_treatment,child_1_5/has_malnutrition_treatmnt,,,
 child_healths.child,following_received,child_1_5/following_received_last_6_mont_001,,,,string
 child_healths.child,times_struggled_to_provide_food_for_child,child_1_5/frequency_providing_n_food_chi,,,,string
 child_healths.child,treatment_for_malnutrition,child_1_5/malnutrition_treatment,,,,string
-,cb_id,_uuid,,,,string
-,kobo_id,_uuid,,,,
+,kobo_id,_uuid,,,,string
 ,registered_at,_submission_time,,,,date
 address,barangay,,,,,string
 contact_number,country_code,,,,,string
 contact_number,number,,,,,string
 ,date_visits,,date_now,,,array
 ,email_address,,,,,string
+,family_members,,,,,array
 health_informations,allergies,,,,,string
 health_informations,blood_sign,,,,,string
 health_informations,blood_sugar,,,,,string
@@ -178,4 +175,3 @@ dental_health,date_updated,,,,,date
 disability,date_updated,,,,,date
 ,type,,user-resident,,,string
 family_planning_and_maternal_healths,no_ANC_why_not,pregnancy/not_rec_ANC_local_health_cente,,,,string
-,family_members,,,,,array

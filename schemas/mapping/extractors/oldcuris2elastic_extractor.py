@@ -1,11 +1,13 @@
 import sys
-from schemas.mapping_conf import demographics_map
-from schemas.mapping_conf import household_map
-from schemas.mapping_conf import health_map
-from schemas.mapping_conf import symptoms_map
-from schemas.mapping_conf import fam_planning_maternal_map
-from schemas.mapping_conf import child_health_map
-from schemas.mapping_conf import dental_health_map
+
+from settings.base_conf import OLDCURIS_CHILD_HEALTH_CSV_MAP
+from settings.base_conf import OLDCURIS_DEMOGRAPHICS_CSV_MAP
+from settings.base_conf import OLDCURIS_HOUSEHOLD_CSV_MAP
+from settings.base_conf import OLDCURIS_HEALTH_CSV_MAP
+from settings.base_conf import OLDCURIS_FAMILY_HEALTH_CSV_MAP
+from settings.base_conf import OLDCURIS_DENTAL_HEALTH_CSV_MAP
+from settings.base_conf import OLDCURIS_SYMPTOMS_CSV_MAP
+
 
 '''
 
@@ -20,49 +22,49 @@ destination - destination database
 
 demographics = {
     "json_structure": ["cb_id", "gender", "birthdate","organization","address","profiles"],
-    "mapping_format": demographics_map.demographics,
+    "mapping_file": OLDCURIS_DEMOGRAPHICS_CSV_MAP,
     "source": "couchbase",
     "destination": "elasticsearch"
 }
 
 household = {
     "json_structure": ["cb_id", "organization", "households"],
-    "mapping_format": household_map.household,
+    "mapping_file": OLDCURIS_HOUSEHOLD_CSV_MAP,
     "source": "couchbase",
     "destination": "elasticsearch"
 }
 
 health = {
     "json_structure": ["cb_id", "organization", "health_informations"],
-    "mapping_format": health_map.health,
+    "mapping_file": OLDCURIS_HEALTH_CSV_MAP,
     "source": "couchbase",
     "destination": "elasticsearch"
 }
 
 symptoms = {
     "json_structure": ["cb_id", "organization", "symptoms_collection"],
-    "mapping_format": symptoms_map.symptoms,
+    "mapping_file": OLDCURIS_SYMPTOMS_CSV_MAP,
     "source": "couchbase",
     "destination": "elasticsearch"
 }
 
 child_health = {
     "json_structure": ["cb_id", "organization", "child_healths"],
-    "mapping_format": child_health_map.child_health,
+    "mapping_file": OLDCURIS_CHILD_HEALTH_CSV_MAP,
     "source": "couchbase",
     "destination": "elasticsearch"
 }
 
 family_planning_maternal_health = {
     "json_structure": ["cb_id", "organization", "family_planning_and_maternal_healths"],
-    "mapping_format": fam_planning_maternal_map.family_planning_and_maternal_health,
+    "mapping_file": OLDCURIS_FAMILY_HEALTH_CSV_MAP,
     "source": "couchbase",
     "destination": "elasticsearch"
 }
 
 dental_health = {
     "json_structure": ["cb_id", "organization", "dental_health"],
-    "mapping_format": dental_health_map.dental_health,
+    "mapping_file": OLDCURIS_DENTAL_HEALTH_CSV_MAP,
     "source": "couchbase",
     "destination": "elasticsearch"
 }

@@ -1,6 +1,6 @@
 
 #SERVER Configuration
-SQLiteENV = "development"
+SQLiteENV = "production"
 
 SQLiteConfig = {
     'development': {

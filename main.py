@@ -39,8 +39,7 @@ def load_data(**kwargs):
 def kobo2oldcuris():
     kobo_data = kobo.kobo_get()
     etl_data = transform.kobo2oldcuris(kobo_data)
-    print(etl_data)
-    # result = couchbase_sync.push_couchbase(etl_data)
+    result = couchbase_sync.push_couchbase(etl_data)
 
 def oldcuris2elastic(country):
     cb_data = couchbase_n1ql.couchbase_get(COUCHBASE[country])
@@ -49,8 +48,8 @@ def oldcuris2elastic(country):
 
 def main():
     kobo2oldcuris()
-    # oldcuris2elastic(PHILIPPINES)
-    # oldcuris2elastic(CAMBODIA)
+    oldcuris2elastic(PHILIPPINES)
+    oldcuris2elastic(CAMBODIA)
     
 
 #run as standalone package

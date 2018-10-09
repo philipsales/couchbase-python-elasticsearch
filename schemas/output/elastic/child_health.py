@@ -56,7 +56,7 @@ child_health_mapping = {
         "type": "object",
         "properties": {
           "number": {"type": "integer"},
-          "date":{"type": "keyword"}
+          "date":{"type": "date"}
         }
 			}
 		}

@@ -4,7 +4,10 @@ symptoms_mapping = {
             "enabled": True
         },
         "properties": {
-            "awh_id": {"type": "keyword"},
+            "awh_id": {
+              "type": "keyword",
+              "index": "not_analyzed"
+            },
             "org": {"type":"keyword"},
             "head": {
                 "type":"object",

@@ -1,6 +1,7 @@
 import sys
-from schemas.mapping_conf import kobo_oldcuris_map
 from schemas.input_conf import personal_info
+
+from settings.base_conf import KOBO_PERSONAL_INFO_CSV_MAP
 
 '''
 
@@ -13,9 +14,10 @@ destination - destination database
 
 '''
 
+
 personal_informations = {
     "json_structure": [],
-    "mapping_format": kobo_oldcuris_map.old_curis,
+    "mapping_file": KOBO_PERSONAL_INFO_CSV_MAP,
     "source": "kobo",
     "destination": "couchbase"
 }

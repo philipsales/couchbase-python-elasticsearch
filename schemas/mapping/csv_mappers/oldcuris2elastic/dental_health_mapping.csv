@@ -1,0 +1,10 @@
+parent_key_name,key_to,key_from,default_value,fields_for_computation,to_compute,type
+,awh_id,cb_id,,,,string
+,org,organization,,,,string
+dental_health,do_you_own_toothbrush,dental_health.do_you_own_toothbrush,,,,boolean
+dental_health,times_clean_teeth_daily,dental_health.times_clean_teeth_daily,,,,string
+dental_health,what_problems,dental_health.what_problems,,,,array
+dental_health,what_do_u_use_to_clean_teeth,dental_health.what_do_u_use_to_clean_teeth,,,,string
+dental_health,family_members_d_problems_last_6_months,dental_health.family_members_d_problems_last_6_months,,,,string
+version,number,,1,,,integer
+version,date,,,,,date

@@ -4,7 +4,10 @@ household_mapping = {
             "enabled": True
         },
         "properties":{
-            "awh_id": {"type":"keyword"},
+            "awh_id": {
+              "type": "keyword",
+              "index": "not_analyzed"
+            },
             "families_in_household": {"type":"integer"},
             "people_in_household": {"type":"integer"},
             "type_of_accommodation": {"type":"keyword"},

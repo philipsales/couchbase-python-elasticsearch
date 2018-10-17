@@ -4,7 +4,10 @@ family_planning_mapping = {
             "enabled": True
         },
         "properties":{
-			"awh_id": {"type": "keyword"},
+			"awh_id": {
+        "type": "keyword",
+        "index": "not_analyzed"
+      },
 			"org": {"type": "keyword"},
 			"are_you_pregnant": {"type": "boolean"},
 			"is_pregnant_or_have_children": {"type": "keyword"},
@@ -46,7 +49,7 @@ family_planning_mapping = {
 				"type": "object",
 				"properties": {
 					"number": {"type": "integer"},
-					"date": {"type": "keyword"}
+					"date": {"type": "date"}
 				}
 			}
 		}

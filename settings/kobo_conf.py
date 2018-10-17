@@ -1,6 +1,6 @@
 
 #SERVER Configuration
-KoboENV = "development"
+KoboENV = "production"
 
 KoboConfig = {
     'local': {
@@ -25,7 +25,7 @@ KoboConfig = {
         'PORT': '',
         'VERSION':'v1',
         'TIMEOUT': 7200,
-        'FORM': '13'
+        'FORM': '12'
     },
     'uat': {
         'USERNAME': '',
@@ -40,15 +40,15 @@ KoboConfig = {
         'FORM': ''
     },
     'production': {
-        'USERNAME': 'koboadmin',
-        'PASSWORD': 'AWH~adm!n123',
+        'USERNAME': 'admin',
+        'PASSWORD': 'admin',
         'PROTOCOL': 'https',
         'SCHEME': 'kobo',
         'IP': '',
-        'HOST': 'kc.curis.online',
+        'HOST': 'kc.aqm.space',
         'PORT': '',
         'VERSION':'v1',
         'TIMEOUT': 7200,
-        'FORM': '3'
+        'FORM': '13'
     }
 }

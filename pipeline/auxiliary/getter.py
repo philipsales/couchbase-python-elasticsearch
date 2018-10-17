@@ -1,6 +1,7 @@
 import json
 from schemas.input_conf import input_schemas
 from schemas.output_conf import output_schemas
+from settings.base_conf import DATA_TYPE
 
 def get_input_schema(source_project, fields_needed):
     schema = input_schemas[source_project]
@@ -21,11 +22,9 @@ def _extract_json_structure(schema_properties, fields_needed):
     
     if fields_needed != []:
         for field in fields_needed:
-            # Change to much sophisticated code
             final_json_struct.update(_classify_datatype(final_json_struct, schema_properties, field))
     else:
         for field in schema_properties:
-            # Change to much sophisticated code
             final_json_struct.update(_classify_datatype(final_json_struct, schema_properties, field))
     
     return final_json_struct
@@ -43,7 +42,7 @@ def _classify_datatype(final_json_struct, schema_properties, field):
             final_json_struct[field]["type"] = 'object'
             final_json_struct[field]["default"] = {}
 
-    elif(schema_properties[field]['type'] == 'array'):
+    elif(schema_properties[field]['type'] == DATA_TYPE['array']):
 
         try:
             inner_schema = schema_properties[field]['items']['properties']
@@ -52,7 +51,7 @@ def _classify_datatype(final_json_struct, schema_properties, field):
             final_json_struct[field]["default"] = _extract_json_structure(inner_schema, [])
         except KeyError:
             final_json_struct[field] = {}
-            final_json_struct[field]["type"] = 'array'
+            final_json_struct[field]["type"] = DATA_TYPE['array']
             final_json_struct[field]["default"] = []
             
     else:
@@ -61,4 +60,3 @@ def _classify_datatype(final_json_struct, schema_properties, field):
         final_json_struct[field]["default"] = schema_properties[field]['default']
 
     return final_json_struct
-

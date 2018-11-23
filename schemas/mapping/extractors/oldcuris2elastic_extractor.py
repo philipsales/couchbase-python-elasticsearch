@@ -21,49 +21,49 @@ destination - destination database
 '''
 
 demographics = {
-    "json_structure": ["cb_id", "gender", "birthdate","organization","address","profiles"],
+    "json_structure": ["cb_id", "gender", "birthdate","organization","address","profiles","user-cam"],
     "mapping_file": OLDCURIS_DEMOGRAPHICS_CSV_MAP,
     "source": "couchbase",
     "destination": "elasticsearch"
 }
 
 household = {
-    "json_structure": ["cb_id", "organization", "households"],
+    "json_structure": ["cb_id", "organization", "households","user-cam"],
     "mapping_file": OLDCURIS_HOUSEHOLD_CSV_MAP,
     "source": "couchbase",
     "destination": "elasticsearch"
 }
 
 health = {
-    "json_structure": ["cb_id", "organization", "health_informations"],
+    "json_structure": ["cb_id", "organization", "health_informations","user-cam"],
     "mapping_file": OLDCURIS_HEALTH_CSV_MAP,
     "source": "couchbase",
     "destination": "elasticsearch"
 }
 
 symptoms = {
-    "json_structure": ["cb_id", "organization", "symptoms_collection"],
+    "json_structure": ["cb_id", "organization", "symptoms_collection","user-cam"],
     "mapping_file": OLDCURIS_SYMPTOMS_CSV_MAP,
     "source": "couchbase",
     "destination": "elasticsearch"
 }
 
 child_health = {
-    "json_structure": ["cb_id", "organization", "child_healths"],
+    "json_structure": ["cb_id", "organization", "child_healths","user-cam"],
     "mapping_file": OLDCURIS_CHILD_HEALTH_CSV_MAP,
     "source": "couchbase",
     "destination": "elasticsearch"
 }
 
 family_planning_maternal_health = {
-    "json_structure": ["cb_id", "organization", "family_planning_and_maternal_healths"],
+    "json_structure": ["cb_id", "organization", "family_planning_and_maternal_healths","user-cam"],
     "mapping_file": OLDCURIS_FAMILY_HEALTH_CSV_MAP,
     "source": "couchbase",
     "destination": "elasticsearch"
 }
 
 dental_health = {
-    "json_structure": ["cb_id", "organization", "dental_health"],
+    "json_structure": ["cb_id", "organization", "dental_health","user-cam"],
     "mapping_file": OLDCURIS_DENTAL_HEALTH_CSV_MAP,
     "source": "couchbase",
     "destination": "elasticsearch"

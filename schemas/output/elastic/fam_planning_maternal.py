@@ -4,10 +4,7 @@ family_planning_mapping = {
             "enabled": True
         },
         "properties":{
-			"awh_id": {
-        "type": "keyword",
-        "index": "not_analyzed"
-      },
+			"awh_id": {"type": "keyword"},
 			"org": {"type": "keyword"},
 			"are_you_pregnant": {"type": "boolean"},
 			"is_pregnant_or_have_children": {"type": "keyword"},
@@ -45,6 +42,7 @@ family_planning_mapping = {
 					"are_you_willing_to_use_any_family_planning_method": {"type": "boolean"}
 				}
 			},
+			"cam_account": {"type": "keyword"},
 			"version": {
 				"type": "object",
 				"properties": {
@@ -65,6 +63,7 @@ family_planning_schema = {
   "required": [
     "awh_id",
     "org",
+    "cam_account",
     "are_you_pregnant",
     "is_pregnant_or_have_children",
     "ANC_visits",
@@ -91,6 +90,16 @@ family_planning_schema = {
       "$id": "#/properties/org",
       "type": "string",
       "title": "The Org Schema",
+      "default": "",
+      "examples": [
+        ""
+      ],
+      "pattern": "^(.*)$"
+    },
+    "cam_account": {
+      "$id": "#/properties/cam_account",
+      "type": "string",
+      "title": "The Cam_account Schema",
       "default": "",
       "examples": [
         ""

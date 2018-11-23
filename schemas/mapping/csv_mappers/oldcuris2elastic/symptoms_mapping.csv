@@ -1,6 +1,7 @@
 parent_key_name,key_to,key_from,default_value,fields_for_computation,to_compute,type
 ,awh_id,cb_id,,,,string
 ,org,organization,,,,string
+,cam_account,user-cam.owner,,,,string
 head,head,symptoms_collection.head.head,,,,array
 head,eyes,symptoms_collection.head.eyes,,,,array
 head,nose,symptoms_collection.head.nose,,,,array

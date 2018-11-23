@@ -11,6 +11,7 @@ address,province,address.province,,,,string
 address,zip,address.postal_code,,,,string
 address,country,address.country,,,,string
 ,org,organization,,,,string
+,cam_account,user-cam.owner,,,,string
 ,civil_st,profiles.civil_status,,,,string
 ,religion,profiles.religion,,,,string
 ,educ,profiles.education,,,,string

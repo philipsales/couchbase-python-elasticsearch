@@ -4,15 +4,12 @@ profile_mapping = {
             "enabled": True
         },
         "properties":{
-            "awh_id": {
-              "type": "keyword",
-              "index": "not_analyzed"
-            },
+            "awh_id": { "type": "keyword" },
             "active": { "type": "boolean" },
             "sex": { "type": "keyword" },
             "birth_date": { 
                 "type": "date",
-                "format": "MM/dd/yyyy||yyyy-MM-dd"
+                "format": "MM/dd/yyyy"
             },
             "deceased": {
                 "type": "object",
@@ -40,12 +37,12 @@ profile_mapping = {
                 "properties": {
                     "is_empl": { "type": "boolean" },
                     "m_income": { "type": "float" },
-                    "nature": { "type": "keyword" },
-                    "currency": { "type": "keyword" }
+                    "nature": { "type": "keyword" }
                 }
             },
             "where_income_from": { "type": "keyword" },
             "are_you_currently_earning": { "type": "keyword" },
+            "cam_account": {"type": "keyword"},
             "version": {
                 "type": "object",
                 "properties": {
@@ -71,6 +68,7 @@ demographics_schema = {
     "deceased",
     "address",
     "org",
+    "cam_account",
     "civil_st",
     "religion",
     "educ",
@@ -223,6 +221,16 @@ demographics_schema = {
       ],
       "pattern": "^(.*)$"
     },
+    "cam_account": {
+      "$id": "#/properties/cam_account",
+      "type": "string",
+      "title": "The Cam_account Schema",
+      "default": "",
+      "examples": [
+        ""
+      ],
+      "pattern": "^(.*)$"
+    },
     "civil_st": {
       "$id": "#/properties/civil_st",
       "type": "string",
@@ -260,7 +268,8 @@ demographics_schema = {
       "required": [
         "is_empl",
         "m_income",
-        "nature"
+        "nature",
+        "currency"
       ],
       "properties": {
         "is_empl": {

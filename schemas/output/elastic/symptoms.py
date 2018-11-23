@@ -4,10 +4,7 @@ symptoms_mapping = {
             "enabled": True
         },
         "properties": {
-            "awh_id": {
-              "type": "keyword",
-              "index": "not_analyzed"
-            },
+            "awh_id": {"type": "keyword"},
             "org": {"type":"keyword"},
             "head": {
                 "type":"object",
@@ -68,6 +65,7 @@ symptoms_mapping = {
                 }
             },
             "skin": {"type": "keyword"},
+            "cam_account": {"type": "keyword"},
             "version":{
                 "type":"object",
                 "properties": {
@@ -78,7 +76,6 @@ symptoms_mapping = {
         }
     }
 }
-
 symptoms_schema = {
   "definitions": {},
   "$schema": "http://json-schema.org/draft-07/schema#",
@@ -88,6 +85,7 @@ symptoms_schema = {
   "required": [
     "awh_id",
     "org",
+    "cam_account",
     "head",
     "neck",
     "chest",
@@ -113,6 +111,16 @@ symptoms_schema = {
       "$id": "#/properties/org",
       "type": "string",
       "title": "The Org Schema",
+      "default": "",
+      "examples": [
+        ""
+      ],
+      "pattern": "^(.*)$"
+    },
+    "cam_account": {
+      "$id": "#/properties/cam_account",
+      "type": "string",
+      "title": "The Cam_account Schema",
       "default": "",
       "examples": [
         ""

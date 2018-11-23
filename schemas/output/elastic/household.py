@@ -4,10 +4,7 @@ household_mapping = {
             "enabled": True
         },
         "properties":{
-            "awh_id": {
-              "type": "keyword",
-              "index": "not_analyzed"
-            },
+            "awh_id": {"type":"keyword"},
             "families_in_household": {"type":"integer"},
             "people_in_household": {"type":"integer"},
             "type_of_accommodation": {"type":"keyword"},
@@ -20,6 +17,7 @@ household_mapping = {
             "water_sources": {"type":"keyword"},
             "how_u_ensure_water_safe": {"type":"keyword"},
             "what_do_u_use_to_wash_hands": {"type":"keyword"},
+            "cam_account": {"type": "keyword"},
             "version":{
                 "type":"object",
                 "properties": {
@@ -48,6 +46,7 @@ household_schema = {
     "type_of_sanitation",
     "sanitation_ownerships",
     "org",
+    "cam_account",
     "water_sources",
     "how_u_ensure_water_safe",
     "what_do_u_use_to_wash_hands",
@@ -136,6 +135,16 @@ household_schema = {
       "$id": "#/properties/org",
       "type": "string",
       "title": "The Org Schema",
+      "default": "",
+      "examples": [
+        ""
+      ],
+      "pattern": "^(.*)$"
+    },
+    "cam_account": {
+      "$id": "#/properties/cam_account",
+      "type": "string",
+      "title": "The Cam_account Schema",
       "default": "",
       "examples": [
         ""

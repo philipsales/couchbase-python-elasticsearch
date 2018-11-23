@@ -1,6 +1,7 @@
 parent_key_name,key_to,key_from,default_value,fields_for_computation,to_compute,type
 ,awh_id,cb_id,,,,string
 ,org,organization,,,,string
+,cam_account,user-cam.owner,,,,string
 ,are_you_pregnant,family_planning_and_maternal_healths.are_you_pregnant,,,,boolean
 ,is_pregnant_or_have_children,family_planning_and_maternal_healths.is_pregnant_or_have_children,,,,string
 ,ANC_visits,family_planning_and_maternal_healths.ANC_visits,,,,integer

@@ -4,10 +4,7 @@ health_mapping = {
             "enabled": True
         },
         "properties":{
-            "awh_id": {
-              "type": "keyword",
-              "index": "not_analyzed"
-            },
+            "awh_id": {"type":"keyword"},
             "bmi": {"type":"keyword"},
             "blood_group": {"type":"keyword"},
             "blood_rhesus": {"type":"keyword"},
@@ -57,6 +54,7 @@ health_mapping = {
             "do_u_have_disability": {"type":"keyword"},
             "do_u_have_health_insurance_plan": {"type":"keyword"},
             "traditional_medicine": {"type":"keyword"},
+            "cam_account": {"type": "keyword"},
             "version":{
                 "type":"object",
                 "properties": {
@@ -93,6 +91,7 @@ health_schema = {
     "maintenance_drugs",
     "high_cost_medicine",
     "org",
+    "cam_account",
     "alcohol_in_a_week",
     "taking_long_term_medication",
     "why_take_or_not_prescribed_dose",
@@ -348,6 +347,16 @@ health_schema = {
       "$id": "#/properties/org",
       "type": "string",
       "title": "The Org Schema",
+      "default": "",
+      "examples": [
+        ""
+      ],
+      "pattern": "^(.*)$"
+    },
+    "cam_account": {
+      "$id": "#/properties/cam_account",
+      "type": "string",
+      "title": "The Cam_account Schema",
       "default": "",
       "examples": [
         ""

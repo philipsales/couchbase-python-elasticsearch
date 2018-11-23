@@ -71,6 +71,7 @@ def _get_all(statement):
         bucket = Bucket(URL)
         bucket.n1ql_timeout = TIMEOUT
 
+        lg.write_to_log("\n", _log_file_name)
         lg.write_to_log("<" + str(dt.datetime.utcnow()) + "> : ", _log_file_name)
         lg.write_to_log("Query: " + statement + "; ", _log_file_name)
 

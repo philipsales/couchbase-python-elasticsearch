@@ -48,6 +48,7 @@ def kobo_get():
 def _get_data(url):
     try:
         
+        lg.write_to_log("\n", _log_file_name)
         lg.write_to_log("<" + str(dt.datetime.utcnow()) + "> : ", _log_file_name)
         lg.write_to_log("url: " + url + "; ", _log_file_name)
 

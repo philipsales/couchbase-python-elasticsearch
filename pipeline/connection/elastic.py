@@ -127,7 +127,7 @@ def _refresh_index(data):
     return es.indices.refresh(index=data)
 
 def _total_entries(count):
-    lg.write_to_log("Total Batch Entries: " + str(count) + "\n", _log_file_name)
+    lg.write_to_log("Total Batch Entries: " + str(count), _log_file_name)
     print("Total Batch Entries: {%}", count)
 
 def _create_mappings(country):

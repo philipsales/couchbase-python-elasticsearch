@@ -21,6 +21,7 @@ bp.third,diastole,health_informations.blood_pressure.third_reading.diastole,,,,s
 ,maintenance_drugs,health_informations.maintenance_drugs,,,,string
 ,high_cost_medicine,health_informations.high_cost_medicine,,,,string
 ,org,,,,,string
+,cam_account,user-cam.owner,,,,string
 ,alcohol_in_a_week,health_informations.alcohol_in_a_week,,,,string
 ,taking_long_term_medication,health_informations.taking_long_term_medication,,,,string
 ,why_take_or_not_prescribed_dose,health_informations.why_take_or_not_prescribed_dose,,,,string

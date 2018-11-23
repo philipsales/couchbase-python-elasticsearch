@@ -1,5 +1,6 @@
 parent_key_name,key_to,key_from,default_value,fields_for_computation,to_compute,type
 ,awh_id,cb_id,,,,string
+,cam_account,user-cam.owner,,,,string
 ,org,organization,,,,string
 newborn,provided_with_the_following,child_healths.newborn.provided_with_the_following,,,,array
 newborn,exclusive_breast_feeding,child_healths.newborn.exclusive_breast_feeding,,,,boolean

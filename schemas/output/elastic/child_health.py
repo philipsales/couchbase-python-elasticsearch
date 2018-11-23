@@ -4,10 +4,7 @@ child_health_mapping = {
             "enabled": True
 		},
 		"properties":{
-			"awh_id": {
-        "type": "keyword",
-        "index": "not_analyzed"
-      },
+			"awh_id": {"type": "keyword"},
 			"org": {"type": "keyword"},
       "newborn": {
         "type": "object",
@@ -55,6 +52,7 @@ child_health_mapping = {
             "if_yes_what_treatment": {"type": "keyword"}
         }
       },
+      "cam_account": {"type": "keyword"},
 			"version": {
         "type": "object",
         "properties": {
@@ -75,6 +73,7 @@ child_health_schema = {
   "required": [
     "awh_id",
     "org",
+    "cam_account",
     "newborn",
     "infant",
     "child",
@@ -95,6 +94,16 @@ child_health_schema = {
       "$id": "#/properties/org",
       "type": "string",
       "title": "The Org Schema",
+      "default": "",
+      "examples": [
+        ""
+      ],
+      "pattern": "^(.*)$"
+    },
+    "cam_account": {
+      "$id": "#/properties/cam_account",
+      "type": "string",
+      "title": "The Cam_account Schema",
       "default": "",
       "examples": [
         ""

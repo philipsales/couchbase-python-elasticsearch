@@ -9,6 +9,7 @@ parent_key_name,key_to,key_from,default_value,fields_for_computation,to_compute,
 ,type_of_sanitation,households.sanitary_type,,,,array
 ,sanitation_ownerships,households.sanitary_ownership,,,,string
 ,org,organization,,,,string
+,cam_account,user-cam.owner,,,,string
 ,water_sources,households.water_sources,,,,array
 ,how_u_ensure_water_safe,households.how_ensure_water_safe,,,,array
 ,what_do_u_use_to_wash_hands,households.what_u_se_to_wash_hands,,,,string

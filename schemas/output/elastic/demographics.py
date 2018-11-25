@@ -9,7 +9,7 @@ profile_mapping = {
             "sex": { "type": "keyword" },
             "birth_date": { 
                 "type": "date",
-                "format": "MM/dd/yyyy"
+                "format": "MM/dd/yyyy || yyyy-MM-dd"
             },
             "deceased": {
                 "type": "object",

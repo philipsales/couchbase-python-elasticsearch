@@ -47,9 +47,9 @@ def oldcuris2elastic(country):
     elastic.set_json_dump(etl_data, ELASTICSEARCH['country'][country])
 
 def main():
-    kobo2oldcuris()
+    # kobo2oldcuris()
     oldcuris2elastic(PHILIPPINES)
-    oldcuris2elastic(CAMBODIA)
+    # oldcuris2elastic(CAMBODIA)
     
 
 #run as standalone package

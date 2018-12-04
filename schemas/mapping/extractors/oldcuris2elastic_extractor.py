@@ -7,6 +7,7 @@ from settings.base_conf import OLDCURIS_HEALTH_CSV_MAP
 from settings.base_conf import OLDCURIS_FAMILY_HEALTH_CSV_MAP
 from settings.base_conf import OLDCURIS_DENTAL_HEALTH_CSV_MAP
 from settings.base_conf import OLDCURIS_SYMPTOMS_CSV_MAP
+from settings.base_conf import OLDCURIS_RISK_SCORE_CSV_MAP
 
 
 '''
@@ -65,6 +66,13 @@ family_planning_maternal_health = {
 dental_health = {
     "json_structure": ["cb_id", "organization", "dental_health","user-cam"],
     "mapping_file": OLDCURIS_DENTAL_HEALTH_CSV_MAP,
+    "source": "couchbase",
+    "destination": "elasticsearch"
+}
+
+risk_score = {
+    "json_structure": ["cb_id", "organization", "profiles","households","identification","user-cam"],
+    "mapping_file": OLDCURIS_RISK_SCORE_CSV_MAP,
     "source": "couchbase",
     "destination": "elasticsearch"
 }

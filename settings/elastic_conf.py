@@ -1,10 +1,10 @@
 
-ElasticSearchENV = "development"
+ElasticSearchENV = "local"
 
 ElasticSearchConfig = {
     'local': {
-        'USERNAME': '',
-        'PASSWORD': '',
+        'USERNAME': 'elastic',
+        'PASSWORD': '5RKmRFgCo19rZb8HIR1t',
         'INDEX': 'philippines',
         'TYPE': 'patients',
         'SCHEME': 'HTTP',

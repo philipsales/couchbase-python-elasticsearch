@@ -4,7 +4,8 @@ from pipeline.computation import utilities
 #TODO: Add new function names here if there are new computations
 computations = {
     "bmi" : "bmi",
-    "organization" : "organization"
+    "organization" : "organization",
+    "poor_risk_score": "poor_risk_score"
 }
 
 def compute(params, fn):

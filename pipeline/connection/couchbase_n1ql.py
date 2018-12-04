@@ -111,13 +111,13 @@ def _set_statement(**kwargs):
                     + "type='user-resident' AND _sync.time_saved LIKE '"
                     + date_sync + "%'")
 
-    return query
-    # return ("SELECT meta(" + BUCKET + ").id as cb_id, " 
-    #                 + BUCKET + ".* FROM "
-    #                 + BUCKET + " WHERE address.country='"
-    #                 + country + "' AND _deleted IS MISSING AND "
-    #                 + "LOWER(organization)!='test rhu' AND "
-    #                 + "type='user-resident' LIMIT 5")
+    # return query
+    return ("SELECT meta(" + BUCKET + ").id as cb_id, " 
+                    + BUCKET + ".* FROM "
+                    + BUCKET + " WHERE address.country='"
+                    + country + "' AND _deleted IS MISSING AND "
+                    + "LOWER(organization)!='test rhu' AND "
+                    + "type='user-resident'")
 
 def _dict2json(results, is_etl):
     counter = 0

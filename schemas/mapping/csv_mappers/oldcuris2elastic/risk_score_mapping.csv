@@ -1,0 +1,5 @@
+parent_key_name,key_to,key_from,default_value,fields_for_computation,to_compute,type
+,awh_id,cb_id,,,,string
+,org,organization,,,,string
+,cam_account,user-cam.owner,,,,string
+,poor_risk_score,,,"profiles.employment.monthly_income, profiles.education,profiles.employment.nature, households.type_of_house, households.house_ownership, households.sanitary_ownership, households.amenities_present_in_house, identification.id1.type, identification.id1.identifier",TRUE,integer

@@ -39,8 +39,6 @@ def transform(extracted, extract_settings, output_schema):
 
         try:
             mapping_format = converter.csv2json(extract_settings['mapping_file'])
-            # final_obj = mapper.transformer(_json_object, 
-            #             extract_settings['mapping_format'], obj)
 
             final_obj = mapper.transformer(_json_object, mapping_format, obj)
         except AttributeError:

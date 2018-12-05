@@ -40,24 +40,24 @@ RISK_SCORE_INDEX = ELASTICSEARCH['index']['risk_score']
 def oldcuris2elastic(data, **kwargs):
     etl_data = []
 
-    demographics = _transform(OLD_CURIS, DEMOGRAPHICS_INDEX, 
-        data, oldcuris2elastic_extractor.demographics)
+    # demographics = _transform(OLD_CURIS, DEMOGRAPHICS_INDEX, 
+    #     data, oldcuris2elastic_extractor.demographics)
     
-    household = _transform(OLD_CURIS, HOUSEHOLD_INDEX, 
-        data, oldcuris2elastic_extractor.household)
+    # household = _transform(OLD_CURIS, HOUSEHOLD_INDEX, 
+    #     data, oldcuris2elastic_extractor.household)
     
-    health = _transform(OLD_CURIS, HEALTH_INDEX, 
-        data, oldcuris2elastic_extractor.health)
+    # health = _transform(OLD_CURIS, HEALTH_INDEX, 
+    #     data, oldcuris2elastic_extractor.health)
 
-    symptoms = _transform(OLD_CURIS, SYMPTOMS_INDEX, 
-        data, oldcuris2elastic_extractor.symptoms)
+    # symptoms = _transform(OLD_CURIS, SYMPTOMS_INDEX, 
+    #     data, oldcuris2elastic_extractor.symptoms)
 
-    child_health = _transform(OLD_CURIS, CHILD_HEALTH_INDEX, 
-        data, oldcuris2elastic_extractor.child_health)
+    # child_health = _transform(OLD_CURIS, CHILD_HEALTH_INDEX, 
+    #     data, oldcuris2elastic_extractor.child_health)
 
-    family_planning_maternal_health = _transform(OLD_CURIS, 
-        FAMILY_PLANNING_MATERNAL_HEALTH_INDEX, 
-        data, oldcuris2elastic_extractor.family_planning_maternal_health)
+    # family_planning_maternal_health = _transform(OLD_CURIS, 
+    #     FAMILY_PLANNING_MATERNAL_HEALTH_INDEX, 
+    #     data, oldcuris2elastic_extractor.family_planning_maternal_health)
     
     dental_health = _transform(OLD_CURIS, DENTAL_HEALTH_INDEX,
         data, oldcuris2elastic_extractor.dental_health)
@@ -65,18 +65,20 @@ def oldcuris2elastic(data, **kwargs):
     risk_score = _transform(OLD_CURIS, RISK_SCORE_INDEX,
         data, oldcuris2elastic_extractor.risk_score)
     
-    child_health_tuple = (child_health, CHILD_HEALTH_INDEX)
-    demographics_tuple = (demographics, DEMOGRAPHICS_INDEX)
-    household_tuple = (household, HOUSEHOLD_INDEX)
-    health_tuple = (health, HEALTH_INDEX)
-    symptoms_tuple = (symptoms, SYMPTOMS_INDEX)
-    fpmh_tuple = (family_planning_maternal_health, FAMILY_PLANNING_MATERNAL_HEALTH_INDEX)
+    # child_health_tuple = (child_health, CHILD_HEALTH_INDEX)
+    # demographics_tuple = (demographics, DEMOGRAPHICS_INDEX)
+    # household_tuple = (household, HOUSEHOLD_INDEX)
+    # health_tuple = (health, HEALTH_INDEX)
+    # symptoms_tuple = (symptoms, SYMPTOMS_INDEX)
+    # fpmh_tuple = (family_planning_maternal_health, FAMILY_PLANNING_MATERNAL_HEALTH_INDEX)
     dental_health_tuple = (dental_health, DENTAL_HEALTH_INDEX)
     risk_score_tuple = (risk_score, RISK_SCORE_INDEX)
 
-    group_tuple = (demographics_tuple, household_tuple, health_tuple, 
-        symptoms_tuple, child_health_tuple,fpmh_tuple, dental_health_tuple,
-        risk_score_tuple)
+    # group_tuple = (demographics_tuple, household_tuple, health_tuple, 
+    #     symptoms_tuple, child_health_tuple,fpmh_tuple, dental_health_tuple,
+    #     risk_score_tuple)
+
+    group_tuple = (dental_health_tuple, risk_score_tuple)
     
 
     etl_data.extend(_load_data(group_tuple))

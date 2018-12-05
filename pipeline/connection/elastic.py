@@ -92,7 +92,7 @@ def set_json_dump(docs, country):
             logger.error("NoneType object!")
             continue
     
-    logger.info(bulk_data)
+    # logger.info(bulk_data)
     _total_entries(counter)
     _bulk_dump(bulk_data, country)
     

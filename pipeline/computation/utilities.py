@@ -61,7 +61,7 @@ class Computations:
         
         occupation = self._occupation_filter()
 
-        if(house_ownership == INFORMAL_SETTLERS or (id_type == "4Ps" and id_identifier != None)):
+        if(house_ownership.casefold() == INFORMAL_SETTLERS.casefold() or (id_type == "4Ps" and id_identifier != None)):
             score = 12
         elif(occupation != ""):
             income = self._typecase_monthly_income()
@@ -111,22 +111,22 @@ class Computations:
     
     def _typecase_monthly_income(self):
         try:
-            monthly_income = float(self.params["profiles.employment.monthly_income"])
+            monthly_income = int(self.params["profiles.employment.monthly_income"])
         except ValueError:
-            monthly_income = 0.0
+            monthly_income = 0
         
         return monthly_income
 
     def _income_score(self,income):
         if(income < 1000):
             score = 5
-        elif(income >= 1000 or income < 2500):
+        elif(income < 2500 and (income >= 1000 or income < 2500)):
             score = 4
-        elif(income >= 2500 or income < 5000):
+        elif(income < 5000 and (income >= 2500 or income < 5000)):
             score = 3
-        elif(income >= 5000 or income < 7500):
+        elif(income < 7500 and (income >= 5000 or income < 7500)):
             score = 2
-        elif(income >= 7500 or income <=10000):
+        elif(income <= 10000 and (income >= 7500 or income <=10000)):
             score = 1
         else:
             score = 0
@@ -134,7 +134,8 @@ class Computations:
         return score
     
     def _education_score(self,education):
-        if(education == ELEMENTARY_LEVEL or education == ELEMENTARY_GRADUATE):
+        if(education.casefold() == ELEMENTARY_LEVEL.casefold() 
+            or education.casefold() == ELEMENTARY_GRADUATE.casefold()):
             score = 1
         else:
             score = 0
@@ -142,7 +143,8 @@ class Computations:
         return score
 
     def _type_of_house_score(self,type_of_house):
-        if(type_of_house == BAHAY_KUBO or type_of_house == WOOD_BASED):
+        if(type_of_house.casefold() == BAHAY_KUBO.casefold() 
+            or type_of_house.casefold() == WOOD_BASED.casefold()):
             score = 1
         else:
             score = 0
@@ -150,8 +152,9 @@ class Computations:
         return score
     
     def _sanitary_ownership_score(self,sanitary_ownership):
-        
+        print(sanitary_ownership)
         if(sanitary_ownership.casefold() == SHARED.casefold()):
+            print("Im in!!")
             score = 2
         else:
             score = 0
@@ -173,7 +176,9 @@ class Computations:
         for i in amenities:
             ctr += 1
 
-        return ctr
+        final_ctr = 3 - ctr
+
+        return final_ctr
 
     def _height_to_metric(self,height):
         if height <= HEIGHT_NOT_METRIC:

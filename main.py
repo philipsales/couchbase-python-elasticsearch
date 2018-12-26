@@ -2,6 +2,7 @@ import os
 import sys
 import logs
 import json
+import pprint
 import datetime as dt
 
 from settings.base_conf import ELASTICSEARCH, COUCHBASE
@@ -48,8 +49,8 @@ def oldcuris2elastic(country):
 
 def main():
     kobo2oldcuris()
-    oldcuris2elastic(PHILIPPINES)
-    oldcuris2elastic(CAMBODIA)
+    #oldcuris2elastic(PHILIPPINES)
+    #oldcuris2elastic(CAMBODIA)
     
 
 #run as standalone package

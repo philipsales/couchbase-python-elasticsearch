@@ -187,6 +187,29 @@ def _set_log_filename(country):
     elif country == CAMBODIA:
         return LOG_KHM
 
+def get_data(index):
+    _res = {}
+    _limit = 2442
+    #_limit = 2
+    _index = index 
+    _doc_type = ''
+
+    _doc = {
+        'size' : _limit,
+        'query': {
+            'match_all' : {}
+       }
+   }
+
+    try:
+        _res = es.search(index=_index, 
+                        doc_type=_doc_type, 
+                        body=_doc)
+        return _res
+    except (ConnectionError) as err: 
+        logger.error(error)
+
+
 #run as standalone module
 if __name__ == "__main__":
     bulk_dump(data)

@@ -41,7 +41,7 @@ KoboConfig = {
     },
     'production': {
         'USERNAME': 'admin',
-        'PASSWORD': 'admin',
+        'PASSWORD': 'adm(1)n@AWH',
         'PROTOCOL': 'https',
         'SCHEME': 'kobo',
         'IP': '',

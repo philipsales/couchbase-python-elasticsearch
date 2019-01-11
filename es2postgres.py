@@ -48,7 +48,7 @@ def flatten_elastic_properties(es_data):
 def transform_data(es_data):
     return flatten_elastic_properties(es_data)
 
-def export_csv(es_data, index)
+def export_csv(es_data, index):
     flatten_data = transform_data(es_data)
 
     fH = FileHandler()
@@ -81,8 +81,6 @@ def init_index(country):
 def elastic_to_postgres():
     indeces = init_index(CAMBODIA)
     transform(indeces)
-    #clean_data = clean_data(trans_data)
-    #output = dump_data(data)
 
 #run as standalone package
 if __name__ == '__main__':

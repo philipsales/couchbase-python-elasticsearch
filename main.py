@@ -44,12 +44,13 @@ def kobo2oldcuris():
 
 def oldcuris2elastic(country):
     cb_data = couchbase_n1ql.couchbase_get(COUCHBASE[country])
+
     etl_data = transform.oldcuris2elastic(cb_data)
     elastic.set_json_dump(etl_data, ELASTICSEARCH['country'][country])
 
 def main():
-    kobo2oldcuris()
-    #oldcuris2elastic(PHILIPPINES)
+    #kobo2oldcuris()
+    oldcuris2elastic(PHILIPPINES)
     #oldcuris2elastic(CAMBODIA)
     
 

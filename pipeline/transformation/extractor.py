@@ -130,6 +130,7 @@ def _datatype_checker(output_schema, final_obj):
     return final_obj
 
 def _type_casting(default_value, final_value):
+    #Check typecasting if value is NULL, '', or 0
     try:
        final_value =  type(default_value)(final_value)
     except (TypeError, ValueError) as e:

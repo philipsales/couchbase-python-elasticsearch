@@ -79,7 +79,7 @@ def init_index(country):
     return new_index
 
 def elastic_to_postgres():
-    indeces = init_index(CAMBODIA)
+    indeces = init_index(PHILIPPINES)
     transform(indeces)
 
 #run as standalone package

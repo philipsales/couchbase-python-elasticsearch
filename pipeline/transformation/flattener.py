@@ -7,6 +7,12 @@ def flattenDict(d, result=None):
         result = {}
     for key in d:
         value = d[key]
+        if isinstance(value, str):
+            if "\n" in value:
+                print('----------------',value) 
+                value = value.replace("\n", ' and ')
+                print('----------------',value) 
+
         if isinstance(value, dict):
         #if d['type'] =='object':
             value1 = {}

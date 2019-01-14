@@ -1,6 +1,14 @@
 FEET_TO_INCH = .3048
 HEIGHT_NOT_METRIC = 10.0
 
+MINIMUM_BMI = 5
+UNDERWEIGHT_CEILING = 18.5
+NORMAL_FLOOR = 18.6
+NORMAL_CEILING = 24.9
+OVERWEIGHT_FLOOR = 25
+OVERWEIGHT_CEILING = 29.9
+OBESE_FLOOR = 30
+
 class Computations:
     def __init__(self, params):
         self.params = params
@@ -30,11 +38,11 @@ class Computations:
             bmi_result = self._categorize_bmi(bmi)
         # This happens when height and weight is a string
         except TypeError:
-            bmi_result = ""
+            bmi_result = "Undefined"
         
         # This happens when the values are zeros
         except ZeroDivisionError:
-            bmi_result = ""
+            bmi_result = "Undefined"
             
         return bmi_result
 
@@ -51,15 +59,17 @@ class Computations:
     def _categorize_bmi(self,bmi):
         bmi_result=""
 
-        if bmi <= 18.5:
+        if MINIMUM_BMI <= bmi <= UNDERWEIGHT_CEILING:
             bmi_result = "Underweight"
-        elif 18.6 <= bmi <= 24.9:
+        elif NORMAL_FLOOR <= bmi <= NORMAL_CEILING:
             bmi_result = "Normal"
-        elif 25 <= bmi <= 29.9:
+        elif OVERWEIGHT_FLOOR <= bmi <= OVERWEIGHT_CEILING:
             bmi_result = "Overweight"
-        elif bmi >= 30:
+        elif bmi >= OBESE_FLOOR:
             bmi_result = "Obese"
-        
+        else:
+            bmi_result = "Undefined"
+
         return bmi_result
 
     def _typecast(self):

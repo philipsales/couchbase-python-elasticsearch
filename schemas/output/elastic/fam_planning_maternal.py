@@ -1,5 +1,5 @@
 family_planning_mapping = {
-	"fam_planning_maternal":{  
+	"family_planning_and_maternal_health":{  
         "_source":{  
             "enabled": True
         },

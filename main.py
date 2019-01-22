@@ -2,6 +2,7 @@ import os
 import sys
 import logs
 import json
+import pprint
 import datetime as dt
 
 from settings.base_conf import ELASTICSEARCH, COUCHBASE
@@ -43,13 +44,14 @@ def kobo2oldcuris():
 
 def oldcuris2elastic(country):
     cb_data = couchbase_n1ql.couchbase_get(COUCHBASE[country])
+
     etl_data = transform.oldcuris2elastic(cb_data)
     elastic.set_json_dump(etl_data, ELASTICSEARCH['country'][country])
 
 def main():
-    kobo2oldcuris()
+    #kobo2oldcuris()
     oldcuris2elastic(PHILIPPINES)
-    oldcuris2elastic(CAMBODIA)
+    #oldcuris2elastic(CAMBODIA)
     
 
 #run as standalone package

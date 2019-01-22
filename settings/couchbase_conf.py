@@ -38,8 +38,8 @@ CouchbaseConfig = {
     },
     'production': {
         'BUCKET': 'awhcurisdb',
-        'USERNAME': '',
-        'PASSWORD': '',
+        'USERNAME': 'superman',
+        'PASSWORD': 'kryptonite',
         'PROTOCOL': 'http',
         'SCHEME': 'couchbase',
         'IP': '13.76.6.56',

@@ -1,15 +1,13 @@
-FEET_TO_INCH = .3048
-HEIGHT_NOT_METRIC = 10.0
-INFORMAL_SETTLERS = "Informal settlers"
-UNDERWEIGHT = "Underweight"
-NORMAL = "Normal"
-OVERWEIGHT = "Overweight"
-OBESE = "Obese"
-ELEMENTARY_LEVEL = "Elementary Level"
-ELEMENTARY_GRADUATE = "Elementary Graduate"
-BAHAY_KUBO = "Bahay-kubo"
-WOOD_BASED = "Wood-based"
-SHARED = "Shared"
+FEET_TO_METER = .3048
+HEIGHT_NOT_METRIC = 10.00
+
+MINIMUM_BMI = 5.00
+UNDERWEIGHT_CEILING = 18.59
+NORMAL_FLOOR = 18.60
+NORMAL_CEILING = 24.99
+OVERWEIGHT_FLOOR = 25.00
+OVERWEIGHT_CEILING = 29.99
+OBESE_FLOOR = 30.00
 
 class Computations:
     def __init__(self, params):
@@ -32,19 +30,20 @@ class Computations:
             (height, weight) = (variable["height"], variable["weight"])
 
             final_height = self._height_to_metric(height)
+            final_height = final_height / 100
                 
             # Computation of BMI
-            bmi = weight / (final_height * final_height)
+            bmi = round(weight / (final_height ** 2), 2)
 
             # Assigning the BMI result
             bmi_result = self._categorize_bmi(bmi)
         # This happens when height and weight is a string
         except TypeError:
-            bmi_result = ""
+            bmi_result = "Undefined"
         
         # This happens when the values are zeros
         except ZeroDivisionError:
-            bmi_result = ""
+            bmi_result = "Undefined"
             
         return bmi_result
 
@@ -85,15 +84,17 @@ class Computations:
     def _categorize_bmi(self,bmi):
         bmi_result=""
 
-        if bmi <= 18.5:
-            bmi_result = UNDERWEIGHT
-        elif 18.6 <= bmi <= 24.9:
-            bmi_result = NORMAL
-        elif 25 <= bmi <= 29.9:
-            bmi_result = OVERWEIGHT
-        elif bmi >= 30:
-            bmi_result = OBESE
-        
+        if bmi <= MINIMUM_BMI:
+            bmi_result = "Underweight"
+        elif bmi >= NORMAL_FLOOR and bmi < NORMAL_CEILING:
+            bmi_result = "Normal"
+        elif bmi >= OVERWEIGHT_FLOOR and bmi < OVERWEIGHT_CEILING:
+            bmi_result = "Overweight"
+        elif bmi >= OBESE_FLOOR: 
+            bmi_result = "Obese"
+        else:
+            bmi_result = "Undefined"
+            
         return bmi_result
 
     def _typecast_bmi_params(self):
@@ -182,6 +183,6 @@ class Computations:
 
     def _height_to_metric(self,height):
         if height <= HEIGHT_NOT_METRIC:
-            height = height * FEET_TO_INCH
+            height = (height * FEET_TO_METER) / 100
 
         return height

@@ -86,13 +86,15 @@ def set_json_dump(docs, country):
 
             bulk_data.append(_header)
             bulk_data.append(json.dumps(_body[0]))
+            logger.info("type: %s, fields: %d" % (_type[0], len(_type[0])))
             counter += 1
 
         except TypeError:
             logger.error("NoneType object!")
             continue
+    logger.info("total index inserts %d" % len(doc))
     
-    # logger.info(bulk_data)
+    logger.info(bulk_data)
     _total_entries(counter)
     _bulk_dump(bulk_data, country)
     
@@ -191,6 +193,30 @@ def _set_log_filename(country):
         return LOG_PHL
     elif country == CAMBODIA:
         return LOG_KHM
+
+def get_data(index):
+    _res = {}
+    _offsets = 0 
+    _limit = 3332
+    _index = index 
+    _doc_type = ''
+
+    _doc = {
+        'size' : _limit,
+        'from' : _offsets,
+        'query': {
+            'match_all' : {}
+       }
+   }
+
+    try:
+        _res = es.search(index=_index, 
+                        body=_doc)
+        print(_res)
+        return _res
+    except (ConnectionError) as err: 
+        logger.error(error)
+
 
 #run as standalone module
 if __name__ == "__main__":

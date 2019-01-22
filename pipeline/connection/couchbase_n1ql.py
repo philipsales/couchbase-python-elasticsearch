@@ -91,6 +91,7 @@ def _set_statement(**kwargs):
     country = kwargs.get('country',"")
     country_iso = country.lower() + "_iso"
 
+    #max =  37,324 
     if query_type=="initial":
         query = ("SELECT meta(" + BUCKET + ").id as cb_id, " 
                     + BUCKET + ".* FROM "
@@ -132,6 +133,7 @@ def _dict2json(results, is_etl):
         lg.write_to_log("Count From Couchbase: " + str(counter) 
                         + "; ", _log_file_name)
 
+    logger.info("couchbase data size: %s" % str(counter))
     return data
 
 def _set_log_filename(country):

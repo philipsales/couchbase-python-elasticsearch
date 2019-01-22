@@ -36,21 +36,22 @@ CHILD_HEALTH_INDEX = ELASTICSEARCH['index']['child_health']
 FAMILY_PLANNING_MATERNAL_HEALTH_INDEX = ELASTICSEARCH['index']['family_planning_and_maternal_health']
 DENTAL_HEALTH_INDEX = ELASTICSEARCH['index']['dental_health']
 RISK_SCORE_INDEX = ELASTICSEARCH['index']['risk_score']
+RISK_SCORE_NCD_GENERAL_INDEX = ELASTICSEARCH['index']['risk_score_ncd_general']
 
 def oldcuris2elastic(data, **kwargs):
     etl_data = []
 
-    # demographics = _transform(OLD_CURIS, DEMOGRAPHICS_INDEX, 
-    #     data, oldcuris2elastic_extractor.demographics)
+    demographics = _transform(OLD_CURIS, DEMOGRAPHICS_INDEX, 
+        data, oldcuris2elastic_extractor.demographics)
     
     # household = _transform(OLD_CURIS, HOUSEHOLD_INDEX, 
     #     data, oldcuris2elastic_extractor.household)
     
-    # health = _transform(OLD_CURIS, HEALTH_INDEX, 
-    #     data, oldcuris2elastic_extractor.health)
+    health = _transform(OLD_CURIS, HEALTH_INDEX, 
+        data, oldcuris2elastic_extractor.health)
 
-    # symptoms = _transform(OLD_CURIS, SYMPTOMS_INDEX, 
-    #     data, oldcuris2elastic_extractor.symptoms)
+    symptoms = _transform(OLD_CURIS, SYMPTOMS_INDEX, 
+        data, oldcuris2elastic_extractor.symptoms)
 
     # child_health = _transform(OLD_CURIS, CHILD_HEALTH_INDEX, 
     #     data, oldcuris2elastic_extractor.child_health)
@@ -64,21 +65,25 @@ def oldcuris2elastic(data, **kwargs):
 
     risk_score = _transform(OLD_CURIS, RISK_SCORE_INDEX,
         data, oldcuris2elastic_extractor.risk_score)
+
+    risk_score_ncd_general = _transform(OLD_CURIS, RISK_SCORE_NCD_GENERAL_INDEX,
+        data, oldcuris2elastic_extractor.risk_score_ncd_general)
     
     # child_health_tuple = (child_health, CHILD_HEALTH_INDEX)
-    # demographics_tuple = (demographics, DEMOGRAPHICS_INDEX)
+    demographics_tuple = (demographics, DEMOGRAPHICS_INDEX)
     # household_tuple = (household, HOUSEHOLD_INDEX)
-    # health_tuple = (health, HEALTH_INDEX)
-    # symptoms_tuple = (symptoms, SYMPTOMS_INDEX)
+    health_tuple = (health, HEALTH_INDEX)
+    symptoms_tuple = (symptoms, SYMPTOMS_INDEX)
     # fpmh_tuple = (family_planning_maternal_health, FAMILY_PLANNING_MATERNAL_HEALTH_INDEX)
     dental_health_tuple = (dental_health, DENTAL_HEALTH_INDEX)
     risk_score_tuple = (risk_score, RISK_SCORE_INDEX)
+    risk_score_ncd_general_tuple = (risk_score_ncd_general, RISK_SCORE_NCD_GENERAL_INDEX)
 
     # group_tuple = (demographics_tuple, household_tuple, health_tuple, 
     #     symptoms_tuple, child_health_tuple,fpmh_tuple, dental_health_tuple,
     #     risk_score_tuple)
 
-    group_tuple = (dental_health_tuple, risk_score_tuple)
+    group_tuple = (demographics_tuple, health_tuple, symptoms_tuple, risk_score_tuple, risk_score_ncd_general_tuple)
     
 
     etl_data.extend(_load_data(group_tuple))
@@ -143,17 +148,3 @@ def _load_data(data_tuple):
 #run as standalone module
 if __name__ == "__main__":
     pass
-
-#run as workflow 
-default_args = {
-    'owner': 'ELKadmin',
-    'start_date': dt.datetime(2017, 6, 1)
-}
-
-with DAG(dag_id='subdg_transform',
-    default_args=default_args,
-    schedule_interval='0 1 * * *',
-    ) as dag:
-
-    task_map_to_schema = PythonOperator(task_id='task_map_to_schema', 
-            python_callable=extractor.transform)

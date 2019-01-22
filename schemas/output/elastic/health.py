@@ -6,6 +6,9 @@ health_mapping = {
         "properties":{
             "awh_id": {"type":"keyword"},
             "bmi": {"type":"keyword"},
+            "height": {"type":"keyword"},
+            "weight": {"type":"keyword"},
+            "waist_circumference": {"type":"keyword"},
             "blood_group": {"type":"keyword"},
             "blood_rhesus": {"type":"keyword"},
             "allergies": { "type": "keyword"},
@@ -76,6 +79,8 @@ health_schema = {
   "required": [
     "awh_id",
     "bmi",
+    "height",
+    "weight",
     "blood_group",
     "blood_rhesus",
     "allergies",
@@ -118,6 +123,36 @@ health_schema = {
       "type": "string",
       "title": "The Bmi Schema",
       "default": "",
+      "examples": [
+        ""
+      ],
+      "pattern": "^(.*)$"
+    },
+    "height": {
+      "$id": "#/properties/height",
+      "type": "integer",
+      "title": "The Height Schema",
+      "default": 0,
+      "examples": [
+        ""
+      ],
+      "pattern": "^(.*)$"
+    },
+    "weight": {
+      "$id": "#/properties/weight",
+      "type": "integer",
+      "title": "The Weight Schema",
+      "default": 0,
+      "examples": [
+        ""
+      ],
+      "pattern": "^(.*)$"
+    },
+    "waist_circumference": {
+      "$id": "#/properties/waist_circumference",
+      "type": "integer",
+      "title": "The Waist_circumference Schema",
+      "default": 0,
       "examples": [
         ""
       ],

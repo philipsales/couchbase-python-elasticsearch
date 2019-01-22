@@ -1,23 +1,23 @@
 
 #SERVER Configuration
-CouchbaseENV = "development"
+CouchbaseENV = "local"
 
 CouchbaseConfig = {
     'local': {
-        'BUCKET': 'awhcurisdb',
-        'USERNAME': '',
-        'PASSWORD': '',
+        'BUCKET': 'awhcurisdb_local',
+        'USERNAME': 'adminadmin',
+        'PASSWORD': 'adminadmin',
         'PROTOCOL': 'http',
         'SCHEME': 'couchbase',
         'IP': '127.0.0.1',
         'HOST': 'couchbase://127.0.0.1/',
-        'PORT': '4984',
+        'PORT': '11211',
         'TIMEOUT': 7200
     },
     'development': {
         'BUCKET': 'awhcurisdb010832',
-        'USERNAME': '',
-        'PASSWORD': '',
+        'USERNAME': 'superman',
+        'PASSWORD': 'kryptonite',
         'PROTOCOL': 'http',
         'SCHEME': 'couchbase',
         'IP': '172.104.49.91',

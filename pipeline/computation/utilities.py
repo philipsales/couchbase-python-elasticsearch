@@ -1,6 +1,8 @@
 FEET_TO_METER = .3048
 HEIGHT_NOT_METRIC = 10.00
 
+INFORMAL_SETTLERS = "Informal settlers"
+
 MINIMUM_BMI = 5.00
 UNDERWEIGHT_CEILING = 18.59
 NORMAL_FLOOR = 18.60
@@ -8,6 +10,12 @@ NORMAL_CEILING = 24.99
 OVERWEIGHT_FLOOR = 25.00
 OVERWEIGHT_CEILING = 29.99
 OBESE_FLOOR = 30.00
+
+ELEMENTARY_LEVEL = "Elementary Level"
+ELEMENTARY_GRADUATE = "Elementary Graduate"
+BAHAY_KUBO = "Bahay-kubo"
+WOOD_BASED = "Wood-based"
+SHARED = "Shared"
 
 class Computations:
     def __init__(self, params):
@@ -186,3 +194,27 @@ class Computations:
             height = (height * FEET_TO_METER) / 100
 
         return height
+
+    def risk_score_ncd_general(self):
+        score = 0
+
+        house_ownership = self.params["households.house_ownership"]
+        id_type = self.params["identification.id1.type"]
+        id_identifier = self.params["identification.id1.identifier"]
+        
+        occupation = self._occupation_filter()
+
+        if(house_ownership.casefold() == INFORMAL_SETTLERS.casefold() or (id_type == "4Ps" and id_identifier != None)):
+            score = 12
+        elif(occupation != ""):
+            income = self._typecase_monthly_income()
+            education = self.params["profiles.education"]
+            type_of_house = self.params["households.type_of_house"]
+            sanitary_ownership = self.params["households.sanitary_ownership"]
+            amenities_points = self._amenities_counter()
+
+            score = (self._income_score(income) + self._education_score(education)
+                    + amenities_points + self._type_of_house_score(type_of_house)
+                    + self._sanitary_ownership_score(sanitary_ownership))
+
+        return score

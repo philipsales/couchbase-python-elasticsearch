@@ -1,6 +1,9 @@
 parent_key_name,key_to,key_from,default_value,fields_for_computation,to_compute,type
 ,awh_id,cb_id,,,,string
 ,bmi,,,"health_informations.height, health_informations.weight",TRUE,string
+,height,health_informations.height,,,,string
+,weight,health_informations.weight,,,,string
+,waist_circumference,health_informations.waist_circumference,,,,string
 ,blood_group,health_informations.blood_type,,,,string
 ,blood_rhesus,health_informations.blood_sign,,,,string
 ,allergies,health_informations.allergies,,,,string

@@ -192,8 +192,7 @@ def _set_log_filename(country):
 def get_data(index):
     _res = {}
     _offsets = 0 
-    _limit = 34987 
-    #_limit = 2
+    _limit = 3332
     _index = index 
     _doc_type = ''
 

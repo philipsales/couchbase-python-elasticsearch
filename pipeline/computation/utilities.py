@@ -1,3 +1,5 @@
+import random
+
 FEET_TO_METER = .3048
 HEIGHT_NOT_METRIC = 10.00
 
@@ -197,24 +199,12 @@ class Computations:
 
     def risk_score_ncd_general(self):
         score = 0
-
-        house_ownership = self.params["households.house_ownership"]
-        id_type = self.params["identification.id1.type"]
-        id_identifier = self.params["identification.id1.identifier"]
+        score = random.randint(0,6)
         
-        occupation = self._occupation_filter()
+        return score
 
-        if(house_ownership.casefold() == INFORMAL_SETTLERS.casefold() or (id_type == "4Ps" and id_identifier != None)):
-            score = 12
-        elif(occupation != ""):
-            income = self._typecase_monthly_income()
-            education = self.params["profiles.education"]
-            type_of_house = self.params["households.type_of_house"]
-            sanitary_ownership = self.params["households.sanitary_ownership"]
-            amenities_points = self._amenities_counter()
-
-            score = (self._income_score(income) + self._education_score(education)
-                    + amenities_points + self._type_of_house_score(type_of_house)
-                    + self._sanitary_ownership_score(sanitary_ownership))
+    def risk_score_child_health(self):
+        score = 0
+        score = random.randint(0,6)
 
         return score

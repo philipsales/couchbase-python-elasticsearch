@@ -12,6 +12,7 @@ from schemas.output_conf import fam_planning_maternal
 from schemas.output_conf import dental_health
 from schemas.output_conf import risk_score
 from schemas.output_conf import risk_score_ncd_general
+from schemas.output_conf import risk_score_child_health
 
 from elasticsearch import Elasticsearch
 from elasticsearch.exceptions import ConnectionError 
@@ -49,6 +50,7 @@ FAM_PLAN_MATERNAL = ELASTICSEARCH['index']['family_planning_and_maternal_health'
 DENTAL_HEALTH = ELASTICSEARCH['index']['dental_health']
 RISK_SCORE = ELASTICSEARCH['index']['risk_score']
 RISK_SCORE_NCD_GENERAL = ELASTICSEARCH['index']['risk_score_ncd_general']
+RISK_SCORE_CHILD_HEALTH = ELASTICSEARCH['index']['risk_score_child_health']
 
 def update_latest(docs, country):
     try:
@@ -146,6 +148,7 @@ def _create_mappings(country):
     _set_mappings(country, DENTAL_HEALTH)
     _set_mappings(country, RISK_SCORE)
     _set_mappings(country, RISK_SCORE_NCD_GENERAL)
+    _set_mappings(country, RISK_SCORE_CHILD_HEALTH)
 
 def _set_mappings(country, index):
     all_mappings = _manage_mapping(index)
@@ -192,6 +195,8 @@ def _manage_mapping(index):
         return risk_score.risk_score_mapping
     elif index == RISK_SCORE_NCD_GENERAL:
         return risk_score_ncd_general.risk_score_ncd_general_mapping
+    elif index == RISK_SCORE_CHILD_HEALTH:
+        return risk_score_child_health.risk_score_child_health_mapping
 
 def _set_log_filename(country):
     if country == PHILIPPINES:

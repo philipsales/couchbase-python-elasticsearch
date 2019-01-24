@@ -9,6 +9,7 @@ from settings.base_conf import OLDCURIS_DENTAL_HEALTH_CSV_MAP
 from settings.base_conf import OLDCURIS_SYMPTOMS_CSV_MAP
 from settings.base_conf import OLDCURIS_RISK_SCORE_CSV_MAP
 from settings.base_conf import OLDCURIS_RISK_SCORE_NCD_GENERAL_CSV_MAP
+from settings.base_conf import OLDCURIS_RISK_SCORE_CHILD_HEALTH_CSV_MAP
 
 
 '''
@@ -81,6 +82,13 @@ risk_score = {
 risk_score_ncd_general = {
     "json_structure": ["cb_id", "organization", "profiles","households","identification","user-cam"],
     "mapping_file": OLDCURIS_RISK_SCORE_NCD_GENERAL_CSV_MAP,
+    "source": "couchbase",
+    "destination": "elasticsearch"
+}
+
+risk_score_child_health = {
+    "json_structure": ["cb_id", "organization", "profiles","households","identification","user-cam"],
+    "mapping_file": OLDCURIS_RISK_SCORE_CHILD_HEALTH_CSV_MAP,
     "source": "couchbase",
     "destination": "elasticsearch"
 }

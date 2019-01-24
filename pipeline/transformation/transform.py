@@ -37,6 +37,7 @@ FAMILY_PLANNING_MATERNAL_HEALTH_INDEX = ELASTICSEARCH['index']['family_planning_
 DENTAL_HEALTH_INDEX = ELASTICSEARCH['index']['dental_health']
 RISK_SCORE_INDEX = ELASTICSEARCH['index']['risk_score']
 RISK_SCORE_NCD_GENERAL_INDEX = ELASTICSEARCH['index']['risk_score_ncd_general']
+RISK_SCORE_CHILD_HEALTH_INDEX = ELASTICSEARCH['index']['risk_score_child_health']
 
 def oldcuris2elastic(data, **kwargs):
     etl_data = []
@@ -68,6 +69,9 @@ def oldcuris2elastic(data, **kwargs):
 
     risk_score_ncd_general = _transform(OLD_CURIS, RISK_SCORE_NCD_GENERAL_INDEX,
         data, oldcuris2elastic_extractor.risk_score_ncd_general)
+
+    risk_score_child_health = _transform(OLD_CURIS, RISK_SCORE_CHILD_HEALTH_INDEX,
+        data, oldcuris2elastic_extractor.risk_score_child_health)
     
     # child_health_tuple = (child_health, CHILD_HEALTH_INDEX)
     demographics_tuple = (demographics, DEMOGRAPHICS_INDEX)
@@ -78,12 +82,13 @@ def oldcuris2elastic(data, **kwargs):
     dental_health_tuple = (dental_health, DENTAL_HEALTH_INDEX)
     risk_score_tuple = (risk_score, RISK_SCORE_INDEX)
     risk_score_ncd_general_tuple = (risk_score_ncd_general, RISK_SCORE_NCD_GENERAL_INDEX)
+    risk_score_child_health_tuple = (risk_score_child_health, RISK_SCORE_CHILD_HEALTH_INDEX)
 
     # group_tuple = (demographics_tuple, household_tuple, health_tuple, 
     #     symptoms_tuple, child_health_tuple,fpmh_tuple, dental_health_tuple,
     #     risk_score_tuple)
 
-    group_tuple = (demographics_tuple, health_tuple, symptoms_tuple, risk_score_tuple, risk_score_ncd_general_tuple)
+    group_tuple = (demographics_tuple, health_tuple, symptoms_tuple, risk_score_tuple, risk_score_ncd_general_tuple, risk_score_child_health_tuple)
     
 
     etl_data.extend(_load_data(group_tuple))

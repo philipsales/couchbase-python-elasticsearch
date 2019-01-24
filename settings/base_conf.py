@@ -19,6 +19,7 @@ OLDCURIS_DENTAL_HEALTH_CSV_MAP = OLDCURIS_CSV_MAPPING_PATH / "dental_health_mapp
 OLDCURIS_SYMPTOMS_CSV_MAP = OLDCURIS_CSV_MAPPING_PATH / "symptoms_mapping.csv"
 OLDCURIS_RISK_SCORE_CSV_MAP = OLDCURIS_CSV_MAPPING_PATH / "risk_score_mapping.csv"
 OLDCURIS_RISK_SCORE_NCD_GENERAL_CSV_MAP = OLDCURIS_CSV_MAPPING_PATH / "risk_score_ncd_general_mapping.csv"
+OLDCURIS_RISK_SCORE_CHILD_HEALTH_CSV_MAP = OLDCURIS_CSV_MAPPING_PATH / "risk_score_child_health_mapping.csv"
 
 COUCHBASE = {
     'philippines': 'Philippines',
@@ -37,7 +38,8 @@ ELASTICSEARCH = {
         'family_planning_and_maternal_health' : 'family_planning_and_maternal_health',
         'dental_health': 'dental_health',
         'risk_score': 'risk_score',
-        'risk_score_ncd_general': 'risk_score_ncd_general'
+        'risk_score_ncd_general': 'risk_score_ncd_general',
+        'risk_score_child_health': 'risk_score_child_health'
     },
     'country': {
         'philippines': 'philippines',

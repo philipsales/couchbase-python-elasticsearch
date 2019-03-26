@@ -15,7 +15,7 @@ import logs.logger as lg
 from settings.base_conf import LOGGER, COUCHBASE
 from settings.base_conf import couchbase_config
 
-import logs.logging_conf, logging
+import logs.settings.logging_conf, logging
 logger = logging.getLogger("couchbase.n1q1")
 
 conn = couchbase_config.CouchbaseConfig[couchbase_config.CouchbaseENV]

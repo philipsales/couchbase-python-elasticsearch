@@ -16,7 +16,7 @@ from schemas.mapping_conf import kobo2oldcuris_extractor
 from settings.base_conf import ELASTICSEARCH
 from settings.base_conf import sqlite_conf
 
-import logs.logging_conf, logging
+import logs.settings.logging_conf, logging
 logger = logging.getLogger("transformer")
 
 from airflow import DAG

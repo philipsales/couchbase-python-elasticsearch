@@ -5,6 +5,9 @@ import json
 import pprint
 import datetime as dt
 
+import logs.settings.logging_conf, logging
+logger = logging.getLogger("main.py")
+
 from settings.base_conf import ELASTICSEARCH, COUCHBASE
 from settings.base_conf import elastic_config, couchbase_config 
 
@@ -49,7 +52,7 @@ def oldcuris2elastic(country):
     elastic.set_json_dump(etl_data, ELASTICSEARCH['country'][country])
 
 def main():
-    kobo2oldcuris()
+    #kobo2oldcuris()
     #oldcuris2elastic(PHILIPPINES)
     #oldcuris2elastic(CAMBODIA)
     

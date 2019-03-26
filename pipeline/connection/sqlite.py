@@ -1,7 +1,7 @@
 import sqlite3
 
 from settings.base_conf import sqlite_conf
-import logs.logging_conf, logging
+import logs.settings.logging_conf, logging
 logger = logging.getLogger("sqlite.sqlite")
 
 sqlite_conn = sqlite_conf.SQLiteConfig[sqlite_conf.SQLiteENV]

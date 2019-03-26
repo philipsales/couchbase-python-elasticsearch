@@ -9,7 +9,7 @@ from pipeline.transformation import converter
 
 from settings.base_conf import DATA_TYPE
 
-import logs.logging_conf, logging
+import logs.settings.logging_conf, logging
 logger = logging.getLogger("extractor")
 
 COUCHBASE = "couchbase"

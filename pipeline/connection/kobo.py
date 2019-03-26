@@ -6,7 +6,7 @@ import datetime as dt
 import dateutil.parser
 
 import logs.logger as lg
-import logs.logging_conf, logging
+import logs.settings.logging_conf, logging
 logger = logging.getLogger("kobo")
 
 from settings.base_conf import LOGGER

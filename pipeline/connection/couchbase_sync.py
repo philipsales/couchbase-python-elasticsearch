@@ -15,7 +15,7 @@ from pipeline.connection import sqlite
 
 from pipeline.auxiliary import sqlite_checker
 
-import logs.logging_conf, logging
+import logs.settings.logging_conf, logging
 logger = logging.getLogger("couchbase.syncgateway")
 
 cb_conn = couchbase_config.CouchbaseConfig[couchbase_config.CouchbaseENV]

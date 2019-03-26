@@ -2,7 +2,7 @@ import json
 from pipeline.connection import sqlite
 from pipeline.connection import couchbase_n1ql
 
-import logs.logging_conf, logging
+import logs.settings.logging_conf, logging
 logger = logging.getLogger("auxiliary.sqlite_checker")
 
 def segregate_ids(conn,data):

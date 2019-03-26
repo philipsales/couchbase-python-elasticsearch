@@ -27,7 +27,7 @@ def extract_data():
 def transform_data(**kwargs):
     cb = kwargs['ti']
     cb_data = cb.xcom_pull(task_ids='extract_from_couch')
-    etl_data = transform.init_pipeline(cb_data)
+    etl_data = transformer.init_pipeline(cb_data)
     return etl_data
 
 def load_data(**kwargs):
@@ -36,23 +36,25 @@ def load_data(**kwargs):
     result = elastic.bulk_dump(etl_data)
     return result 
 
+def newAQMkobo2elastic(country):
+    kobo_data = kobo.kobo_get_stream()
+
 def kobo2oldcuris():
     kobo_data = kobo.kobo_get()
-    etl_data = transform.kobo2oldcuris(kobo_data)
-    result = couchbase_sync.push_couchbase(etl_data)
+    etl_data = transformer.kobo2oldcuris(kobo_data)
+    return couchbase_sync.push_couchbase(etl_data)
 
 def oldcuris2elastic(country):
     cb_data = couchbase_n1ql.couchbase_get(COUCHBASE[country])
-    etl_data = transform.oldcuris2elastic(cb_data)
-    elastic.set_json_dump(etl_data, ELASTICSEARCH['country'][country])
+    etl_data = transformer.oldcuris2elastic(cb_data)
+    return elastic.set_json_dump(etl_data, ELASTICSEARCH['country'][country])
 
 def main():
     logger.info('main')
-    logger.error('main')
+    #newAQMkobo2elastic(PHILIPPINES)
     #kobo2oldcuris()
-    print(str(dt.datetime.utcnow()))
     #oldcuris2elastic(PHILIPPINES)
-    #oldcuris2elastic(CAMBODIA)
+    oldcuris2elastic(CAMBODIA)
     
 
 #run as standalone package

@@ -16,7 +16,7 @@ from elasticsearch.exceptions import ConnectionError
 
 import lib.logs.logging_conf, logging
 logger = logging.getLogger("elasticsearch.connection")
-import lib.logs.logger as lg
+import lib.logs.logger as etl_log 
 
 from settings.base_conf import LOGGER, ELASTICSEARCH
 from settings.base_conf import elastic_config
@@ -71,6 +71,7 @@ def set_json_dump(docs, country):
     counter = 0
     bulk_data = []
 
+    logger.info(docs)
     for doc in docs:
         try:
             _type = list(doc.keys())
@@ -90,7 +91,7 @@ def set_json_dump(docs, country):
         except TypeError:
             logger.error("NoneType object!")
             continue
-    logger.info("total index inserts %d" % len(doc))
+    logger.info("total index inserts :" + str(len(doc)))
     
     #logger.info(bulk_data)
     _total_entries(counter)
@@ -98,6 +99,8 @@ def set_json_dump(docs, country):
     
 def _bulk_dump(bulk_data,country):
     try:
+        print('bulkData:')
+        print(bulk_data)
         es.bulk(bulk_data)  
     except (ConnectionError) as err: 
         logger.error(error)
@@ -108,6 +111,7 @@ def _batch_dump(docs, country):
         _create_mappings(country)
         counter = 0
 
+        logger.info('docs:' + str(docs))
         try:
             for doc in docs:
                 _type = list(doc.keys())
@@ -129,8 +133,8 @@ def _refresh_index(data):
     return es.indices.refresh(index=data)
 
 def _total_entries(count):
-    lg.write_to_log("Total Batch Entries: " + str(count), _log_file_name)
-    print("Total Batch Entries: {%}", count)
+    etl_log.write_to_log("Total Batch Entries: " + str(count), _log_file_name)
+    logger.info("Total Batch Entries: {%}"+ str(count))
 
 def _create_mappings(country):
     _set_mappings(country, DEMOGRAPHICS)
@@ -192,7 +196,8 @@ def _set_log_filename(country):
 def get_data(index):
     _res = {}
     _offsets = 0 
-    _limit = 3332
+    #_limit = 3332
+    _limit = 3
     _index = index 
     _doc_type = ''
 
@@ -207,7 +212,7 @@ def get_data(index):
     try:
         _res = es.search(index=_index, 
                         body=_doc)
-        print(_res)
+        logger.info(_res)
         return _res
     except (ConnectionError) as err: 
         logger.error(error)

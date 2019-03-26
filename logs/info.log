@@ -1,2 +1,1 @@
-2019-03-26 10:00:33: main.py     :INFO:main
-2019-03-26 10:00:33: main.py     :ERROR:main
+2019-03-26 15:20:35: elasticsearch:INFO:POST http://localhost:9200/_bulk [status:200 request:0.020s]

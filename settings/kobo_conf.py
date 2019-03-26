@@ -49,6 +49,6 @@ KoboConfig = {
         'PORT': '',
         'VERSION':'v1',
         'TIMEOUT': 7200,
-        'FORM': '13'
+        'FORM': '33'
     }
 }

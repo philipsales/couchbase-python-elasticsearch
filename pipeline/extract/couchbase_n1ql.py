@@ -99,7 +99,7 @@ def _set_statement(**kwargs):
                     + country + "' OR address.country='"
                     + COUCHBASE[country_iso] + "') AND _deleted IS MISSING AND "
                     + "LOWER(organization)!='test rhu' AND "
-                    + "type='user-resident'")
+                    + "type='user-resident' limit 1")
     elif query_type=="batch":
         date_sync = kwargs.get('sync_date', "")
 

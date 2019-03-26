@@ -48,17 +48,17 @@ def flatten_elastic_properties(es_data):
 def transform_data(es_data):
     return flatten_elastic_properties(es_data)
 
-def export_csv(es_data, index):
+def export_csv(es_data, es_index):
     flatten_data = transform_data(es_data)
 
     fH = FileHandler()
 
     header = CSVBuilder.set_header(flatten_data)
-    fH.fwrite(header, index)
+    fH.fwrite(header, es_index)
 
     body = CSVBuilder.set_body(flatten_data)
     for item in body:
-        fH.fappend(item, index)
+        fH.fappend(item, es_index)
 
 def get_source_data(index):
     return elastic.get_data(index)

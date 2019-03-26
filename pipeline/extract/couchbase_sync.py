@@ -11,11 +11,11 @@ from requests.exceptions import ConnectionError, RequestException
 
 from settings.base_conf import couchbase_config, sqlite_conf
 
-from pipeline.connection import sqlite
+from pipeline.extract import sqlite
 
 from pipeline.auxiliary import sqlite_checker
 
-import logs.settings.logging_conf, logging
+import lib.logs.logging_conf, logging
 logger = logging.getLogger("couchbase.syncgateway")
 
 cb_conn = couchbase_config.CouchbaseConfig[couchbase_config.CouchbaseENV]

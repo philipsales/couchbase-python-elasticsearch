@@ -1,5 +1,5 @@
 import sys
-from pipeline.computation import utilities
+from pipeline.compute import utilities
 
 #TODO: Add new function names here if there are new computations
 computations = {

@@ -2,14 +2,14 @@ import sys
 import json
 import traceback
 
-from pipeline.transformation import mapper
-from pipeline.cleaning import cleaner
+from pipeline.transform import mapper
+from pipeline.clean import cleaner
 
-from pipeline.transformation import converter
+from pipeline.transform import converter
 
 from settings.base_conf import DATA_TYPE
 
-import logs.settings.logging_conf, logging
+import lib.logs.logging_conf, logging
 logger = logging.getLogger("extractor")
 
 COUCHBASE = "couchbase"

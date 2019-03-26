@@ -6,7 +6,7 @@ from pipeline.auxiliary import function_map
 
 from settings.base_conf import DATA_TYPE
 
-import logs.settings.logging_conf, logging
+import lib.logs.logging_conf, logging
 logger = logging.getLogger("mapper")
 
 DEFAULT_DATE = "date_now"

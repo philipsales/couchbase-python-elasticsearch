@@ -10,12 +10,12 @@ from couchbase.exceptions import CouchbaseTransientError
 from couchbase.exceptions import CouchbaseNetworkError
 from requests.exceptions import ConnectionError, RequestException 
 
-import logs.logger as lg
+import lib.logs.logger as lg
 
 from settings.base_conf import LOGGER, COUCHBASE
 from settings.base_conf import couchbase_config
 
-import logs.settings.logging_conf, logging
+import lib.logs.logging_conf, logging
 logger = logging.getLogger("couchbase.n1q1")
 
 conn = couchbase_config.CouchbaseConfig[couchbase_config.CouchbaseENV]

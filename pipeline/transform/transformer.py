@@ -3,12 +3,12 @@ import sys
 import json
 import datetime as dt
 
-from pipeline.transformation import extractor
+from pipeline.transform import extractor
 
 from pipeline.auxiliary import sqlite_checker
 from pipeline.auxiliary import getter
 
-from pipeline.connection import sqlite
+from pipeline.extract import sqlite
 
 from schemas.mapping_conf import oldcuris2elastic_extractor
 from schemas.mapping_conf import kobo2oldcuris_extractor
@@ -16,12 +16,8 @@ from schemas.mapping_conf import kobo2oldcuris_extractor
 from settings.base_conf import ELASTICSEARCH
 from settings.base_conf import sqlite_conf
 
-import logs.settings.logging_conf, logging
+import lib.logs.logging_conf, logging
 logger = logging.getLogger("transformer")
-
-from airflow import DAG
-from airflow.operators.bash_operator import BashOperator
-from airflow.operators.python_operator import PythonOperator
 
 sqlite_conn = sqlite_conf.SQLiteConfig[sqlite_conf.SQLiteENV]
 
@@ -135,17 +131,3 @@ def _load_data(data_tuple):
 #run as standalone module
 if __name__ == "__main__":
     pass
-
-#run as workflow 
-default_args = {
-    'owner': 'ELKadmin',
-    'start_date': dt.datetime(2017, 6, 1)
-}
-
-with DAG(dag_id='subdg_transform',
-    default_args=default_args,
-    schedule_interval='0 1 * * *',
-    ) as dag:
-
-    task_map_to_schema = PythonOperator(task_id='task_map_to_schema', 
-            python_callable=extractor.transform)

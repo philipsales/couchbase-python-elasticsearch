@@ -3,7 +3,7 @@ import json
 import csv
 
 from settings.base_conf import DATA_TYPE
-import logs.settings.logging_conf, logging
+import lib.logs.logging_conf, logging
 logger = logging.getLogger("converter")
 
 DEFAULT_INT = 0

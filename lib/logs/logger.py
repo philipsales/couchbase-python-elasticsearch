@@ -1,13 +1,16 @@
 import sys
+import os.path
 import datetime
 
+root_url = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+
 def write_to_log(string, filename):
-    file = open("logs/log_files/" + filename + "_log.txt", "a")
+    file = open(root_url + "/logs/" + filename + "_log.txt", "a")
     file.write(string)
     file.close()
 
 def get_last_batch_log(filename):
-    fileHandle = open("logs/log_files/" + filename + "_log.txt", "r")
+    fileHandle = open(root_url+ "/logs/" + filename + "_log.txt", "r")
     lineList = fileHandle.readlines()
     fileHandle.close()
 

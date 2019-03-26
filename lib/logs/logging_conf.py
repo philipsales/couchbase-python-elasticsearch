@@ -1,18 +1,22 @@
 import sys
 import os.path
+import time
 import logging.config
 from logging import FileHandler, StreamHandler
+from logging.handlers import TimedRotatingFileHandler
 
-root_url = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-print(root_url)
+root_url = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 #LOGS Configuration
-default_formatter = logging.Formatter("%(asctime)s: %(name)-12s:%(levelname)s:%(message)s")
+default_formatter = logging.Formatter("%(asctime)s: %(name)-12s:%(levelname)s:%(message)s","%Y-%m-%d %H:%M:%S")
 
 console_handler = StreamHandler()
 console_handler.setFormatter(default_formatter)
 
-error_handler = FileHandler(root_url +"/log_files/error.log", "a")
+
+#error_handler = FileHandler(root_url + "/logs/error.log", "a")
+error_handler = TimedRotatingFileHandler(root_url + '/logs/error.log',  when='S', interval=1, backupCount=5)
+error_handler.suffix = '%Y-%m-%d.log'
 error_handler.setLevel(logging.ERROR)
 error_handler.setFormatter(default_formatter)
 
@@ -21,7 +25,9 @@ root.addHandler(console_handler)
 root.addHandler(error_handler)
 root.setLevel(logging.ERROR)
 
-info_handler = FileHandler(root_url +"/log_files/info.log", "a")
+info_handler = TimedRotatingFileHandler(root_url + '/logs/info.log',  when='S', interval=1, backupCount=5)
+#info_handler = FileHandler(root_url + "/logs/info.log", "a")
+info_handler.suffix = '%Y-%m-%d.log'
 info_handler.setLevel(logging.INFO)
 info_handler.setFormatter(default_formatter)
 

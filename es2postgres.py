@@ -8,11 +8,11 @@ import datetime as dt
 from settings.base_conf import ELASTICSEARCH, COUCHBASE
 from settings.base_conf import elastic_config, couchbase_config 
 
-from pipeline.connection import couchbase_n1ql, couchbase_sync, elastic, kobo, sqlite
+from pipeline.extract import couchbase_n1ql, couchbase_sync, elastic, kobo, sqlite
 
-from pipeline.transformation import transform, flattener
-from pipeline.utility.file_handler import FileHandler
-from pipeline.utility.csv_builder import CSVBuilder 
+from pipeline.transform import transformer, flattener
+from lib.utility.file_handler import FileHandler
+from lib.utility.csv_builder import CSVBuilder 
 
 PHILIPPINES = 'philippines'
 CAMBODIA = 'cambodia'

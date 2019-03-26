@@ -14,9 +14,9 @@ from schemas.output_conf import dental_health
 from elasticsearch import Elasticsearch
 from elasticsearch.exceptions import ConnectionError 
 
-import logs.settings.logging_conf, logging
+import lib.logs.logging_conf, logging
 logger = logging.getLogger("elasticsearch.connection")
-import logs.logger as lg
+import lib.logs.logger as lg
 
 from settings.base_conf import LOGGER, ELASTICSEARCH
 from settings.base_conf import elastic_config

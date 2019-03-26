@@ -5,19 +5,15 @@ import json
 import pprint
 import datetime as dt
 
-import logs.settings.logging_conf, logging
+import lib.logs.logging_conf, logging
 logger = logging.getLogger("main.py")
 
 from settings.base_conf import ELASTICSEARCH, COUCHBASE
 from settings.base_conf import elastic_config, couchbase_config 
 
-from pipeline.connection import couchbase_n1ql, couchbase_sync, elastic, kobo, sqlite
+from pipeline.extract import couchbase_n1ql, couchbase_sync, elastic, kobo, sqlite
 
-from pipeline.transformation import transform
-
-from airflow import DAG
-from airflow.operators.bash_operator import BashOperator
-from airflow.operators.python_operator import PythonOperator
+from pipeline.transform import transformer
 
 PHILIPPINES = 'philippines'
 CAMBODIA = 'cambodia'
@@ -47,12 +43,14 @@ def kobo2oldcuris():
 
 def oldcuris2elastic(country):
     cb_data = couchbase_n1ql.couchbase_get(COUCHBASE[country])
-
     etl_data = transform.oldcuris2elastic(cb_data)
     elastic.set_json_dump(etl_data, ELASTICSEARCH['country'][country])
 
 def main():
+    logger.info('main')
+    logger.error('main')
     #kobo2oldcuris()
+    print(str(dt.datetime.utcnow()))
     #oldcuris2elastic(PHILIPPINES)
     #oldcuris2elastic(CAMBODIA)
     

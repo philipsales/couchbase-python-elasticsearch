@@ -1,0 +1,2 @@
+parent_key_name,key_to,key_from,default_value,fields_for_computation,to_compute,type
+identification.id1,type,identity_consent/Do_you_have_a_person_ty_document_with_you,,,,string

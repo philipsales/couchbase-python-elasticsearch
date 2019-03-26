@@ -49,8 +49,8 @@ def oldcuris2elastic(country):
     elastic.set_json_dump(etl_data, ELASTICSEARCH['country'][country])
 
 def main():
-    #kobo2oldcuris()
-    oldcuris2elastic(PHILIPPINES)
+    kobo2oldcuris()
+    #oldcuris2elastic(PHILIPPINES)
     #oldcuris2elastic(CAMBODIA)
     
 
@@ -59,28 +59,3 @@ if __name__ == '__main__':
     main()
 
 #run as workflow 
-default_args = {
-    'owner': 'ELKadmin',
-    'start_date': dt.datetime(2017, 6, 1)
-}
-
-with DAG(dag_id='dg_main',
-    default_args=default_args,
-    schedule_interval='0 1 * * *',
-    ) as dag:
-
-    extract_from_couch = PythonOperator(task_id='extract_from_couch', 
-            python_callable=extract_data)
-
-    transform_couch_data = PythonOperator(task_id='transform_couch_data', 
-            provide_context=True,
-            depends_on_past=True,
-            python_callable=transform_data)
-
-    load_to_elasticsearch = PythonOperator(task_id='load_to_elasticsearch', 
-            depends_on_past=True,
-            provide_context=True,
-            python_callable=load_data)
-
-extract_from_couch >> transform_couch_data >> load_to_elasticsearch
-

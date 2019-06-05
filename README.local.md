@@ -1,26 +1,33 @@
+
+
 # AWH Data pipeline - Source Code Installation
 Bare data pipepline 
+
 
 ## Tested Environment
 - [x] MacOS based machine - Local.
 - [x] Linux based machine - Production. 
 - [ ] Windows based machine. 
 
-## System Dependencies
 
+## System Dependencies
+```
 | Dependencies | Versions |
 | ------------ | -------- |
 | Python       | 3.6.2    |
 | Virtualenv   | 15.1.0   |
+```
 
 ## Application Dependencies
 Listed in requirements.txt
-| Python Libraries | Versions |
-| ------------ | -------- |
-| couchbase    | 2.4.0 |
-|elasticsearch|6.2.0 |
-|urllib3 | 1.22
-|requests | 2.19.1
+```
+| Python pck    | Versions |
+| ------------  | -------- |
+| couchbase     | 2.4.0    |
+| elasticsearch | 6.2.0    |
+| urllib3       | 1.22     |
+| requests      | 2.19.1   |
+```
 
 ### System Dependencies Installation - Python (Linux)
 1. Open command line terminal
@@ -29,7 +36,7 @@ Listed in requirements.txt
     ssh <username>@<ip_address>
     ```
 1. Update OS packages and install python dependencies (e.g Python > 3.6)
-    ```bash
+    ```
     sudo apt-get update \
         && apt-get install -y software-properties-common curl \
         && add-apt-repository ppa:deadsnakes/ppa \
@@ -37,7 +44,7 @@ Listed in requirements.txt
         && apt-get install -y python3.6 python3.6-venv
     ```
 1. Download specific python version (e.g Python > 3.6)
-    ```bash
+    ```
     wget http://www.python.org/ftp/python/3.6.0/Python-3.6.0.tgz
     tar xzvf Python-3.6.0.tgz
     cd Python-3.6.0/

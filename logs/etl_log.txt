@@ -1,2 +1,0 @@
-
-<2019-03-26 07:20:21.288107> : Query: SELECT meta(awhcurisdb).id as cb_id, awhcurisdb.* FROM awhcurisdb WHERE (address.country='Cambodia' OR address.country='KHM') AND _deleted IS MISSING AND LOWER(organization)!='test rhu' AND type='user-resident' limit 1; Count From Couchbase: 1; Total Batch Entries: 7

@@ -93,14 +93,13 @@ def set_json_dump(docs, country):
             continue
     logger.info("total index inserts :" + str(len(doc)))
     
+    
     #logger.info(bulk_data)
     _total_entries(counter)
     _bulk_dump(bulk_data, country)
     
 def _bulk_dump(bulk_data,country):
     try:
-        print('bulkData:')
-        print(bulk_data)
         es.bulk(bulk_data)  
     except (ConnectionError) as err: 
         logger.error(error)

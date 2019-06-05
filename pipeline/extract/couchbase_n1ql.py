@@ -99,7 +99,7 @@ def _set_statement(**kwargs):
                     + country + "' OR address.country='"
                     + COUCHBASE[country_iso] + "') AND _deleted IS MISSING AND "
                     + "LOWER(organization)!='test rhu' AND "
-                    + "type='user-resident' limit 1")
+                    + "type='user-resident' OFFSET 45001 LIMIT 15000")
     elif query_type=="batch":
         date_sync = kwargs.get('sync_date', "")
 
@@ -134,6 +134,8 @@ def _dict2json(results, is_etl):
                         + "; ", _log_file_name)
 
     logger.info("couchbase data size: %s" % str(counter))
+ 
+    print('counter' , counter)
     return data
 
 def _set_log_filename(country):

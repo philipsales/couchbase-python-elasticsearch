@@ -99,7 +99,9 @@ def _get_data_stream(url):
         local_filename = "data/tmp/" + 'kobo_shutil' + '.json'
         r = requests.get(url, auth=(USERNAME, PASSWORD), stream=True)
 
-        with open(local_filename, 'wb') as f:
+        #with open(local_filename, 'wb') as f:
+        #TODO: error if file already exist. won't overwrite
+        with open(local_filename, 'ab') as f:
             logger.info(str(f))
             shutil.copyfileobj(r.raw, f)
 

@@ -1,10 +1,8 @@
 #!/bin/bash
 
-cd /virtualenv/awhdatapipeline
+source /virtual_env/awhdatapipeline_env/bin/activate
 
-source bin/activate
-
-cd ~/data-pipeline
+cd ~/src/data-pipeline
 
 python main.py
 
